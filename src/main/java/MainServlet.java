@@ -24,6 +24,7 @@ public class MainServlet extends HttpServlet {
         out.println("<h1>" + welcomeString + "</h1>");
 
         out.println("Текущее время - " + new Date());
+        out.println("<a href=\"/count\"> Кол-во </a>");
 
     }
 

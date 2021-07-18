@@ -4,6 +4,11 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
+    <display-name>maven-deploy</display-name>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
     <servlet>
         <servlet-name>mainServlet</servlet-name>
         <servlet-class>MainServlet</servlet-class>
@@ -14,12 +19,48 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>cntServlet</servlet-name>
+        <servlet-class>CountServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>cntServlet</servlet-name>
+        <url-pattern>/count</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SignInServlet</servlet-name>
+        <servlet-class>SignLogIn.SignInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignInServlet</servlet-name>
+        <url-pattern>/create-acc</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>LogInServlet</servlet-name>
+        <servlet-class>SignLogIn.LogInServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogInServlet</servlet-name>
+        <url-pattern>/check-acc</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>MainJsp</servlet-name>
-        <jsp-file>/Main.jsp</jsp-file>
+        <jsp-file>/main.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>MainJsp</servlet-name>
-        <url-pattern>/hiJsp</url-pattern>
+        <url-pattern>/main</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SignIn</servlet-name>
+        <jsp-file>/signIn.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignIn</servlet-name>
+        <url-pattern>/sign-in</url-pattern>
     </servlet-mapping>
 
 </web-app>
