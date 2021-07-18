@@ -51,7 +51,8 @@
                 <button class="w-100 btn btn-lg btn-dark" type="submit">Войти</button>
 
                 <div class="mt-3 mb-3 text-body">
-                    <p>Впервые? <a href="signIn.jsp"> Зарегистрируйтесь </a> </p>
+                    <!-- <p>Впервые? <a href="signIn.jsp"> Зарегистрируйтесь </a> </p> -->
+                    <p>Впервые? <a href="main.html"> Зарегистрируйтесь </a> </p>
                 </div>
 
                 <p class="mt-5 mb-3 text-muted">&copy; 2021–2021</p>

@@ -63,4 +63,17 @@
         <url-pattern>/sign-in</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Test</servlet-name>
+        <jsp-file>/main.html</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Test</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
 </web-app>

@@ -1,7 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page import="java.util.Date" %>
-<%@ page import="mainLogic.WelcomeLogic"%>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -32,7 +30,7 @@
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <h1>Имя_пользователя</h1>
+                    <h1 th:text="${name}">Имя_пользователя</h1>
                     <div class="row">
                         <div class="col-md-3">
                             <img src="defoult.png" width="200" height="200" alt="Не удалось загрузить картинку">
