@@ -24,25 +24,15 @@ public class MainServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         ServletContextTemplateResolver resolver = new ServletContextTemplateResolver(getServletContext());
-        resolver.setPrefix("/webapp/");
+        resolver.setPrefix("/WEB-INF/");
         resolver.setSuffix(".html");
         resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setCharacterEncoding("UTF-8");
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(resolver);
-        final Context context = new Context(Locale.US);
+        final Context context = new Context(new Locale("ru"));
+        context.setVariable("name", "Имя");
         templateEngine.process("main", context, resp.getWriter());
-        context.setVariable("name", "User_name");
-
-        String name = req.getParameter("name");
-        String surname = req.getParameter("surname");
-
-        String welcomeString = new WelcomeLogic().getWelcomeString(name, surname);
-
-        out.println("<h1>" + welcomeString + "</h1>");
-
-        out.println("Текущее время - " + new Date());
-        out.println("<a href=\"/count\"> Кол-во </a>");
-
     }
 
 }
