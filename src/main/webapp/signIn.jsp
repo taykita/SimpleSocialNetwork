@@ -44,6 +44,10 @@
                     <label for="email">Адрес почты</label>
                 </div>
                 <div class="form-floating">
+                    <input type="text" class="form-control" name="userName" id="userName">
+                    <label for="userName">Имя пользователя</label>
+                </div>
+                <div class="form-floating">
                     <input type="password" class="form-control" name="pass" id="pass">
                     <label for="pass">Пароль</label>
                 </div>
@@ -52,7 +56,7 @@
                     <label for="chPass">Подтвердите пароль</label>
                 </div>
 
-                <button class="w-100 btn btn-lg btn-dark" type="submit">Войти</button>
+                <button class="mt-3 mb-3 w-100 btn btn-lg btn-dark" type="submit">Войти</button>
 
                 <div class="mt-3 mb-3 text-body">
                     <p>Уже есть аккаунт? <a href="index.jsp"> Войдите </a> </p>

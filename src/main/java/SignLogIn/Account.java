@@ -8,6 +8,7 @@ public class Account {
 
     private String email;
     private String pass;
+    private String userName;
 
     public String getEmail() {
         return email;
@@ -19,5 +20,13 @@ public class Account {
 
     public void setPass(String pass) {
         this.pass = pass;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

@@ -4,6 +4,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import static SignLogIn.SignInServlet.emailPassDB;
 
@@ -16,6 +17,8 @@ public class LogInServlet extends HttpServlet {
 
         if (emailPassDB.containsKey(email)) {
             if (emailPassDB.get(email).equals(password)) {
+                HttpSession session = req.getSession();
+                session.setAttribute("email", email);
                 String path = req.getScheme() + "://" + req.getServerName() + req.getContextPath() + "/main";
                 resp.sendRedirect(path);
             } else {
