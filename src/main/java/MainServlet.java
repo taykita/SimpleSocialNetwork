@@ -25,13 +25,13 @@ public class MainServlet extends HttpServlet {
 
         ServletContextTemplateResolver resolver = new ServletContextTemplateResolver(getServletContext());
         resolver.setPrefix("/webapp/");
-        resolver.setSuffix(".jsp");
-        //resolver.setTemplateMode(TemplateMode.HTML);
+        resolver.setSuffix(".html");
+        resolver.setTemplateMode(TemplateMode.HTML);
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(resolver);
         final Context context = new Context(Locale.US);
-        context.setVariable("name", "User_name");
         templateEngine.process("main", context, resp.getWriter());
+        context.setVariable("name", "User_name");
 
         String name = req.getParameter("name");
         String surname = req.getParameter("surname");

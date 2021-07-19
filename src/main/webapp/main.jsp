@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <link href="cssFiles/test.css" rel="stylesheet">
+    <link href="cssFiles/main.css" rel="stylesheet">
 </head>
 <body>
     <main class="BN-side-menu">
@@ -30,7 +30,16 @@
                     </div>
                 </div>
                 <div class="col-md-9">
-                    <h1 th:text="${name}">Имя_пользователя</h1>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <h1>Имя_пользователя</h1>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="exitB">
+                                <button class="w-30 btn btn-lg btn-secondary" type="submit">Выход</button>
+                            </div>
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-3">
                             <img src="defoult.png" width="200" height="200" alt="Не удалось загрузить картинку">
