@@ -1,0 +1,19 @@
+html,
+body {
+    height: 100%;
+}
+
+body {
+    padding-top: 20px;
+    padding-bottom: 40px;
+    background-color: #f5f5f5;
+}
+
+.BN-side-menu .btn-group-vertical{
+    width: 350px;
+}
+
+.BN-side-menu .exitB{
+    margin: auto;
+    width: 100px;
+}

@@ -1,4 +1,5 @@
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -15,24 +16,33 @@
             <div class="position-sticky">
                 <div class="p-2 mb-3">
                     <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                        <label class="btn btn-md btn-secondary active">
+                        <a class="btn btn-md btn-secondary active" href="#">
                             Моя страница
-                        </label>
-                        <label class="btn btn-md btn-secondary">
+                        </a>
+                        <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
-                        </label>
-                        <label class="btn btn-md btn-secondary">
+                        </a>
+                        <a class="btn btn-md btn-secondary" href="friend-list-redirect.jsp">
                             Друзья
-                        </label>
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-md-9">
-            <h1 th:text="${name}">Имя_пользователя</h1>
+            <div class="row">
+                <div class="col-md-10">
+                    <h1 th:text="${name}">Имя_пользователя</h1>
+                </div>
+                <div class="col-md-2">
+                    <div class="exitB">
+                        <button class="w-30 btn btn-lg btn-secondary" type="submit">Выход</button>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-md-3">
-                    <img src="defoult.png" width="200" height="200" alt="Не удалось загрузить картинку">
+                    <img src="/WEB-INF/resources/images/avatars/1.png" width="200" height="200" alt="Не удалось загрузить картинку">
                 </div>
                 <div class="col-md-9">
                     <p>Информация</p>

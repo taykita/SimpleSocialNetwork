@@ -42,7 +42,7 @@
                     </div>
                     <div class="row">
                         <div class="col-md-3">
-                            <img src="defoult.png" width="200" height="200" alt="Не удалось загрузить картинку">
+                            <img src="defoult.png" width="200" height="200" alt="Не удалось загрузить картинку!">
                         </div>
                         <div class="col-md-9">
                             <p>Информация</p>

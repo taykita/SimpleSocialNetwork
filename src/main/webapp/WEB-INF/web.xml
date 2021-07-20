@@ -37,6 +37,24 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>FriendList</servlet-name>
+        <servlet-class>FriendListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>FriendList</servlet-name>
+        <url-pattern>/friend-list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>UserPage</servlet-name>
+        <servlet-class>UserPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserPage</servlet-name>
+        <url-pattern>/user-page</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>LogInServlet</servlet-name>
         <servlet-class>SignLogIn.LogInServlet</servlet-class>
     </servlet>

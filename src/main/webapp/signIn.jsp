@@ -37,7 +37,7 @@
     <body class="text-center">
         <main class="form-signin">
             <form action="http://booknetwork.site/myapp/create-acc">
-                <h1 class="h3 mb-3 fw-normal">Вход</h1>
+                <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
                 <div class="form-floating">
                     <input type="email" class="form-control" name="email" id="email">

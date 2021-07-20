@@ -9,6 +9,7 @@ public class Account {
     private String email;
     private String pass;
     private String userName;
+    private String avatarImg;
 
     public String getEmail() {
         return email;
@@ -28,5 +29,13 @@ public class Account {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getAvatarImg() {
+        return avatarImg;
+    }
+
+    public void setAvatarImg(String avatarImg) {
+        this.avatarImg = avatarImg;
     }
 }

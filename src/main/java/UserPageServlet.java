@@ -14,7 +14,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
-public class MainServlet extends HttpServlet {
+public class UserPageServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -36,8 +36,8 @@ public class MainServlet extends HttpServlet {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(resolver);
         final Context context = new Context(new Locale("ru"));
-        context.setVariable("name", dataBase.get((String) session.getAttribute("email")).getUserName());
-        templateEngine.process("main", context, resp.getWriter());
+        context.setVariable("name", dataBase.get((String) req.getParameter("id")).getUserName());
+        templateEngine.process("user-page", context, resp.getWriter());
     }
 
 }
