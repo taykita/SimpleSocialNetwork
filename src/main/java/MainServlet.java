@@ -36,7 +36,13 @@ public class MainServlet extends HttpServlet {
         TemplateEngine templateEngine = new TemplateEngine();
         templateEngine.setTemplateResolver(resolver);
         final Context context = new Context(new Locale("ru"));
-        context.setVariable("name", dataBase.get((String) session.getAttribute("email")).getUserName());
+        String id = (String) session.getAttribute("email");
+        if (id != null) {
+            context.setVariable("name", dataBase.get(id).getUserName());
+        } else {
+            String path = req.getScheme() + "://" + req.getServerName() + req.getContextPath() + "/";
+            resp.sendRedirect(path);
+        }
         templateEngine.process("main", context, resp.getWriter());
     }
 
