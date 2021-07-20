@@ -2,8 +2,6 @@ import DataBase.DataBase;
 import SignLogIn.Account;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import org.thymeleaf.templatemode.TemplateMode;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,9 +11,16 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Locale;
 
 public class FriendListServlet extends HttpServlet {
+
+    ThymeleafEngine thymeleafEngine;
+
+    @Override
+    public void init() throws ServletException {
+        thymeleafEngine = new ThymeleafEngine(getServletContext());
+    }
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
@@ -27,14 +32,8 @@ public class FriendListServlet extends HttpServlet {
             session.setAttribute("DB", dataBase);
         }
 
-        ServletContextTemplateResolver resolver = new ServletContextTemplateResolver(getServletContext());
-        resolver.setPrefix("/WEB-INF/templates/");
-        resolver.setSuffix(".html");
-        resolver.setTemplateMode(TemplateMode.HTML);
-        resolver.setCharacterEncoding("UTF-8");
-        TemplateEngine templateEngine = new TemplateEngine();
-        templateEngine.setTemplateResolver(resolver);
-        final Context context = new Context(new Locale("ru"));
+        TemplateEngine templateEngine = thymeleafEngine.getTemplateEngine();
+        Context context = thymeleafEngine.getContext();
         List<Account> allUsers = dataBase.getAll();
         context.setVariable("users", allUsers.toArray());
         templateEngine.process("all-users", context, resp.getWriter());

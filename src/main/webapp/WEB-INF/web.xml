@@ -19,15 +19,6 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>cntServlet</servlet-name>
-        <servlet-class>CountServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>cntServlet</servlet-name>
-        <url-pattern>/count</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
         <servlet-name>SignInServlet</servlet-name>
         <servlet-class>SignLogIn.SignInServlet</servlet-class>
     </servlet>
