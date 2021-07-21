@@ -18,9 +18,10 @@ public class SignIn extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
         String email = req.getParameter("email");
         String password = req.getParameter("pass");
         String checkPassword = req.getParameter("chPass");
