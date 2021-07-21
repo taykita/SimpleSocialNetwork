@@ -1,3 +1,5 @@
+package source.thymeleaf.config;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;

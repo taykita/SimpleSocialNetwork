@@ -5,13 +5,19 @@
          version="3.0">
 
     <display-name>maven-deploy</display-name>
-    <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
-    </welcome-file-list>
+
+    <servlet>
+        <servlet-name>LogIn</servlet-name>
+        <servlet-class>source.verification.LogInPage</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>LogIn</servlet-name>
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>mainServlet</servlet-name>
-        <servlet-class>MainServlet</servlet-class>
+        <servlet-class>source.entity.MainServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>mainServlet</servlet-name>
@@ -20,7 +26,7 @@
 
     <servlet>
         <servlet-name>SignInServlet</servlet-name>
-        <servlet-class>SignLogIn.SignInServlet</servlet-class>
+        <servlet-class>source.verification.SignIn</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SignInServlet</servlet-name>
@@ -29,7 +35,7 @@
 
     <servlet>
         <servlet-name>FriendList</servlet-name>
-        <servlet-class>FriendListServlet</servlet-class>
+        <servlet-class>source.entity.FriendListServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>FriendList</servlet-name>
@@ -38,7 +44,7 @@
 
     <servlet>
         <servlet-name>UserPage</servlet-name>
-        <servlet-class>UserPageServlet</servlet-class>
+        <servlet-class>source.entity.UserPageServlet</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>UserPage</servlet-name>
@@ -47,7 +53,7 @@
 
     <servlet>
         <servlet-name>LogInServlet</servlet-name>
-        <servlet-class>SignLogIn.LogInServlet</servlet-class>
+        <servlet-class>source.verification.LogIn</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LogInServlet</servlet-name>
@@ -56,11 +62,11 @@
 
     <servlet>
         <servlet-name>SignIn</servlet-name>
-        <jsp-file>/signIn.jsp</jsp-file>
+        <servlet-class>source.verification.SignInPage</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>SignIn</servlet-name>
-        <url-pattern>/sign-in</url-pattern>
+        <url-pattern>/sign</url-pattern>
     </servlet-mapping>
 
 

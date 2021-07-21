@@ -11,8 +11,7 @@
     <body>
         <%
             request.getSession().setAttribute("email", null);
-            String path = request.getScheme() + "://" + request.getServerName() + request.getContextPath() + "/";
-            response.sendRedirect(path);
+            response.sendRedirect(request.getContextPath() + "/");
         %>
     </body>
 

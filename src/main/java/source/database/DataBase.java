@@ -1,6 +1,6 @@
-package DataBase;
+package source.database;
 
-import SignLogIn.Account;
+import source.verification.Account;
 
 import java.util.*;
 

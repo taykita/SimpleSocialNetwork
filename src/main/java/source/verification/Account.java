@@ -1,4 +1,4 @@
-package SignLogIn;
+package source.verification;
 
 public class Account {
     public Account(String email, String pass) {
