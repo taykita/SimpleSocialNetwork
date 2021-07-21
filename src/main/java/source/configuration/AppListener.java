@@ -18,5 +18,7 @@ public class AppListener implements ServletContextListener {
         TemplateEngine templateEngine = new ThymeleafEngine(servletContext).getTemplateEngine();
         servletContext.setAttribute("dataBase", dataBase);
         servletContext.setAttribute("templateEngine", templateEngine);
+        int usersCount = 0;
+        servletContext.setAttribute("usersCount", usersCount);
     }
 }

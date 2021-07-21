@@ -2,6 +2,7 @@ package source.verification;
 
 import source.database.DataBase;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -31,8 +32,13 @@ public class SignIn extends HttpServlet {
             if (dataBase.exist(email)) {
                 resp.sendRedirect("sign");
             } else {
+                ServletContext servletContext = getServletContext();
+                int currentId = (Integer) servletContext.getAttribute("usersCount");
+                currentId++;
+                newAccount.setId(currentId);
+                servletContext.setAttribute("usersCount", currentId);
                 dataBase.add(newAccount);
-                req.getSession().setAttribute("email", email);
+                req.getSession().setAttribute("id", currentId);
                 resp.sendRedirect("main");
             }
         } else {

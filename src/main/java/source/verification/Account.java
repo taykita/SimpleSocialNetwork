@@ -10,6 +10,7 @@ public class Account {
     private String pass;
     private String userName;
     private String avatarImg;
+    private int id;
 
     public String getEmail() {
         return email;
@@ -37,5 +38,13 @@ public class Account {
 
     public void setAvatarImg(String avatarImg) {
         this.avatarImg = avatarImg;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }

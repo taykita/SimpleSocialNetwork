@@ -27,10 +27,9 @@ public class LogIn extends HttpServlet {
 
         if (dataBase.exist(email)) {
             if (dataBase.confirmPass(email, password)) {
-                req.getSession().setAttribute("email", email);
+                req.getSession().setAttribute("id", dataBase.get(email).getId());
                 resp.sendRedirect("main");
             } else {
-
                 resp.sendRedirect(req.getContextPath() + "/");
             }
         } else {

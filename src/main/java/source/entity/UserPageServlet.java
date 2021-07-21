@@ -32,7 +32,7 @@ public class UserPageServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         Context context = new Context(new Locale("ru"));
-        context.setVariable("name", dataBase.get((String) req.getParameter("id")).getUserName());
+        context.setVariable("name", dataBase.get(Integer.parseInt(req.getParameter("id"))).getUserName());
         templateEngine.process("user-page", context, resp.getWriter());
     }
 

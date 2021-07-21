@@ -5,11 +5,16 @@ import source.verification.Account;
 import java.util.*;
 
 public class DataBase {
-    private Map<String, String> emailPassDB = new HashMap<>();
+    private Map<Integer, String> idEmail = new HashMap<>();
     private Map<String, Account> accounts = new HashMap<>();
 
     public void add(Account account) {
         accounts.put(account.getEmail(), account);
+        idEmail.put(account.getId(), account.getEmail());
+    }
+
+    public Account get(int id) {
+        return accounts.get(idEmail.get(id));
     }
 
     public Account get(String email) {

@@ -34,7 +34,7 @@ public class MainServlet extends HttpServlet {
         HttpSession session = req.getSession();
 
         Context context = new Context(new Locale("ru"));
-        String id = (String) session.getAttribute("email");
+        Integer id = (Integer) session.getAttribute("id");
         if (id != null) {
             context.setVariable("name", dataBase.get(id).getUserName());
         } else {

@@ -44,7 +44,7 @@
             </div>
 
             <th:block th:each="user : ${users}">
-                <a th:href="@{'user-page?id=' + ${user.email}}">
+                <a th:href="@{'user-page?id=' + ${user.id}}">
                     <h5 th:text="${user.userName}">..</h5>
                 </a>
             </th:block>
