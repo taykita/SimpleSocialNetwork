@@ -6,13 +6,26 @@
 
     <display-name>maven-deploy</display-name>
 
+    <welcome-file-list>
+        <welcome-file>main</welcome-file>
+    </welcome-file-list>
+
     <servlet>
         <servlet-name>LogIn</servlet-name>
-        <servlet-class>source.verification.LogInPage</servlet-class>
+        <servlet-class>source.verification.LogIn</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>LogIn</servlet-name>
-        <url-pattern>/</url-pattern>
+        <url-pattern>/login</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>SignIn</servlet-name>
+        <servlet-class>source.verification.SignIn</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>SignIn</servlet-name>
+        <url-pattern>/sign</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -22,15 +35,6 @@
     <servlet-mapping>
         <servlet-name>mainServlet</servlet-name>
         <url-pattern>/main</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SignInServlet</servlet-name>
-        <servlet-class>source.verification.SignIn</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SignInServlet</servlet-name>
-        <url-pattern>/create-acc</url-pattern>
     </servlet-mapping>
 
     <servlet>
@@ -50,27 +54,5 @@
         <servlet-name>UserPage</servlet-name>
         <url-pattern>/user-page</url-pattern>
     </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LogInServlet</servlet-name>
-        <servlet-class>source.verification.LogIn</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LogInServlet</servlet-name>
-        <url-pattern>/check-acc</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>SignIn</servlet-name>
-        <servlet-class>source.verification.SignInPage</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>SignIn</servlet-name>
-        <url-pattern>/sign</url-pattern>
-    </servlet-mapping>
-
-
-
-
 
 </web-app>

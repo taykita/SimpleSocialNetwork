@@ -10,8 +10,8 @@
 
     <body>
         <%
-            request.getSession().setAttribute("email", null);
-            response.sendRedirect(request.getContextPath() + "/");
+            request.getSession().invalidate();
+            response.sendRedirect("login");
         %>
     </body>
 

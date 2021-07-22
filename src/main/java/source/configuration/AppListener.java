@@ -2,7 +2,7 @@ package source.configuration;
 
 import org.thymeleaf.TemplateEngine;
 import source.database.DataBase;
-import source.thymeleaf.config.ThymeleafEngine;
+import source.thymeleaf.config.ThymeleafEngineInitializer;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -14,11 +14,18 @@ public class AppListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext servletContext = sce.getServletContext();
-        DataBase dataBase = new DataBase();
-        TemplateEngine templateEngine = new ThymeleafEngine(servletContext).getTemplateEngine();
-        servletContext.setAttribute("dataBase", dataBase);
+
+        initDataBase(servletContext);
+        initTemplateEngine(servletContext);
+    }
+
+    private void initTemplateEngine(ServletContext servletContext) {
+        TemplateEngine templateEngine = new ThymeleafEngineInitializer().init(servletContext);
         servletContext.setAttribute("templateEngine", templateEngine);
-        int usersCount = 0;
-        servletContext.setAttribute("usersCount", usersCount);
+    }
+
+    private void initDataBase(ServletContext servletContext) {
+        DataBase dataBase = new DataBase();
+        servletContext.setAttribute("dataBase", dataBase);
     }
 }
