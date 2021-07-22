@@ -7,7 +7,7 @@ import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 
 import javax.servlet.ServletContext;
 import java.util.Locale;
-//TODO поменять на initializer
+
 public class ThymeleafEngineInitializer {
     public TemplateEngine init(ServletContext servletContext) {
         TemplateEngine templateEngine = new TemplateEngine();

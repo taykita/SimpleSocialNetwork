@@ -29,7 +29,7 @@ public class LogIn extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
 
         Context context = new Context(LOCALE);
-        templateEngine.process("index", context, resp.getWriter());
+        templateEngine.process("log-in", context, resp.getWriter());
     }
 
     @Override
