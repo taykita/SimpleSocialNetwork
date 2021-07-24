@@ -2,7 +2,7 @@ package source.entity;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import source.database.DataBase;
+import source.database.AccountStorage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,12 +16,12 @@ import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 public class MainServlet extends HttpServlet {
 
     TemplateEngine templateEngine;
-    DataBase dataBase;
+    AccountStorage accountStorage;
 
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        dataBase = (DataBase) getServletContext().getAttribute("dataBase");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
     }
 
 
@@ -38,7 +38,7 @@ public class MainServlet extends HttpServlet {
             return;
         }
 
-        context.setVariable("name", dataBase.get(id).getUserName());
+        context.setVariable("name", accountStorage.get(id).getUserName());
         templateEngine.process("main", context, resp.getWriter());
     }
 

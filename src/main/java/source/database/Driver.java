@@ -1,41 +1,43 @@
 package source.database;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.*;
-import java.util.Arrays;
+import source.exception.DriverException;
 
-public class Driver extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        connectPostgreSQLDriver();
-        PrintWriter printWriter = resp.getWriter();
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+public class Driver {
+    public Driver() {
+        connectPSQLDriver();
         try {
-            Connection connection = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/booknetwork_db",
-                        "postgres", "");
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT email FROM accounts");
-
-            while (rs.next()) {
-                printWriter.println(rs.getString("email"));
-            }
-            stmt.close();
+            this.connection = getPSQLConnection();
         } catch (SQLException e) {
-            printWriter.println(Arrays.toString(e.getStackTrace()));
-            e.printStackTrace();
+            throw new DriverException("get PSQLConnection error");
         }
     }
 
-    private void connectPostgreSQLDriver() {
+    Connection connection;
+
+    public Statement getStatement() {
+        try {
+            return connection.createStatement();
+        } catch (SQLException e) {
+            throw new DriverException("create statement error");
+        }
+    }
+
+    private Connection getPSQLConnection() throws SQLException {
+        return DriverManager.getConnection(
+                "jdbc:postgresql://78.24.220.161/simple_social_network_db",
+                    "admin", "admin");
+    }
+
+    private void connectPSQLDriver() {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            throw new DriverException("connect PSQL driver error");
         }
     }
 }

@@ -1,7 +1,9 @@
 package source.configuration;
 
 import org.thymeleaf.TemplateEngine;
-import source.database.DataBase;
+import source.database.AccountStorage;
+import source.database.CollectionAccountStorage;
+import source.database.DataBaseAccountStorage;
 import source.thymeleaf.config.ThymeleafEngineInitializer;
 
 import javax.servlet.ServletContext;
@@ -25,7 +27,7 @@ public class AppListener implements ServletContextListener {
     }
 
     private void initDataBase(ServletContext servletContext) {
-        DataBase dataBase = new DataBase();
-        servletContext.setAttribute("dataBase", dataBase);
+        AccountStorage accountStorage = new DataBaseAccountStorage();
+        servletContext.setAttribute("collectionAccountStorage", accountStorage);
     }
 }

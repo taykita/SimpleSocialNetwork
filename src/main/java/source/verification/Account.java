@@ -1,9 +1,17 @@
 package source.verification;
 
 public class Account {
-    public Account(String email, String pass) {
+    public Account(String email, String pass, String userName) {
         this.email = email;
         this.pass = pass;
+        this.userName = userName;
+    }
+
+    public Account(String email, String pass, String userName, int id) {
+        this.email = email;
+        this.pass = pass;
+        this.userName = userName;
+        this.id = id;
     }
 
     private String email;

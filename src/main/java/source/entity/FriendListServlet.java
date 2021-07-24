@@ -2,7 +2,7 @@ package source.entity;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import source.database.DataBase;
+import source.database.AccountStorage;
 import source.verification.Account;
 
 import javax.servlet.ServletException;
@@ -17,12 +17,12 @@ import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 public class FriendListServlet extends HttpServlet {
 
     TemplateEngine templateEngine;
-    DataBase dataBase;
+    AccountStorage accountStorage;
 
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        dataBase = (DataBase) getServletContext().getAttribute("dataBase");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class FriendListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
 
         Context context = new Context(LOCALE);
-        List<Account> allUsers = dataBase.getAll();
+        List<Account> allUsers = accountStorage.getAll();
 
         context.setVariable("users", allUsers.toArray());
         templateEngine.process("all-users", context, resp.getWriter());

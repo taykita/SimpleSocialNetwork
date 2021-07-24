@@ -2,25 +2,26 @@ package source.verification;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import source.database.DataBase;
+import source.database.AccountStorage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 
 public class LogIn extends HttpServlet {
 
     TemplateEngine templateEngine;
-    DataBase dataBase;
+    AccountStorage accountStorage;
 
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        dataBase = (DataBase) getServletContext().getAttribute("dataBase");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
     }
 
     @Override
@@ -34,14 +35,14 @@ public class LogIn extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        resp.setContentType("text/html;charset=UTF-8");
-        req.setCharacterEncoding("UTF-8");
+        configServlet(req, resp);
+
         String email = req.getParameter("email");
         String password = req.getParameter("pass");
 
-        if (dataBase.exist(email)) {
-            if (dataBase.confirmPass(email, password)) {
-                req.getSession().setAttribute("id", dataBase.get(email).getId());
+        if (accountStorage.exist(email)) {
+            if (accountStorage.confirmPass(email, password)) {
+                req.getSession().setAttribute("id", accountStorage.get(email).getId());
                 resp.sendRedirect("main");
             } else {
                 resp.sendRedirect( "login");
@@ -50,5 +51,10 @@ public class LogIn extends HttpServlet {
             resp.sendRedirect("login");
         }
 
+    }
+
+    private void configServlet(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException {
+        resp.setContentType("text/html;charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
     }
 }

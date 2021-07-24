@@ -2,24 +2,25 @@ package source.verification;
 
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import source.database.DataBase;
+import source.database.AccountStorage;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 
 public class SignIn extends HttpServlet {
     TemplateEngine templateEngine;
-    DataBase dataBase;
+    AccountStorage accountStorage;
 
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        dataBase = (DataBase) getServletContext().getAttribute("dataBase");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
     }
 
 
@@ -35,24 +36,30 @@ public class SignIn extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        resp.setContentType("text/html;charset=UTF-8");
-        req.setCharacterEncoding("UTF-8");
+        configServlet(req, resp);
+
         String email = req.getParameter("email");
         String password = req.getParameter("pass");
         String checkPassword = req.getParameter("chPass");
+
         if (password.equals(checkPassword)) {
-            Account newAccount = new Account(email, password);
-            newAccount.setUserName(req.getParameter("userName"));
-            if (dataBase.exist(email)) {
+            String userName = req.getParameter("userName");
+            Account newAccount = new Account(email, password, userName);
+            if (accountStorage.exist(email)) {
                 resp.sendRedirect("sign");
             } else {
-                newAccount.setId(dataBase.getCountUsers() + 1);
-                dataBase.add(newAccount);
+                newAccount.setId(accountStorage.getCountUsers() + 1);
+                accountStorage.add(newAccount);
                 req.getSession().setAttribute("id", newAccount.getId());
                 resp.sendRedirect("main");
             }
         } else {
             resp.sendRedirect("sign");
         }
+    }
+
+    private void configServlet(HttpServletRequest req, HttpServletResponse resp) throws UnsupportedEncodingException {
+        resp.setContentType("text/html;charset=UTF-8");
+        req.setCharacterEncoding("UTF-8");
     }
 }
