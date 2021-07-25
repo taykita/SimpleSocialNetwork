@@ -55,13 +55,4 @@
         <url-pattern>/user-page</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>Driver</servlet-name>
-        <servlet-class>source.database.Driver</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>Driver</servlet-name>
-        <url-pattern>/driver</url-pattern>
-    </servlet-mapping>
-
 </web-app>
