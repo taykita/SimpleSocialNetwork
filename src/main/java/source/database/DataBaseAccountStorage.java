@@ -12,7 +12,7 @@ public class DataBaseAccountStorage implements AccountStorage{
         this.queryController = new QueryController(statement);
     }
 
-    Statement statement;
+    private Statement statement;
     private final QueryController queryController;
 
     @Override
@@ -52,3 +52,4 @@ public class DataBaseAccountStorage implements AccountStorage{
         return queryController.getCountQuery("SELECT MAX(id) AS count FROM accounts");
     }
 }
+

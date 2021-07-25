@@ -2,7 +2,6 @@ package source.configuration;
 
 import org.thymeleaf.TemplateEngine;
 import source.database.AccountStorage;
-import source.database.CollectionAccountStorage;
 import source.database.DataBaseAccountStorage;
 import source.thymeleaf.config.ThymeleafEngineInitializer;
 

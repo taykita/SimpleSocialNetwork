@@ -29,7 +29,7 @@ public class Driver {
 
     private Connection getPSQLConnection() throws SQLException {
         return DriverManager.getConnection(
-                "jdbc:postgresql://78.24.220.161/simple_social_network_db",
+                "jdbc:postgresql://78.24.220.161/booknetwork_db",
                     "admin", "admin");
     }
 
