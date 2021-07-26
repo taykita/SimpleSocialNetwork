@@ -18,7 +18,7 @@ public class QueryController {
 
     public void query(String query) {
         try {
-            statement.executeQuery(query);
+            statement.execute(query);
         } catch (SQLException e) {
             throw new DBException("DataBase.add error. Query: " + query + "\nError:" + e.getMessage());
         }
