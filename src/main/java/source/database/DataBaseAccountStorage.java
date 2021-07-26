@@ -8,11 +8,9 @@ import java.util.List;
 public class DataBaseAccountStorage implements AccountStorage{
 
     public DataBaseAccountStorage() {
-        this.statement = new Driver().getStatement();
-        this.queryController = new QueryController(statement);
+        this.queryController = new QueryController();
     }
 
-    private Statement statement;
     private final QueryController queryController;
 
     @Override

@@ -55,4 +55,12 @@
         <url-pattern>/user-page</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>Test</servlet-name>
+        <servlet-class>source.entity.TestServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Test</servlet-name>
+        <url-pattern>/test</url-pattern>
+    </servlet-mapping>
 </web-app>
