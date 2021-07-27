@@ -27,15 +27,18 @@ public class QueryController {
 
     private BasicDataSource connectionPull;
 
-    public void query(String query) {
+    public int queryAdd(String query) {
         try {
             Connection connection = connectionPull.getConnection();
             Statement statement = connection.createStatement();
 
-            statement.execute(query);
+            ResultSet rs = statement.executeQuery(query);
+            rs.next();
+            int id = rs.getInt("id");
 
             statement.close();
             connection.close();
+            return id;
         } catch (SQLException e) {
             throw new DBException("DataBase.add error. Query: " + query + "\nError:" + e.getMessage());
         }

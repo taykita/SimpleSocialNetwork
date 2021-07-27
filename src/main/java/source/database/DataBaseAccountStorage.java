@@ -2,10 +2,9 @@ package source.database;
 
 import source.verification.Account;
 
-import java.sql.Statement;
 import java.util.List;
 
-public class DataBaseAccountStorage implements AccountStorage{
+public class DataBaseAccountStorage implements AccountStorage {
 
     public DataBaseAccountStorage() {
         this.queryController = new QueryController();
@@ -15,8 +14,10 @@ public class DataBaseAccountStorage implements AccountStorage{
 
     @Override
     public Account add(Account account) {
-        queryController.query("INSERT INTO accounts (email, name, pass) " +
-                "VALUES ('" + account.getEmail() + "', '" + account.getUserName() + "', '" + account.getPass() + "');");
+        int id = queryController.queryAdd("INSERT INTO accounts (email, name, pass) " +
+                "VALUES ('" + account.getEmail() + "', '" + account.getUserName() + "', '" + account.getPass() + "') " +
+                "RETURNING id;");
+        account.setId(id);
         return account;
     }
 
@@ -45,9 +46,5 @@ public class DataBaseAccountStorage implements AccountStorage{
         return queryController.getAllQuery("SELECT * FROM accounts;");
     }
 
-    @Override
-    public int getCountUsers() {
-        return queryController.getCountQuery("SELECT MAX(id) AS count FROM accounts");
-    }
 }
 

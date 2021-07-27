@@ -13,6 +13,8 @@ import java.io.UnsupportedEncodingException;
 
 import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 
+//TODO Обработать регистрацию с пустыми полями
+//TODO Обработать пробелы
 public class SignIn extends HttpServlet {
     TemplateEngine templateEngine;
     AccountStorage accountStorage;
@@ -48,7 +50,6 @@ public class SignIn extends HttpServlet {
             if (accountStorage.exist(email)) {
                 resp.sendRedirect("sign");
             } else {
-                newAccount.setId(accountStorage.getCountUsers() + 1);
                 accountStorage.add(newAccount);
                 req.getSession().setAttribute("id", newAccount.getId());
                 resp.sendRedirect("main");

@@ -17,5 +17,4 @@ public interface AccountStorage {
 
     List<Account> getAll();
 
-    int getCountUsers();
 }

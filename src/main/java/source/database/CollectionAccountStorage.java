@@ -48,12 +48,4 @@ public class CollectionAccountStorage implements AccountStorage {
         return new ArrayList<Account>(accounts.values());
     }
 
-    @Override
-    public int getCountUsers() {
-        return countUsers;
-    }
-
-    public void setCountUsers(int countUsers) {
-        this.countUsers = countUsers;
-    }
 }
