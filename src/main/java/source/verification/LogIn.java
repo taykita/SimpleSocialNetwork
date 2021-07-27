@@ -21,7 +21,7 @@ public class LogIn extends HttpServlet {
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("accountStorage");
     }
 
     @Override

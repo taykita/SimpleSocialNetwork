@@ -16,7 +16,9 @@ public class DataBaseAccountStorage implements AccountStorage {
     public Account add(Account account) {
         int id = queryController.queryAdd("INSERT INTO accounts (email, name, pass) " +
                 "VALUES ('" + account.getEmail() + "', '" + account.getUserName() + "', '" + account.getPass() + "') " +
-                "RETURNING id;");
+                "RETURNING id;",
+                "INSERT INTO user_list (name, avatar) " +
+                "VALUES ('" + account.getUserName() + "', 'resources/images/avatars/1.png')");
         account.setId(id);
         return account;
     }
@@ -44,6 +46,25 @@ public class DataBaseAccountStorage implements AccountStorage {
     @Override
     public List<Account> getAll() {
         return queryController.getAllQuery("SELECT * FROM accounts;");
+    }
+
+    @Override
+    public void addFriend(int userId, int friendId) {
+        queryController.addLinkQuery("INSERT INTO accounts_user_list (acc_id, list_id) VALUES (" + userId + ", " + friendId + ");");
+        queryController.addLinkQuery("INSERT INTO accounts_user_list (acc_id, list_id) VALUES (" + friendId + ", " + userId + ");");
+    }
+
+    @Override
+    public boolean isFriend(int userId, int friendId) {
+        return queryController.existQuery("SELECT EXISTS(SELECT acc_id, list_id FROM accounts_user_list " +
+                "WHERE acc_id=" + userId + " AND list_id= " + friendId +");");
+    }
+
+    @Override
+    public List<Account> getFriends(int userId) {
+        return queryController.getAllQuery("SELECT * FROM  accounts_user_list LEFT JOIN accounts \n" +
+                    "ON id = acc_id \n" +
+                    "WHERE accounts_user_list.list_id = "+ userId +";");
     }
 
 }

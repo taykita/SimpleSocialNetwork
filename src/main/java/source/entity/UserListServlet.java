@@ -3,16 +3,18 @@ package source.entity;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
+import source.verification.Account;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 
-public class UserPageServlet extends HttpServlet {
+public class UserListServlet extends HttpServlet {
 
     TemplateEngine templateEngine;
     AccountStorage accountStorage;
@@ -24,24 +26,13 @@ public class UserPageServlet extends HttpServlet {
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
 
         Context context = new Context(LOCALE);
-        int id = Integer.parseInt(req.getParameter("id"));
+        List<Account> allUsers = accountStorage.getAll();
 
-        context.setVariable("name", accountStorage.get(id).getUserName());
-        context.setVariable("isFriend", isFriend(getUserId(req), id));
-        context.setVariable("id", id);
-        templateEngine.process("user-page", context, resp.getWriter());
-    }
-
-    private boolean isFriend(int userId, int friendId) {
-        return accountStorage.isFriend(userId, friendId);
-    }
-
-    private int getUserId(HttpServletRequest req) {
-        return (Integer) req.getSession().getAttribute("id");
+        context.setVariable("users", allUsers.toArray());
+        templateEngine.process("all-users", context, resp.getWriter());
     }
 }

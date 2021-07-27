@@ -22,7 +22,7 @@ public class FriendListServlet extends HttpServlet {
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("accountStorage");
     }
 
     @Override
@@ -30,9 +30,13 @@ public class FriendListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
 
         Context context = new Context(LOCALE);
-        List<Account> allUsers = accountStorage.getAll();
+        List<Account> allUsers = accountStorage.getFriends(getUserId(req));
 
         context.setVariable("users", allUsers.toArray());
-        templateEngine.process("all-users", context, resp.getWriter());
+        templateEngine.process("friend-list", context, resp.getWriter());
+    }
+
+    private int getUserId(HttpServletRequest req) {
+        return (Integer) req.getSession().getAttribute("id");
     }
 }

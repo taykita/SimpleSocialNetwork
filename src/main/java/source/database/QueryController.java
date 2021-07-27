@@ -14,33 +14,35 @@ import java.util.List;
 //TODO Разобраться с закрыванием statement при эксэпшене
 public class QueryController {
     public QueryController() {
-        createPull();
+        connectionPull = createPull();
     }
 //TODO Разобраться с property
-    private void createPull() {
-        connectionPull = new BasicDataSource();
+    private BasicDataSource createPull() {
+        BasicDataSource connectionPull = new BasicDataSource();
         connectionPull.setDriverClassName("org.postgresql.Driver");
         connectionPull.setUrl("jdbc:postgresql://78.24.220.161/booknetwork_db");
         connectionPull.setUsername("admin");
         connectionPull.setPassword("admin");
+        return connectionPull;
     }
 
     private BasicDataSource connectionPull;
 
-    public int queryAdd(String query) {
+    public int queryAdd(String mainQuery, String childQuery) {
         try {
             Connection connection = connectionPull.getConnection();
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(mainQuery);
             rs.next();
             int id = rs.getInt("id");
+            statement.execute(childQuery);
 
             statement.close();
             connection.close();
             return id;
         } catch (SQLException e) {
-            throw new DBException("DataBase.add error. Query: " + query + "\nError:" + e.getMessage());
+            throw new DBException("DataBase.add error. Query: " + mainQuery + "\nError:" + e.getMessage());
         }
     }
 
@@ -101,20 +103,18 @@ public class QueryController {
         }
     }
 
-    public int getCountQuery(String query) {
+    public void addLinkQuery(String query) {
         try {
             Connection connection = connectionPull.getConnection();
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery(query);
-            rs.next();
-            int count = rs.getInt("count");
+            statement.execute(query);
 
             statement.close();
             connection.close();
-            return count;
         } catch (SQLException e) {
-            throw new DBException("DataBase.getCount error. Query: " + query + "\nError:" + e.getMessage());
+            throw new DBException("DataBase.addLink error. Query: " + query + "\nError:" + e.getMessage());
         }
     }
+
 }

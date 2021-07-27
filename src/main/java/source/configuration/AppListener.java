@@ -27,6 +27,6 @@ public class AppListener implements ServletContextListener {
 
     private void initDataBase(ServletContext servletContext) {
         AccountStorage accountStorage = new DataBaseAccountStorage();
-        servletContext.setAttribute("collectionAccountStorage", accountStorage);
+        servletContext.setAttribute("accountStorage", accountStorage);
     }
 }

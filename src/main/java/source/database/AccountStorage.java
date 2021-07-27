@@ -17,4 +17,9 @@ public interface AccountStorage {
 
     List<Account> getAll();
 
+    void addFriend(int userId, int friendId);
+
+    boolean isFriend(int userId, int friendId);
+
+    List<Account> getFriends(int userId);
 }

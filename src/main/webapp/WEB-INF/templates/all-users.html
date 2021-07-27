@@ -22,8 +22,11 @@
                         <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
                         </a>
-                        <a class="btn btn-md btn-secondary active" href="friend-list">
+                        <a class="btn btn-md btn-secondary" href="friend-list">
                             Друзья
+                        </a>
+                        <a class="btn btn-md btn-secondary active" href="user-list">
+                            Список пользователей
                         </a>
                     </div>
                 </div>
@@ -49,22 +52,6 @@
                 </a>
             </th:block>
 
-            <!--
-                <table>
-                    <tr th:each="user : ${users}">
-                        <td th:text="${user.userName}">Onions</td>
-                        <img class="image" th:src="@{'/resources/images/avatars/'+${user.avatarImg}}" alt="Avatar">
-                    </th:block>
-                </table>
-            -->
-                <!--
-                <div class="col-md-2 border-top border-bottom border-secondary">
-                    <img src="defoult.png" width="150" height="150" alt="Не удалось загрузить картинку">
-                </div>
-                <div class="col-md-4 border-top border-bottom border-secondary">
-                    <h5>Имя_пользователя</h5>
-                </div>
-                -->
         </div>
     </div>
 </main>

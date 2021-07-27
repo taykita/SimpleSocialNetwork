@@ -38,6 +38,15 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>UserList</servlet-name>
+        <servlet-class>source.entity.UserListServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserList</servlet-name>
+        <url-pattern>/user-list</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>FriendList</servlet-name>
         <servlet-class>source.entity.FriendListServlet</servlet-class>
     </servlet>
@@ -62,5 +71,14 @@
     <servlet-mapping>
         <servlet-name>Test</servlet-name>
         <url-pattern>/test</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>AddFriend</servlet-name>
+        <servlet-class>source.action.AddFriend</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AddFriend</servlet-name>
+        <url-pattern>/add-friend</url-pattern>
     </servlet-mapping>
 </web-app>

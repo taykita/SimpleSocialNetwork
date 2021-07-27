@@ -15,6 +15,7 @@ import static source.thymeleaf.config.ThymeleafEngineInitializer.LOCALE;
 
 //TODO Обработать регистрацию с пустыми полями
 //TODO Обработать пробелы
+//TODO Добавить ограничение по кол-ву символов
 public class SignIn extends HttpServlet {
     TemplateEngine templateEngine;
     AccountStorage accountStorage;
@@ -22,7 +23,7 @@ public class SignIn extends HttpServlet {
     @Override
     public void init() throws ServletException {
         templateEngine = (TemplateEngine) getServletContext().getAttribute("templateEngine");
-        accountStorage = (AccountStorage) getServletContext().getAttribute("collectionAccountStorage");
+        accountStorage = (AccountStorage) getServletContext().getAttribute("accountStorage");
     }
 
 
