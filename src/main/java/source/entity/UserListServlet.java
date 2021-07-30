@@ -3,6 +3,7 @@ package source.entity;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
+import source.exception.AccStorageException;
 import source.verification.Account;
 
 import javax.servlet.ServletException;
@@ -30,9 +31,20 @@ public class UserListServlet extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
 
         Context context = new Context(LOCALE);
-        List<Account> allUsers = accountStorage.getAll();
+        List<Account> allUsers = null;
+        allUsers = getAllUsers();
 
         context.setVariable("users", allUsers.toArray());
         templateEngine.process("all-users", context, resp.getWriter());
+    }
+
+    private List<Account> getAllUsers() throws ServletException {
+        List<Account> allUsers;
+        try {
+            allUsers = accountStorage.getAll();
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
+        return allUsers;
     }
 }

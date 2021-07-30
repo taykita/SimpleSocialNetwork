@@ -3,6 +3,7 @@ package source.entity;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
+import source.exception.AccStorageException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,14 +32,26 @@ public class UserPageServlet extends HttpServlet {
         Context context = new Context(LOCALE);
         int id = Integer.parseInt(req.getParameter("id"));
 
-        context.setVariable("name", accountStorage.get(id).getUserName());
+        context.setVariable("name", getUserName(id));
         context.setVariable("isFriend", isFriend(getUserId(req), id));
         context.setVariable("id", id);
         templateEngine.process("user-page", context, resp.getWriter());
     }
 
-    private boolean isFriend(int userId, int friendId) {
-        return accountStorage.isFriend(userId, friendId);
+    private boolean isFriend(int userId, int friendId) throws ServletException {
+        try {
+            return accountStorage.isFriend(userId, friendId);
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
+    }
+
+    private String getUserName(Integer id) throws ServletException {
+        try {
+            return accountStorage.get(id).getUserName();
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
     }
 
     private int getUserId(HttpServletRequest req) {

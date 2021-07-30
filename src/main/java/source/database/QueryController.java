@@ -1,7 +1,7 @@
 package source.database;
 
 import org.apache.commons.dbcp2.BasicDataSource;
-import source.exception.DBException;
+import source.exception.AccStorageException;
 import source.verification.Account;
 
 import java.sql.Connection;
@@ -11,110 +11,96 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-//TODO Разобраться с закрыванием statement при эксэпшене
+
 public class QueryController {
     public QueryController() {
-        connectionPull = createPull();
+        connectionPool = createPull();
     }
-//TODO Разобраться с property
     private BasicDataSource createPull() {
-        BasicDataSource connectionPull = new BasicDataSource();
-        connectionPull.setDriverClassName("org.postgresql.Driver");
-        connectionPull.setUrl("jdbc:postgresql://78.24.220.161/booknetwork_db");
-        connectionPull.setUsername("admin");
-        connectionPull.setPassword("admin");
-        return connectionPull;
+        BasicDataSource connectionPool = new BasicDataSource();
+        connectionPool.setDriverClassName("org.postgresql.Driver");
+        connectionPool.setUrl("jdbc:postgresql://78.24.220.161/booknetwork_db");
+        connectionPool.setUsername("admin");
+        connectionPool.setPassword("admin");
+        return connectionPool;
     }
 
-    private BasicDataSource connectionPull;
+    private BasicDataSource connectionPool;
 
-    public int queryAdd(String mainQuery, String childQuery) {
-        try {
-            Connection connection = connectionPull.getConnection();
-            Statement statement = connection.createStatement();
+    public int queryAdd(String mainQuery, String childQuery) throws AccStorageException {
+        try (Connection connection = connectionPool.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
 
-            ResultSet rs = statement.executeQuery(mainQuery);
-            rs.next();
-            int id = rs.getInt("id");
-            statement.execute(childQuery);
+                ResultSet rs = statement.executeQuery(mainQuery);
+                rs.next();
+                int id = rs.getInt("id");
+                statement.execute(childQuery);
 
-            statement.close();
-            connection.close();
-            return id;
-        } catch (SQLException e) {
-            throw new DBException("DataBase.add error. Query: " + mainQuery + "\nError:" + e.getMessage());
-        }
-    }
-
-    public Account getQuery(String query) {
-        try {
-            Connection connection = connectionPull.getConnection();
-            Statement statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(query);
-            rs.next();
-            Account account = new Account(rs.getString("email"), rs.getString("pass"),
-                    rs.getString("name"), rs.getInt("id"));
-
-            statement.close();
-            connection.close();
-            return account;
-        } catch (SQLException e) {
-            throw new DBException("DataBase.get error. Query: " + query + "\nError:" + e.getMessage());
-        }
-    }
-
-    public boolean existQuery(String query) {
-        try {
-            Connection connection = connectionPull.getConnection();
-            Statement statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(query);
-            rs.next();
-            boolean exists = rs.getBoolean("exists");
-
-            statement.close();
-            connection.close();
-            return exists;
-        } catch (SQLException e) {
-            throw new DBException("DataBase.exist error. \nQuery: " + query + "\nError:" + e.getMessage());
-        }
-    }
-
-    public List<Account> getAllQuery(String query) {
-        try {
-            Connection connection = connectionPull.getConnection();
-            Statement statement = connection.createStatement();
-
-            ResultSet rs = statement.executeQuery(query);
-            List<Account> accounts = new ArrayList<>();
-
-            while (rs.next()) {
-                Account account = new Account(rs.getString("email"), rs.getString("pass"),
-                        rs.getString("name"), rs.getInt("id"));
-                accounts.add(account);
+                return id;
             }
-
-            statement.close();
-            connection.close();
-            return accounts;
         } catch (SQLException e) {
-            throw new DBException("DataBase.getAll error. Query: " + query + "\nError:" + e.getMessage());
+            throw new AccStorageException("DataBase.add error. Query: " + mainQuery + "\nError:", e);
         }
     }
 
-    public void addLinkQuery(String query) {
-        try {
-            Connection connection = connectionPull.getConnection();
-            Statement statement = connection.createStatement();
+    public Account getQuery(String query) throws AccStorageException {
+        Account account;
+        try (Connection connection = connectionPool.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
 
-            statement.execute(query);
-
-            statement.close();
-            connection.close();
+                ResultSet rs = statement.executeQuery(query);
+                rs.next();
+                account = new Account(rs.getString("email"), rs.getString("pass"),
+                        rs.getString("name"), rs.getInt("id"));
+                return account;
+            }
         } catch (SQLException e) {
-            throw new DBException("DataBase.addLink error. Query: " + query + "\nError:" + e.getMessage());
+            throw new AccStorageException("DataBase.get error. Query: " + query + "\nError:", e);
         }
     }
 
+    public boolean existQuery(String query) throws AccStorageException {
+        boolean exists;
+        try (Connection connection = connectionPool.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+
+                ResultSet rs = statement.executeQuery(query);
+                rs.next();
+                exists = rs.getBoolean("exists");
+                return exists;
+            }
+        } catch (SQLException e) {
+            throw new AccStorageException("DataBase.exist error. Query: " + query + "\nError:", e);
+        }
+    }
+
+    public List<Account> getAllQuery(String query) throws AccStorageException {
+        List<Account> accounts;
+        try (Connection connection = connectionPool.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+
+                ResultSet rs = statement.executeQuery(query);
+                accounts = new ArrayList<>();
+
+                while (rs.next()) {
+                    Account account = new Account(rs.getString("email"), rs.getString("pass"),
+                            rs.getString("name"), rs.getInt("id"));
+                    accounts.add(account);
+                }
+                return accounts;
+            }
+        } catch (SQLException e) {
+            throw new AccStorageException("DataBase.getAll error. Query: " + query + "\nError:", e);
+        }
+    }
+
+    public void addLinkQuery(String query) throws AccStorageException {
+        try (Connection connection = connectionPool.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
+                statement.execute(query);
+            }
+        } catch (SQLException e) {
+            throw new AccStorageException("DataBase.addLink error. Query: " + query + "\nError:", e);
+        }
+    }
 }

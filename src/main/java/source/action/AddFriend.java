@@ -1,6 +1,7 @@
 package source.action;
 
 import source.database.AccountStorage;
+import source.exception.AccStorageException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -21,9 +22,17 @@ public class AddFriend extends HttpServlet {
         int userId = getUserId(req);
         int friendId = getFriendId(req);
 
-        accountStorage.addFriend(userId, friendId);
+        addFriend(userId, friendId);
 
         resp.sendRedirect("user-page?id=" + friendId);
+    }
+
+    private void addFriend(int userId, int friendId) throws ServletException {
+        try {
+            accountStorage.addFriend(userId, friendId);
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
     }
 
     private Integer getFriendId(HttpServletRequest req) {

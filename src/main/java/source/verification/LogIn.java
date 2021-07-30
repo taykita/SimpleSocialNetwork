@@ -3,6 +3,7 @@ package source.verification;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
+import source.exception.AccStorageException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,16 +41,7 @@ public class LogIn extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("pass");
 
-        if (accountStorage.exist(email)) {
-            if (accountStorage.confirmPass(email, password)) {
-                req.getSession().setAttribute("id", accountStorage.get(email).getId());
-                resp.sendRedirect("main");
-            } else {
-                resp.sendRedirect( "login");
-            }
-        } else {
-            resp.sendRedirect("login");
-        }
+        checkAcc(req, resp, email, password);
 
     }
 
@@ -57,4 +49,22 @@ public class LogIn extends HttpServlet {
         resp.setContentType("text/html;charset=UTF-8");
         req.setCharacterEncoding("UTF-8");
     }
+
+    private void checkAcc(HttpServletRequest req, HttpServletResponse resp, String email, String password) throws IOException, ServletException {
+        try {
+            if (accountStorage.exist(email)) {
+                if (accountStorage.confirmPass(email, password)) {
+                    req.getSession().setAttribute("id", accountStorage.get(email).getId());
+                    resp.sendRedirect("main");
+                } else {
+                    resp.sendRedirect("login");
+                }
+            } else {
+                resp.sendRedirect("login");
+            }
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
+    }
+
 }

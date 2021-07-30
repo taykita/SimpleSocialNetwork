@@ -1,25 +1,26 @@
 package source.database;
 
+import source.exception.AccStorageException;
 import source.verification.Account;
 
 import java.util.List;
 
 public interface AccountStorage {
-    Account add(Account account);
+    Account add(Account account) throws AccStorageException;
 
-    Account get(int id);
+    Account get(int id) throws AccStorageException;
 
-    Account get(String email);
+    Account get(String email) throws AccStorageException;
 
-    boolean exist(String email);
+    boolean exist(String email) throws AccStorageException;
 
-    boolean confirmPass(String email, String pass);
+    boolean confirmPass(String email, String pass) throws AccStorageException;
 
-    List<Account> getAll();
+    List<Account> getAll() throws AccStorageException;
 
-    void addFriend(int userId, int friendId);
+    void addFriend(int userId, int friendId) throws AccStorageException;
 
-    boolean isFriend(int userId, int friendId);
+    boolean isFriend(int userId, int friendId) throws AccStorageException;
 
-    List<Account> getFriends(int userId);
+    List<Account> getFriends(int userId) throws AccStorageException;
 }

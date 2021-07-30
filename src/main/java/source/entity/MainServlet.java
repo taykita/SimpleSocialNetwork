@@ -3,6 +3,7 @@ package source.entity;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
+import source.exception.AccStorageException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,8 +39,16 @@ public class MainServlet extends HttpServlet {
             return;
         }
 
-        context.setVariable("name", accountStorage.get(id).getUserName());
+        context.setVariable("name", getUserName(id));
         templateEngine.process("main", context, resp.getWriter());
+    }
+
+    private String getUserName(Integer id) throws ServletException {
+        try {
+            return accountStorage.get(id).getUserName();
+        } catch (AccStorageException e) {
+            throw new ServletException(e);
+        }
     }
 
 }
