@@ -29,13 +29,22 @@ public class UserPageServlet extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
 
-        Context context = new Context(LOCALE);
         int id = Integer.parseInt(req.getParameter("id"));
+        if (isCurrentUser(req, id)) {
+            resp.sendRedirect("main");
+            return;
+        }
+
+        Context context = new Context(LOCALE);
 
         context.setVariable("name", getUserName(id));
         context.setVariable("isFriend", isFriend(getUserId(req), id));
         context.setVariable("id", id);
         templateEngine.process("user-page", context, resp.getWriter());
+    }
+
+    private boolean isCurrentUser(HttpServletRequest req, int id) {
+        return (Integer) req.getSession().getAttribute("id") == id;
     }
 
     private boolean isFriend(int userId, int friendId) throws ServletException {

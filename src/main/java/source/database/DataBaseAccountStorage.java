@@ -7,8 +7,8 @@ import java.util.List;
 
 public class DataBaseAccountStorage implements AccountStorage {
 
-    public DataBaseAccountStorage() {
-        this.queryController = new QueryController();
+    public DataBaseAccountStorage(QueryController queryController) {
+        this.queryController = queryController;
     }
 
     private final QueryController queryController;
@@ -51,21 +51,21 @@ public class DataBaseAccountStorage implements AccountStorage {
 
     @Override
     public void addFriend(int userId, int friendId) throws AccStorageException {
-        queryController.addLinkQuery("INSERT INTO accounts_user_list (acc_id, list_id) VALUES (" + userId + ", " + friendId + ");");
-        queryController.addLinkQuery("INSERT INTO accounts_user_list (acc_id, list_id) VALUES (" + friendId + ", " + userId + ");");
+        queryController.addLinkQuery("INSERT INTO accounts_accounts (acc_id, user_id) VALUES (" + userId + ", " + friendId + ");");
+        queryController.addLinkQuery("INSERT INTO accounts_accounts (acc_id, user_id) VALUES (" + friendId + ", " + userId + ");");
     }
 
     @Override
     public boolean isFriend(int userId, int friendId) throws AccStorageException {
-        return queryController.existQuery("SELECT EXISTS(SELECT acc_id, list_id FROM accounts_user_list " +
-                "WHERE acc_id=" + userId + " AND list_id= " + friendId +");");
+        return queryController.existQuery("SELECT EXISTS(SELECT acc_id, user_id FROM accounts_accounts " +
+                "WHERE acc_id=" + userId + " AND user_id= " + friendId +");");
     }
 
     @Override
     public List<Account> getFriends(int userId) throws AccStorageException {
-        return queryController.getAllQuery("SELECT * FROM  accounts_user_list LEFT JOIN accounts \n" +
+        return queryController.getAllQuery("SELECT * FROM  accounts_accounts LEFT JOIN accounts \n" +
                     "ON id = acc_id \n" +
-                    "WHERE accounts_user_list.list_id = "+ userId +";");
+                    "WHERE accounts_accounts.user_id = "+ userId +";");
     }
 
 }

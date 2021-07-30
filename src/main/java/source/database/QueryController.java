@@ -13,16 +13,8 @@ import java.util.List;
 
 
 public class QueryController {
-    public QueryController() {
-        connectionPool = createPull();
-    }
-    private BasicDataSource createPull() {
-        BasicDataSource connectionPool = new BasicDataSource();
-        connectionPool.setDriverClassName("org.postgresql.Driver");
-        connectionPool.setUrl("jdbc:postgresql://78.24.220.161/booknetwork_db");
-        connectionPool.setUsername("admin");
-        connectionPool.setPassword("admin");
-        return connectionPool;
+    public QueryController(BasicDataSource connectionPool) {
+        this.connectionPool = connectionPool;
     }
 
     private BasicDataSource connectionPool;
