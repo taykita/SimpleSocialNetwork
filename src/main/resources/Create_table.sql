@@ -5,7 +5,7 @@ CREATE TABLE IF NOT EXISTS public.accounts
     name character varying(50) NOT NULL,
     pass character varying(50) NOT NULL,
     PRIMARY KEY (id, email),
-    CONSTRAINT id UNIQUE (id)
+    CONSTRAINT id UNIQUE (acc_id)
 )
 WITH (
     OIDS = FALSE
@@ -16,36 +16,18 @@ ALTER TABLE public.accounts
 	
 
 
-
-CREATE TABLE IF NOT EXISTS public.user_list
+CREATE TABLE IF NOT EXISTS public.accounts_accounts
 (
-    id serial NOT NULL,
-    name character varying(50) NOT NULL,
-    avatar character varying(100),
-    PRIMARY KEY (id),
-    CONSTRAINT id UNIQUE (id)
-)
-WITH (
-    OIDS = FALSE
-);
-
-ALTER TABLE public.user_list
-    OWNER to admin;
-	
-
-
-
-CREATE TABLE IF NOT EXISTS public.accounts_user_list
-(
-    acc_id integer,
-    list_id integer,
+    acc_id integer NOT NULL,
+    user_id integer NOT NULL,
+    CONSTRAINT accounts PRIMARY KEY (acc_id, user_id),
     CONSTRAINT acc_id FOREIGN KEY (acc_id)
         REFERENCES public.accounts (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID,
-    CONSTRAINT list_id FOREIGN KEY (list_id)
-        REFERENCES public.user_list (id) MATCH SIMPLE
+    CONSTRAINT user_id FOREIGN KEY (acc_id)
+        REFERENCES public.accounts (id) MATCH SIMPLE
         ON UPDATE NO ACTION
         ON DELETE NO ACTION
         NOT VALID
@@ -54,5 +36,5 @@ WITH (
     OIDS = FALSE
 );
 
-ALTER TABLE public.accounts_user_list
+ALTER TABLE public.accounts_accounts
     OWNER to admin;

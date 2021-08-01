@@ -16,7 +16,6 @@ import javax.servlet.annotation.WebListener;
 public class AppListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        connectPSQLDriver();
         ServletContext servletContext = sce.getServletContext();
 
         initDataBase(servletContext);
@@ -33,11 +32,4 @@ public class AppListener implements ServletContextListener {
         servletContext.setAttribute("accountStorage", accountStorage);
     }
 
-    private void connectPSQLDriver() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
 }
