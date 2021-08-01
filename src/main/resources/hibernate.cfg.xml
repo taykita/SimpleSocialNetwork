@@ -23,7 +23,7 @@
         
 <!--        <property name="default_schema">testhibernate</property>-->
 
-        <mapping resource="Account.hbm.xml"/>
+        <mapping resource="source/verification/entity/Account.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -21,6 +21,7 @@
 <body class="text-center">
 <main class="form-signin">
     <form action="sign" method="post">
+        <h6 th:text="${error}">....</h6>
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
         <div class="form-floating">
@@ -40,7 +41,7 @@
             <label for="chPass">Подтвердите пароль</label>
         </div>
 
-        <button class="mt-3 mb-3 w-100 btn btn-lg btn-dark" type="submit">Войти</button>
+        <button class="mt-3 mb-3 w-100 btn btn-lg btn-dark" type="submit">Зарегистрироваться</button>
 
         <div class="mt-3 mb-3 text-body">
             <p>Уже есть аккаунт? <a href="login"> Войдите </a> </p>

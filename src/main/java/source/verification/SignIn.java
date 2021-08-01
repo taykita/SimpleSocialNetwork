@@ -34,7 +34,13 @@ public class SignIn extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
 
+        String error = req.getParameter("error");
+
         Context context = new Context(LOCALE);
+        if (error != null && error.equals("1")) {
+            context.setVariable("error", "На этот email уже зарегистрирован аккаунт");
+        }
+
         templateEngine.process("sign-in", context, resp.getWriter());
     }
 
@@ -46,7 +52,6 @@ public class SignIn extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("pass");
         String checkPassword = req.getParameter("chPass");
-
         if (password.equals(checkPassword)) {
             String userName = req.getParameter("userName");
             Account newAccount = new Account(email, password, userName);
@@ -64,7 +69,7 @@ public class SignIn extends HttpServlet {
     private void registration(HttpServletRequest req, HttpServletResponse resp, String email, Account newAccount) throws IOException, ServletException {
         try {
             if (accountStorage.exist(email)) {
-                resp.sendRedirect("sign");
+                resp.sendRedirect("sign?error=1");
             } else {
                 accountStorage.add(newAccount);
                 req.getSession().setAttribute("id", newAccount.getId());

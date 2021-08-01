@@ -30,7 +30,12 @@ public class LogIn extends HttpServlet {
             throws ServletException, IOException {
         resp.setContentType("text/html;charset=UTF-8");
 
+        String error = req.getParameter("error");
+
         Context context = new Context(LOCALE);
+        if (error != null && error.equals("1")) {
+            context.setVariable("error", "Неверное имя пользователя или пароль");
+        }
         templateEngine.process("log-in", context, resp.getWriter());
     }
 
@@ -57,10 +62,10 @@ public class LogIn extends HttpServlet {
                     req.getSession().setAttribute("id", accountStorage.get(email).getId());
                     resp.sendRedirect("main");
                 } else {
-                    resp.sendRedirect("login");
+                    resp.sendRedirect("login?error=1");
                 }
             } else {
-                resp.sendRedirect("login");
+                resp.sendRedirect("login?error=1");
             }
         } catch (AccStorageException e) {
             throw new ServletException(e);
