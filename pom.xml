@@ -51,6 +51,24 @@
             <artifactId>commons-dbcp2</artifactId>
             <version>2.8.0</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>5.4.10.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-c3p0 -->
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-c3p0</artifactId>
+            <version>5.4.10.Final</version>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
+        <dependency>
+            <groupId>com.mchange</groupId>
+            <artifactId>c3p0</artifactId>
+            <version>0.9.5.2</version>
+        </dependency>
 
 
     </dependencies>
@@ -64,9 +82,9 @@
                 <version>2.2</version>
                 <configuration>
                     <url>http://booknetwork.site/manager/text</url>
-                    <!--          <url>http://localhost:8080/manager/text</url>-->
+<!--                              <url>http://localhost:8080/manager/text</url>-->
                     <server>my-tomcat</server>
-                    <path>/</path>
+                    <path>/myapp</path>
                 </configuration>
             </plugin>
         </plugins>

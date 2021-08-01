@@ -2,7 +2,7 @@ package source.database;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 import source.exception.AccStorageException;
-import source.verification.Account;
+import source.verification.entity.Account;
 
 import java.sql.Connection;
 import java.sql.ResultSet;

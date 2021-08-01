@@ -1,10 +1,10 @@
 package source.configuration;
 
-import org.apache.commons.dbcp2.BasicDataSource;
+import org.hibernate.Session;
 import org.thymeleaf.TemplateEngine;
 import source.database.AccountStorage;
-import source.database.DataBaseAccountStorage;
-import source.database.QueryController;
+import source.database.HibernateAccountStorage;
+import source.database.hibernate.HibernateUtil;
 import source.thymeleaf.config.ThymeleafEngineInitializer;
 
 import javax.servlet.ServletContext;
@@ -16,6 +16,7 @@ import javax.servlet.annotation.WebListener;
 public class AppListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        connectPSQLDriver();
         ServletContext servletContext = sce.getServletContext();
 
         initDataBase(servletContext);
@@ -28,20 +29,15 @@ public class AppListener implements ServletContextListener {
     }
 
     private void initDataBase(ServletContext servletContext) {
-        AccountStorage accountStorage = new DataBaseAccountStorage(createQueryController());
+        AccountStorage accountStorage = new HibernateAccountStorage(new HibernateUtil().getSessionFactory());
         servletContext.setAttribute("accountStorage", accountStorage);
     }
 
-    private QueryController createQueryController() {
-        return new QueryController(createPool());
-    }
-
-    private BasicDataSource createPool() {
-        BasicDataSource connectionPool = new BasicDataSource();
-        connectionPool.setDriverClassName("org.postgresql.Driver");
-        connectionPool.setUrl("jdbc:postgresql://78.24.220.161/booknetwork_db");
-        connectionPool.setUsername("admin");
-        connectionPool.setPassword("admin");
-        return connectionPool;
+    private void connectPSQLDriver() {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

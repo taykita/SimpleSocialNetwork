@@ -1,0 +1,20 @@
+<hibernate-mapping package="source.verification.entity">
+    <class name="Account" table="Accounts">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="email" type="string" column="EMAIL"/>
+        <property name="pass" type="string" column="PASS"/>
+        <property name="userName" type="string" column="USER_NAME"/>
+        <set name="accountSet" table="Accounts_Accounts"
+             inverse="false" lazy="false" fetch="select" cascade="all" >
+            <key>
+                <column name="ACC_ID" />
+            </key>
+            <many-to-many entity-name="source.verification.entity.Account">
+                <column name="USER_ID" />
+            </many-to-many>
+        </set>
+
+    </class>
+</hibernate-mapping>

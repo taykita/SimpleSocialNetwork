@@ -1,6 +1,12 @@
-package source.verification;
+package source.verification.entity;
 
-public class Account {
+import java.util.HashSet;
+import java.util.Set;
+
+public class Account extends Object{
+    public Account() {
+    }
+
     public Account(String email, String pass, String userName) {
         this.email = email;
         this.pass = pass;
@@ -19,6 +25,7 @@ public class Account {
     private String userName;
     private String avatarImg;
     private int id;
+    private Set<Account> accountSet = new HashSet<>(0);
 
     public String getEmail() {
         return email;
@@ -58,5 +65,22 @@ public class Account {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Set<Account> getAccountSet() {
+        return accountSet;
+    }
+
+    public void setAccountSet(Set<Account> accountSet) {
+        this.accountSet = accountSet;
+    }
+
+    @Override
+    public boolean equals(Object object) {
+        if (object instanceof Account) {
+            Account account = (Account) object;
+            return this.id == account.id;
+        }
+        return false;
     }
 }

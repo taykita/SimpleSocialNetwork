@@ -4,7 +4,7 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import source.database.AccountStorage;
 import source.exception.AccStorageException;
-import source.verification.Account;
+import source.verification.entity.Account;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
