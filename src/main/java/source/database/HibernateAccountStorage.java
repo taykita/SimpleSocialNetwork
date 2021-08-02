@@ -139,11 +139,7 @@ public class HibernateAccountStorage implements AccountStorage {
 
     @Override
     public List<Account> getFriends(int userId) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()) {
-            Account account = get(userId);
-            return Arrays.asList(account.getAccountSet().toArray(new Account[0]));
-        } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate getFriends Error.", e);
-        }
+        Account account = get(userId);
+        return Arrays.asList(account.getAccountSet().toArray(new Account[0]));
     }
 }
