@@ -4,7 +4,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-
+//TODO Подумать над тем, как здесь сделать DI
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
 

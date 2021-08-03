@@ -9,8 +9,8 @@ import source.verification.entity.Account;
 import java.util.Arrays;
 import java.util.List;
 
-public class HibernateAccountStorage implements AccountStorage {
-    public HibernateAccountStorage(SessionFactory sessionFactory) {
+public class HibernateAccountRepository implements AccountRepository {
+    public HibernateAccountRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
@@ -120,10 +120,10 @@ public class HibernateAccountStorage implements AccountStorage {
     public boolean isFriend(int userId, int friendId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
- 
+
             boolean exist = false;
             Account friendAccount = get(friendId);
-            for (Account account: get(userId).getAccountSet()) {
+            for (Account account : get(userId).getAccountSet()) {
                 if (account.equals(friendAccount)) {
                     exist = true;
                     break;

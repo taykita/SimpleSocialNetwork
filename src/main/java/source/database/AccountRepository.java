@@ -5,7 +5,7 @@ import source.verification.entity.Account;
 
 import java.util.List;
 
-public interface AccountStorage {
+public interface AccountRepository {
     Account add(Account account) throws AccStorageException;
 
     Account get(int id) throws AccStorageException;

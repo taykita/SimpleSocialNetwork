@@ -16,25 +16,25 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="css/signIn.css" rel="stylesheet">
+    <link href="static/css/signIn.css" rel="stylesheet">
 </head>
 <body class="text-center">
 <main class="form-signin">
-    <form action="sign" method="post">
+    <form th:action="@{sign}" th:method="POST" th:object="${account}">
         <h6 th:text="${error}">....</h6>
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
         <div class="form-floating">
             <input type="email" class="form-control" name="email" id="email">
-            <label for="email">Адрес почты</label>
+            <label for="email" th:field="*{email}">Адрес почты</label>
         </div>
         <div class="form-floating">
             <input type="text" class="form-control" name="userName" id="userName">
-            <label for="userName">Имя пользователя</label>
+            <label for="userName" th:field="*{userName}">Имя пользователя</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" name="pass" id="pass">
-            <label for="pass">Пароль</label>
+            <label for="pass" th:field="*{pass}">Пароль</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" name="chPass" id="chPass">
