@@ -1,7 +1,7 @@
 package source.database;
 
 import source.exception.AccStorageException;
-import source.verification.entity.Account;
+import source.controllers.authorization.entity.Account;
 
 import java.util.List;
 

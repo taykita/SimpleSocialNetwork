@@ -1,4 +1,4 @@
-<hibernate-mapping package="source.verification.entity">
+<hibernate-mapping package="source.controllers.authorization.entity">
     <class name="Account" table="Accounts">
         <id name="id" type="int" column="id">
             <generator class="native"/>
@@ -11,7 +11,7 @@
             <key>
                 <column name="ACC_ID" />
             </key>
-            <many-to-many entity-name="source.verification.entity.Account">
+            <many-to-many entity-name="source.controllers.authorization.entity.Account">
                 <column name="USER_ID" />
             </many-to-many>
         </set>

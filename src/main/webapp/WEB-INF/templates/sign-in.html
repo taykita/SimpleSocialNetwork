@@ -16,12 +16,14 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="static/css/signIn.css" rel="stylesheet">
+    <link href="resources/css/signIn.css" rel="stylesheet">
 </head>
 <body class="text-center">
 <main class="form-signin">
     <form th:action="@{sign}" th:method="POST" th:object="${account}">
-        <h6 th:text="${error}">....</h6>
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>
+        <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">...</div>
+        <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
         <div class="form-floating">

@@ -1,15 +1,12 @@
-package source.entity;
+package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
-
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class MainPageController {
@@ -17,11 +14,7 @@ public class MainPageController {
     AccountRepository accountRepository;
 
     @GetMapping("/main")
-    public String mainPage(Model model) throws AccStorageException {
-        HttpSession session = getSession();
-
-        Integer id = (Integer) session.getAttribute("id");
-
+    public String mainPage(@SessionAttribute Integer id, Model model) throws AccStorageException {
         if (id == null) {
             return "login";
         }
@@ -32,10 +25,5 @@ public class MainPageController {
 
     private String getUserName(Integer id) throws AccStorageException {
         return accountRepository.get(id).getUserName();
-    }
-
-    private HttpSession getSession() {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
-        return attr.getRequest().getSession(true);
     }
 }

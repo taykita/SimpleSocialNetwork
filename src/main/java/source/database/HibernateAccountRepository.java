@@ -3,18 +3,22 @@ package source.database;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import source.exception.AccStorageException;
-import source.verification.entity.Account;
+import source.controllers.authorization.entity.Account;
 
 import java.util.Arrays;
 import java.util.List;
 
+@Repository
 public class HibernateAccountRepository implements AccountRepository {
+    @Autowired
     public HibernateAccountRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 
-    SessionFactory sessionFactory;
+    private final SessionFactory sessionFactory;
 
     @Override
     public Account add(Account account) throws AccStorageException {

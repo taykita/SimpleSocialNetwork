@@ -1,9 +1,11 @@
-package source.verification.entity;
+package source.controllers.authorization.entity;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Account extends Object{
+public class Account extends Object {
     public Account() {
     }
 
@@ -20,9 +22,18 @@ public class Account extends Object{
         this.id = id;
     }
 
+    @NotEmpty(message = "Почта не должна быть пустой")
+    @Size(min = 3, max = 50, message = "Длина почты от 3 до 50")
     private String email;
+
+    @NotEmpty(message = "Пароль не должен быть пустым")
+    @Size(min = 3, max = 50, message = "Длина пароля от 3 до 50")
     private String pass;
+
+    @NotEmpty(message = "Имя не должен быть пустым")
+    @Size(min = 3, max = 50, message = "Длина имени от 3 до 50")
     private String userName;
+
     private String avatarImg;
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);

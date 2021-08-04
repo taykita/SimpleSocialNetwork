@@ -17,12 +17,14 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
     <!-- Custom styles for this template -->
-    <link th:href="@{static/css/logIn.css}" rel="stylesheet">
+    <link href="resources/css/logIn.css" rel="stylesheet">
+<!--    TODO Сделать текст ошибок красным-->
 </head>
 <body class="text-center">
 <main class="form-signin">
     <form th:action="@{login}" th:method="POST" th:object="${account}">
-        <h6 th:text="${error}">....</h6>
+        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>
+        <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>
         <h1 class="h3 mb-3 fw-normal">Вход</h1>
 
         <div class="form-floating">
