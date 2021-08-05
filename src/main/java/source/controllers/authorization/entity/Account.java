@@ -2,20 +2,22 @@ package source.controllers.authorization.entity;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class Account extends Object {
+public class Account {
     public Account() {
+        setRoles(Collections.singletonList("ROLE_USER"));
     }
 
     public Account(String email, String pass, String userName) {
+        setRoles(Collections.singletonList("ROLE_USER"));
         this.email = email;
         this.pass = pass;
         this.userName = userName;
     }
 
     public Account(String email, String pass, String userName, int id) {
+        setRoles(Collections.singletonList("ROLE_USER"));
         this.email = email;
         this.pass = pass;
         this.userName = userName;
@@ -37,6 +39,8 @@ public class Account extends Object {
     private String avatarImg;
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
+
+    private List<String> roles;
 
     public String getEmail() {
         return email;
@@ -93,5 +97,13 @@ public class Account extends Object {
             return this.id == account.id;
         }
         return false;
+    }
+
+    public List<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 }
