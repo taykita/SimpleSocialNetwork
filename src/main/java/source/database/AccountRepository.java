@@ -20,6 +20,8 @@ public interface AccountRepository {
 
     void addFriend(int userId, int friendId) throws AccStorageException;
 
+    void deleteFriend(int userId, int friendId) throws AccStorageException;
+
     boolean isFriend(int userId, int friendId) throws AccStorageException;
 
     List<Account> getFriends(int userId) throws AccStorageException;

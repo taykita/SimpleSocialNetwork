@@ -23,12 +23,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account add(Account account) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
             int id = (Integer) session.save(account);
             account.setId(id);
 
-            session.getTransaction().commit();
             return account;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate add Error.", e);
@@ -38,12 +35,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account get(int id) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            Account account = session.get(Account.class, id);
-
-            session.getTransaction().commit();
-            return account;
+            return session.get(Account.class, id);
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate get Error.", e);
         }
@@ -52,14 +44,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account get(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            Account account = (Account) session.createQuery("from Account where email = :email")
+            return (Account) session.createQuery("from Account where email = :email")
                     .setParameter("email", email)
                     .getSingleResult();
-
-            session.getTransaction().commit();
-            return account;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate get Error.", e);
         }
@@ -68,14 +55,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public boolean exist(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            boolean exist = session.createQuery("select email from Account where email = :email")
+            return session.createQuery("select email from Account where email = :email")
                     .setParameter("email", email)
                     .uniqueResult() != null;
-
-            session.getTransaction().commit();
-            return exist;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate exist Error.", e);
         }
@@ -89,12 +71,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Account> getAll() throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            List<Account> accounts = session.createQuery("from Account").list();
-
-            session.getTransaction().commit();
-            return accounts;
+            return (List<Account>) session.createQuery("from Account").list();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getAll Error.", e);
         }
@@ -117,6 +94,35 @@ public class HibernateAccountRepository implements AccountRepository {
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addFriend Error.", e);
+        }
+    }
+
+    @Override
+    public void deleteFriend(int userId, int friendId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            Account userAcc = get(userId);
+            Account friendAcc = get(friendId);
+
+            removeFromFriends(userAcc, friendAcc);
+            removeFromFriends(friendAcc, userAcc);
+
+            session.update(userAcc);
+            session.update(friendAcc);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate deleteFriend Error.", e);
+        }
+    }
+
+    private void removeFromFriends(Account userAcc, Account friendAcc) {
+        for (Account account : userAcc.getAccountSet()) {
+            if (account.equals(friendAcc)) {
+                userAcc.getAccountSet().remove(account);
+                break;
+            }
         }
     }
 

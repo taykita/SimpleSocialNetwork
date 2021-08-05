@@ -17,3 +17,7 @@ body {
     margin: auto;
     width: 100px;
 }
+
+.BN-side-menu .user{
+    border: 1px solid;
+}

@@ -47,9 +47,17 @@
             </div>
 
             <th:block th:each="user : ${users}">
-                <a th:href="@{'user-page?id=' + ${user.id}}">
-                    <h5 th:text="${user.userName}">..</h5>
-                </a>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="p-2">
+                            <div class="user">
+                                <a th:href="@{'user-page?id=' + ${user.id}}">
+                                    <h5 th:text="${user.userName}">..</h5>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </th:block>
 
         </div>
