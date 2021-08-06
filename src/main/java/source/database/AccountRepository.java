@@ -1,7 +1,7 @@
 package source.database;
 
+import source.controllers.entity.Post;
 import source.exception.AccStorageException;
-import source.controllers.authorization.entity.Account;
 
 import java.util.List;
 
@@ -25,4 +25,6 @@ public interface AccountRepository {
     boolean isFriend(int userId, int friendId) throws AccStorageException;
 
     List<Account> getFriends(int userId) throws AccStorageException;
+
+    void addPost(Post post) throws AccStorageException;
 }

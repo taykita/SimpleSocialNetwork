@@ -1,5 +1,7 @@
 package source.controllers.authorization.entity;
 
+import source.controllers.entity.Post;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.*;
@@ -39,6 +41,7 @@ public class Account {
     private String avatarImg;
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
+    private List<Post> posts = new LinkedList<>();
 
     private List<String> roles;
 
@@ -105,5 +108,13 @@ public class Account {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }

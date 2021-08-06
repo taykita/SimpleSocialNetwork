@@ -52,6 +52,31 @@
                 </div>
             </div>
             <h1>Посты</h1>
+			
+			<div>
+				<form th:action="@{create-post}" th:method="POST" th:object="${post}">
+					<div class="form-floating">
+						<input type="text" class="form-control" name="text" id="text">
+						<label for="text" th:field="*{text}">Введите текст</label>
+					</div>
+					
+					<button class="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
+				</form>
+			</div>
+
+            <th:block th:each="post : ${posts}">
+                <div class="row">
+                    <div class="col-md-7">
+                        <div class="p-2">
+                            <div class="post">
+                                <h6 th:text="${name}">..</h6>
+                                <p th:text="${post}">...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
         </div>
     </div>
 </main>

@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 import source.controllers.authorization.entity.Account;
 
@@ -151,5 +152,10 @@ public class HibernateAccountRepository implements AccountRepository {
     public List<Account> getFriends(int userId) throws AccStorageException {
         Account account = get(userId);
         return Arrays.asList(account.getAccountSet().toArray(new Account[0]));
+    }
+
+    @Override
+    public void addPost(Post post) throws AccStorageException {
+
     }
 }
