@@ -24,7 +24,7 @@
         
 <!--        <property name="default_schema">testhibernate</property>-->
 
-        <mapping resource="source/controllers/authorization/entity/Account.hbm.xml"/>
+        <mapping resource="source/controllers/entity/Account.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

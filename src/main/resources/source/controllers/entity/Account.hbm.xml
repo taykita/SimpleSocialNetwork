@@ -1,0 +1,48 @@
+<hibernate-mapping package="source.controllers.entity">
+    <class name="Account" table="Accounts">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+        <property name="email" type="string" column="EMAIL"/>
+        <property name="pass" type="string" column="PASS"/>
+        <property name="userName" type="string" column="USER_NAME"/>
+        <set name="accountSet" table="Accounts_Accounts"
+             inverse="false" lazy="false" fetch="select" cascade="all">
+            <key>
+                <column name="ACC_ID"/>
+            </key>
+            <many-to-many entity-name="source.controllers.entity.Account">
+                <column name="USER_ID"/>
+            </many-to-many>
+        </set>
+
+        <list name="posts" table="POST"  cascade="all"
+              lazy="false" fetch="select" inverse="true">
+            <key>
+                <column name="POST_ID"/>
+            </key>
+            <list-index column="idx"/>
+            <one-to-many class="source.controllers.entity.Post"/>
+        </list>
+
+    </class>
+
+    <class name="Post" table="POST">
+        <meta attribute="class-description">
+            This class contains the users posts.
+        </meta>
+
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>
+
+        <many-to-one name="account" class="source.controllers.entity.Account" fetch="select">
+            <column name="ACC_ID"/>
+        </many-to-one>
+
+
+        <property name="text" type="string" column="TEXT"/>
+
+    </class>
+
+</hibernate-mapping>

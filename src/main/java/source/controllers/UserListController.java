@@ -6,7 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
-import source.controllers.authorization.entity.Account;
+import source.controllers.entity.Account;
 
 import java.util.List;
 

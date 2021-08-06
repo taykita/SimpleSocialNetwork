@@ -1,6 +1,4 @@
-package source.controllers.authorization.entity;
-
-import source.controllers.entity.Post;
+package source.controllers.entity;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -41,7 +39,7 @@ public class Account {
     private String avatarImg;
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
-    private List<Post> posts = new LinkedList<>();
+    private List<Post> posts = new ArrayList<>(0);
 
     private List<String> roles;
 

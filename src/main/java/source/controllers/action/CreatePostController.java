@@ -6,8 +6,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
+import source.exception.AccStorageException;
 
 import javax.validation.Valid;
 
@@ -17,12 +19,10 @@ public class CreatePostController {
     AccountRepository accountRepository;
 
     @PostMapping("/create-post")
-    public String createPost(@ModelAttribute("post") @Valid Post post,
-                             BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return "main";
-        }
-        accountRepository.
+    public String createPost(@ModelAttribute("post") Post post,
+                             @SessionAttribute int id) throws AccStorageException {
 
+        accountRepository.addPost(post, id);
+        return "redirect:main";
     }
 }

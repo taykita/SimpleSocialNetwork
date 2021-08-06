@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
-import source.controllers.authorization.entity.Account;
+import source.controllers.entity.Account;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,9 +24,12 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account add(Account account) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
             int id = (Integer) session.save(account);
             account.setId(id);
 
+            session.getTransaction().commit();
             return account;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate add Error.", e);
@@ -155,7 +158,18 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public void addPost(Post post) throws AccStorageException {
+    public void addPost(Post post, int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+            Account userAcc = get(userId);
 
+            post.setAccount(userAcc);
+            userAcc.getPosts().add(post);
+
+            session.update(userAcc);
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPost Error.", e);
+        }
     }
 }

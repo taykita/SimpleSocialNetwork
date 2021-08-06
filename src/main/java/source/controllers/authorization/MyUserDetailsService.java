@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import source.controllers.authorization.entity.Account;
+import source.controllers.entity.Account;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import source.controllers.authorization.entity.Account;
+import source.controllers.entity.Account;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
