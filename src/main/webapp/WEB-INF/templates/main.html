@@ -10,7 +10,7 @@
     <link href="resources/css/main.css" rel="stylesheet">
 </head>
 <body>
-<main class="BN-side-menu">
+<main class="main">
     <div class="row">
         <div class="col-md-3 ">
             <div class="position-sticky">
@@ -21,6 +21,9 @@
                         </a>
                         <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
+                        </a>
+                        <a class="btn btn-md btn-secondary" href="news">
+                            Новости
                         </a>
                         <a class="btn btn-md btn-secondary" href="friend-list">
                             Друзья
@@ -45,17 +48,20 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <img src="resources/images/avatars/1.png" width="200" height="200" alt="Не удалось загрузить картинку">
+                    <img src="resources/images/avatars/1.png" width="200" height="200"
+                         alt="Не удалось загрузить картинку">
                 </div>
                 <div class="col-md-9">
                     <p>Информация</p>
                 </div>
             </div>
             <h1>Посты</h1>
-			
-			<div class="row">
+
+
+            <div class="row">
                 <div class="col-md-7">
                     <form th:action="@{create-post}" th:method="POST" th:object="${post}">
+                        <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
                         <div class="form-floating">
                             <input type="text" class="form-control" name="text" id="text">
                             <label for="text" th:field="*{text}">Введите текст</label>
@@ -64,7 +70,7 @@
                         <button class="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
                     </form>
                 </div>
-			</div>
+            </div>
 
             <th:block th:each="userPost : ${posts}">
                 <div class="row">
@@ -72,7 +78,30 @@
                         <div class="p-2">
                             <div class="post">
                                 <h6 th:text="${name}">..</h6>
+                                <p class="list" th:text="${userPost.date}">...</p>
                                 <p class="list" th:text="${userPost.text}">...</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-2">
+                        <div class="pt-2 pb-1">
+                            <div class="pt-1 pb-1">
+                                <div class="delete-post">
+                                    <form action="delete-post" method="post">
+                                        <input type="text" name="id" th:value="${userPost.id}" hidden/>
+                                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Удалить</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="pt-1 pb-1">
+                                <div class="edit-post">
+                                    <form action="edit-post-page" method="post">
+                                        <input type="text" name="id" th:value="${userPost.id}" hidden/>
+                                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Редактировать</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
                     </div>

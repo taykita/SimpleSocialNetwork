@@ -3,12 +3,15 @@ package source.database;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 import source.controllers.entity.Account;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -163,13 +166,89 @@ public class HibernateAccountRepository implements AccountRepository {
             session.beginTransaction();
             Account userAcc = get(userId);
 
+            post.setUserName(userAcc.getUserName());
             post.setAccount(userAcc);
-            userAcc.getPosts().add(post);
 
-            session.update(userAcc);
+            session.save(post);
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addPost Error.", e);
         }
     }
+
+    @Override
+    public void deletePost(Post post) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            session.delete(post);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPost Error.", e);
+        }
+    }
+
+    @Override
+    public void updatePost(Post oldPost, Post newPost) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            session.beginTransaction();
+
+            oldPost.setText(newPost.getText());
+            session.update(oldPost);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate updatePost Error.", e);
+        }
+    }
+
+    @Override
+    public Post getPost(int postId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.get(Post.class, postId);
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public List<Post> getPosts(int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
+                    .setParameter("id", userId)
+                    .getResultList();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPost Error.", e);
+        }
+    }
+
+    //TODO Заменить на объектное представление
+    @Override
+    public List<Post> getFriendsPosts(int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            List<Integer> ids = new ArrayList<>();
+
+            for (Account account: getFriends(userId)) {
+                ids.add(account.getId());
+            }
+
+            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID IN (:ids) ORDER BY id DESC")
+                    .setParameterList("ids", ids)
+                    .getResultList();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPost Error.", e);
+        }
+    }
 }
+/*
+            List<Integer> ids = new ArrayList<>();
+
+            for (Account account: getFriends(userId)) {
+                ids.add(account.getId());
+            }
+
+            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID IN (:ids)")
+                    .setParameterList("ids", ids)
+                    .getResultList();
+ */

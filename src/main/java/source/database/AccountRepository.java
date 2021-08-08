@@ -28,4 +28,14 @@ public interface AccountRepository {
     List<Account> getFriends(int userId) throws AccStorageException;
 
     void addPost(Post post, int userId) throws AccStorageException;
+
+    void deletePost(Post post) throws AccStorageException;
+
+    void updatePost(Post oldPost, Post newPost) throws AccStorageException;
+
+    Post getPost(int postId) throws AccStorageException;
+
+    List<Post> getPosts(int userId) throws AccStorageException;
+
+    List<Post> getFriendsPosts(int userId) throws AccStorageException;
 }

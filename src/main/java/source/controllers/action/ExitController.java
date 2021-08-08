@@ -11,6 +11,6 @@ public class ExitController {
     @GetMapping("/exit")
     public String exit(HttpSession session) {
         session.invalidate();
-        return "redirect: login";
+        return "redirect:login";
     }
 }

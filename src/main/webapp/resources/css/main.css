@@ -9,6 +9,20 @@ body {
     background-color: #f5f5f5;
 }
 
-.BN-side-menu .btn-group-vertical{
+.main .btn-group-vertical{
     width: 350px;
+}
+
+.main .post {
+    border: 1px solid;
+}
+
+.main .delete-post {
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+.main .edit-post {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }
