@@ -1,40 +1,37 @@
-CREATE TABLE IF NOT EXISTS public.accounts
-(
-    id serial NOT NULL,
-    email character varying(50) NOT NULL,
-    name character varying(50) NOT NULL,
-    pass character varying(50) NOT NULL,
-    PRIMARY KEY (id, email),
-    CONSTRAINT id UNIQUE (acc_id)
-)
-WITH (
-    OIDS = FALSE
+create table Accounts (
+	id int4 not null,
+	EMAIL varchar(50),
+	PASS varchar(50),
+	USER_NAME varchar(50),
+	primary key (id)
 );
 
-ALTER TABLE public.accounts
-    OWNER to admin;
-	
-
-
-CREATE TABLE IF NOT EXISTS public.accounts_accounts
-(
-    acc_id integer NOT NULL,
-    user_id integer NOT NULL,
-    CONSTRAINT accounts PRIMARY KEY (acc_id, user_id),
-    CONSTRAINT acc_id FOREIGN KEY (acc_id)
-        REFERENCES public.accounts (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID,
-    CONSTRAINT user_id FOREIGN KEY (acc_id)
-        REFERENCES public.accounts (id) MATCH SIMPLE
-        ON UPDATE NO ACTION
-        ON DELETE NO ACTION
-        NOT VALID
-)
-WITH (
-    OIDS = FALSE
+create table Accounts_Accounts (
+	ACC_ID int4 not null,
+	USER_ID int4 not null,
+	primary key (ACC_ID, USER_ID)
 );
 
-ALTER TABLE public.accounts_accounts
-    OWNER to admin;
+create table POST (
+	id int4 not null,
+	ACC_ID int4,
+	TEXT varchar(200),
+	DATE varchar(50),
+	USERNAME varchar(50),
+	primary key (id)
+);
+
+alter table if exists Accounts_Accounts
+	add constraint USER_ID_CONST
+	foreign key (USER_ID)
+	references Accounts;
+
+alter table if exists Accounts_Accounts
+	add constraint ACC_ID_CONST
+	foreign key (ACC_ID)
+	references Accounts;
+
+alter table if exists POST
+	add constraint POST_ACC_ID_CONST
+	foreign key (ACC_ID)
+	references Accounts;

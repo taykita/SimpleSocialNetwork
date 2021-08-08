@@ -10,6 +10,7 @@ import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -20,8 +21,8 @@ public class MainPageController {
     AccountRepository accountRepository;
 
     @GetMapping("")
-    public String redirect(@SessionAttribute Integer id) {
-        if (id == null) {
+    public String redirect(HttpSession session) {
+        if (session.getAttribute("id") == null) {
             return "redirect:login";
         }
         return "redirect:main";
