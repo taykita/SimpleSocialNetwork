@@ -43,7 +43,7 @@ public class AuthorizationController {
             accountRepository.add(account);
 
             session.setAttribute("id", account.getId());
-            return "redirect:" + "main";
+            return "redirect:" + "login";
         }
     }
 
