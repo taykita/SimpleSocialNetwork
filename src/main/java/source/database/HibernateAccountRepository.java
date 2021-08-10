@@ -6,10 +6,12 @@ import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 import source.controllers.entity.Account;
+import sun.security.util.Password;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +24,9 @@ public class HibernateAccountRepository implements AccountRepository {
         this.sessionFactory = sessionFactory;
     }
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
     private final SessionFactory sessionFactory;
 
     @Override
@@ -30,6 +35,7 @@ public class HibernateAccountRepository implements AccountRepository {
             session.beginTransaction();
 
             int id = (Integer) session.save(account);
+            account.setPass(passwordEncoder.encode(account.getPass()));
             account.setId(id);
 
             session.getTransaction().commit();

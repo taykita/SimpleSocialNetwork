@@ -30,14 +30,10 @@ public class MainPageController {
 
     @GetMapping("/main")
     public String mainPage(@SessionAttribute Integer id, Model model) throws AccStorageException {
-        if (id == null) {
-            return "redirect:login";
-        }
         model.addAttribute("post", new Post());
 
         Account account = accountRepository.get(id);
         List<Post> posts = accountRepository.getPosts(id);
-        //Collections.reverse(posts);
 
         if (posts != null) {
             model.addAttribute("posts", posts);
