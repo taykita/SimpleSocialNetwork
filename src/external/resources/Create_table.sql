@@ -1,7 +1,7 @@
 create table Accounts (
 	id int4 not null,
 	EMAIL varchar(50),
-	PASS varchar(50),
+	PASS varchar(100),
 	USER_NAME varchar(50),
 	primary key (id)
 );
@@ -35,3 +35,10 @@ alter table if exists POST
 	add constraint POST_ACC_ID_CONST
 	foreign key (ACC_ID)
 	references Accounts;
+
+CREATE SEQUENCE hibernate_sequence
+    INCREMENT 1
+    START 1
+    MINVALUE 1
+    MAXVALUE 9223372036854775807
+    CACHE 1;

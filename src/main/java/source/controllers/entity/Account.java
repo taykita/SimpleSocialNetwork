@@ -29,7 +29,7 @@ public class Account {
     private String email;
 
     @NotEmpty(message = "Пароль не должен быть пустым")
-    @Size(min = 3, max = 50, message = "Длина пароля от 3 до 50")
+    @Size(min = 3, max = 100, message = "Длина пароля от 3 до 50")
     private String pass;
 
     @NotEmpty(message = "Имя не должен быть пустым")
