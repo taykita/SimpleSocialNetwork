@@ -3,6 +3,7 @@ package source.controllers.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import source.controllers.authorization.validation.ValidEmail;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -38,6 +39,7 @@ public class Account implements UserDetails {
 
     @NotEmpty(message = "Почта не должна быть пустой")
     @Size(min = 3, max = 50, message = "Длина почты от 3 до 50")
+    //@ValidEmail(message = "На эту почту уже зарегистрирован аккаунт")
     private String email;
 
     @NotEmpty(message = "Пароль не должен быть пустым")
@@ -74,7 +76,7 @@ public class Account implements UserDetails {
     public void setPass(String pass) {
         this.pass = pass;
     }
-
+//TODO поменять на name
     public String getUserName() {
         return userName;
     }

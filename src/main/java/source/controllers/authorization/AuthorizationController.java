@@ -55,10 +55,21 @@ public class AuthorizationController {
     }
 
     @GetMapping("/login")
-    public String showLoginPage(Model model) {
+    public String showLoginPage(Model model,
+                                @RequestParam(value = "error", required = false) String error,
+                                @RequestParam(value = "logout", required = false) String logout) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account) {
             return "redirect:" + "main";
         }
+
+        if (error != null) {
+            model.addAttribute("error", "Неправильное имя пользователя или пароль!");
+        }
+
+        if (logout != null) {
+            model.addAttribute("logout", "Вы вышли!");
+        }
+
         model.addAttribute("account", new Account());
         return "log-in";
     }

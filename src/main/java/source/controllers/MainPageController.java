@@ -35,7 +35,7 @@ public class MainPageController {
         if (posts != null) {
             model.addAttribute("posts", posts);
         }
-        model.addAttribute("name", activeUser.getUsername());
+        model.addAttribute("name", activeUser.getUserName());
         return "main";
     }
 
