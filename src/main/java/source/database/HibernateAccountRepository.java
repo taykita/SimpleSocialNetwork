@@ -3,15 +3,12 @@ package source.database;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
+import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
-import source.controllers.entity.Account;
-import sun.security.util.Password;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,7 +161,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            post.setUserName(user.getUserName());
+            post.setUserName(user.getName());
             post.setAccount(user);
 
             session.save(post);
@@ -221,7 +218,6 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
-    //TODO Заменить на объектное представление
     @Override
     public List<Post> getFriendsPosts(Account user) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {

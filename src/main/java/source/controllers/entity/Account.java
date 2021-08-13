@@ -39,7 +39,7 @@ public class Account implements UserDetails {
 
     @NotEmpty(message = "Почта не должна быть пустой")
     @Size(min = 3, max = 50, message = "Длина почты от 3 до 50")
-    //@ValidEmail(message = "На эту почту уже зарегистрирован аккаунт")
+    @ValidEmail(message = "На эту почту уже зарегистрирован аккаунт")
     private String email;
 
     @NotEmpty(message = "Пароль не должен быть пустым")
@@ -48,7 +48,7 @@ public class Account implements UserDetails {
 
     @NotEmpty(message = "Имя не должен быть пустым")
     @Size(min = 3, max = 50, message = "Длина имени от 3 до 50")
-    private String userName;
+    private String name;
 
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
@@ -76,13 +76,13 @@ public class Account implements UserDetails {
     public void setPass(String pass) {
         this.pass = pass;
     }
-//TODO поменять на name
-    public String getUserName() {
-        return userName;
+
+    public String getName() {
+        return name;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -128,7 +128,7 @@ public class Account implements UserDetails {
 
     @Override
     public String toString() {
-        return userName;
+        return name;
     }
 
     @Override

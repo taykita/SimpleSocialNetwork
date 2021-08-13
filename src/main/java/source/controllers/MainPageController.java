@@ -5,15 +5,11 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.SessionAttribute;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
-import javax.servlet.http.HttpSession;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Controller
@@ -35,7 +31,7 @@ public class MainPageController {
         if (posts != null) {
             model.addAttribute("posts", posts);
         }
-        model.addAttribute("name", activeUser.getUserName());
+        model.addAttribute("name", activeUser.getName());
         return "main";
     }
 
