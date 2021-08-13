@@ -22,7 +22,7 @@
 <main class="form-signin">
     <form th:action="@{sign}" th:method="POST" th:object="${account}">
         <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>
-        <div th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">...</div>
+        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">...</div>
         <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
@@ -31,8 +31,8 @@
             <label for="email" th:field="*{email}">Адрес почты</label>
         </div>
         <div class="form-floating">
-            <input type="text" class="form-control" name="userName" id="userName">
-            <label for="userName" th:field="*{userName}">Имя пользователя</label>
+            <input type="text" class="form-control" name="name" id="name">
+            <label for="name" th:field="*{name}">Имя пользователя</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" name="pass" id="pass">

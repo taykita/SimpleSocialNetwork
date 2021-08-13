@@ -16,6 +16,9 @@
         <property name="hibernate.connection.characterEncoding">utf8</property>
         <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQL94Dialect</property>
 
+        <property name="javax.persistence.validation.mode">NONE</property>
+
+
         <property name="hibernate.c3p0.min_size">5</property>
         
         <property name="show_sql">true</property>

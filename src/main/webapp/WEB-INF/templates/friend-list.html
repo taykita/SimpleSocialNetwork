@@ -55,7 +55,7 @@
                         <div class="p-2">
                             <div class="user">
                                 <a th:href="@{'user-page?id=' + ${user.id}}">
-                                    <h5 th:text="${user.userName}">..</h5>
+                                    <h5 th:text="${user.name}">..</h5>
                                 </a>
                                 <a th:href="@{'delete-friend?id=' + ${user.id}}">
                                     <h6>Удалить из друзей?</h6>

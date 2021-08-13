@@ -23,8 +23,6 @@
 <body class="text-center">
 <main class="form-signin">
     <form th:action="@{login}" th:method="POST" th:object="${account}">
-<!--        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>-->
-<!--        <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>-->
         <div th:text="${error}">...</div>
         <div th:text="${logout}">...</div>
         <h1 class="h3 mb-3 fw-normal">Вход</h1>

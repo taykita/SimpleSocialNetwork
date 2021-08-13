@@ -5,7 +5,7 @@
         </id>
         <property name="email" type="string" column="EMAIL"/>
         <property name="pass" type="string" column="PASS"/>
-        <property name="userName" type="string" column="USER_NAME"/>
+        <property name="name" type="string" column="USER_NAME"/>
         <set name="accountSet" table="Accounts_Accounts"
              inverse="false" lazy="false" fetch="select" cascade="all">
             <key>
