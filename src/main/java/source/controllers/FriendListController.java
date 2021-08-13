@@ -1,6 +1,7 @@
 package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +18,8 @@ public class FriendListController {
     AccountRepository accountRepository;
 
     @GetMapping("/friend-list")
-    public String friendListPage(@SessionAttribute int id, Model model) throws AccStorageException {
-        List<Account> allUsers = accountRepository.getFriends(id);
+    public String friendListPage(@AuthenticationPrincipal Account activeUser, Model model) throws AccStorageException {
+        List<Account> allUsers = accountRepository.getFriends(activeUser);
 
         model.addAttribute("users", allUsers.toArray());
         return "friend-list";

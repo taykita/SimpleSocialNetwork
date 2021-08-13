@@ -22,7 +22,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-//                .addFilterBefore(new ExceptionHandlerFilter(), ChannelProcessingFilter.class)
                 .authorizeRequests()
                     .antMatchers("/home", "/sign", "/resources/**").permitAll()
                     .anyRequest().authenticated()
@@ -33,7 +32,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                     .logout()
                     .logoutUrl("/exit")
-                    .permitAll();
+                    .permitAll()
+                .and()
+                    .csrf()
+                    .disable();
     }
 
     @Autowired

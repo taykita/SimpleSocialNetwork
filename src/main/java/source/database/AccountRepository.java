@@ -19,15 +19,15 @@ public interface AccountRepository {
 
     List<Account> getAll() throws AccStorageException;
 
-    void addFriend(int userId, int friendId) throws AccStorageException;
+    void addFriend(Account user, Account friend) throws AccStorageException;
 
-    void deleteFriend(int userId, int friendId) throws AccStorageException;
+    void deleteFriend(Account user, Account friend) throws AccStorageException;
 
-    boolean isFriend(int userId, int friendId) throws AccStorageException;
+    boolean isFriend(Account user, Account friend) throws AccStorageException;
 
-    List<Account> getFriends(int userId) throws AccStorageException;
+    List<Account> getFriends(Account user) throws AccStorageException;
 
-    void addPost(Post post, int userId) throws AccStorageException;
+    void addPost(Post post, Account user) throws AccStorageException;
 
     void deletePost(Post post) throws AccStorageException;
 
@@ -37,5 +37,5 @@ public interface AccountRepository {
 
     List<Post> getPosts(int userId) throws AccStorageException;
 
-    List<Post> getFriendsPosts(int userId) throws AccStorageException;
+    List<Post> getFriendsPosts(Account user) throws AccStorageException;
 }

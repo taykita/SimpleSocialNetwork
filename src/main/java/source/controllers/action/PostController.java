@@ -1,10 +1,12 @@
 package source.controllers.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
@@ -19,13 +21,13 @@ public class PostController {
 //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")
     public String createPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
-                             @SessionAttribute int id) throws AccStorageException {
+                             @AuthenticationPrincipal Account activeUser) throws AccStorageException {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
         post.setDate(new Date().toString());
 
-        accountRepository.addPost(post, id);
+        accountRepository.addPost(post, activeUser);
         return "redirect:main";
     }
 

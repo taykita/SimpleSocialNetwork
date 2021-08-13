@@ -27,27 +27,10 @@ public class MyUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         try {
             Account account = accountRepository.get(email);
-            boolean enabled = true;
-            boolean accountNonExpired = true;
-            boolean credentialsNonExpired = true;
-            boolean accountNonLocked = true;
-
-
-            return new User(
-                    account.getEmail(), account.getPass(), enabled, accountNonExpired,
-                    credentialsNonExpired, accountNonLocked, getAuthorities(account.getRoles()));
-
+            return account;
         } catch (AccStorageException e) {
             throw new UsernameNotFoundException("UserDetails error: " + e.getMessage());
         }
-    }
-
-    private static List<GrantedAuthority> getAuthorities(List<String> roles){
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        for (String role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role));
-        }
-        return authorities;
     }
 
 }

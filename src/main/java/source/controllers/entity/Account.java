@@ -1,27 +1,39 @@
 package source.controllers.entity;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.*;
 
-public class Account {
+public class Account implements UserDetails {
     public Account() {
         setRoles(Collections.singletonList("ROLE_USER"));
+
+        this.accountNonExpired = true;
+        this.credentialsNonExpired = true;
+        this.accountNonLocked = true;
+        this.enabled = true;
     }
 
-    public Account(String email, String pass, String userName) {
-        setRoles(Collections.singletonList("ROLE_USER"));
-        this.email = email;
-        this.pass = pass;
-        this.userName = userName;
-    }
+    public Account(String username, String password, boolean enabled,
+                   boolean accountNonExpired, boolean credentialsNonExpired,
+                   boolean accountNonLocked, List<String> authorities) {
 
-    public Account(String email, String pass, String userName, int id) {
+        if (((username == null) || "".equals(username)) || (password == null)) {
+            throw new IllegalArgumentException(
+                    "Cannot pass null or empty values to constructor");
+        }
+
+        this.email = username;
+        this.pass = password;
+        this.enabled = enabled;
+        this.accountNonExpired = accountNonExpired;
+        this.credentialsNonExpired = credentialsNonExpired;
+        this.accountNonLocked = accountNonLocked;
         setRoles(Collections.singletonList("ROLE_USER"));
-        this.email = email;
-        this.pass = pass;
-        this.userName = userName;
-        this.id = id;
     }
 
     @NotEmpty(message = "Почта не должна быть пустой")
@@ -36,12 +48,16 @@ public class Account {
     @Size(min = 3, max = 50, message = "Длина имени от 3 до 50")
     private String userName;
 
-    private String avatarImg;
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
     private List<Post> posts = new ArrayList<>(0);
 
     private List<String> roles;
+
+    private boolean enabled;
+    private boolean accountNonExpired;
+    private boolean credentialsNonExpired;
+    private boolean accountNonLocked;
 
     public String getEmail() {
         return email;
@@ -65,14 +81,6 @@ public class Account {
 
     public void setUserName(String userName) {
         this.userName = userName;
-    }
-
-    public String getAvatarImg() {
-        return avatarImg;
-    }
-
-    public void setAvatarImg(String avatarImg) {
-        this.avatarImg = avatarImg;
     }
 
     public int getId() {
@@ -120,4 +128,48 @@ public class Account {
     public String toString() {
         return userName;
     }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getAuthorities(roles);
+    }
+
+    private List<GrantedAuthority> getAuthorities(List<String> roles){
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role));
+        }
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return pass;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
 }

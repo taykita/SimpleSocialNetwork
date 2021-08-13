@@ -1,10 +1,12 @@
 package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.SessionAttribute;
+import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
@@ -17,8 +19,8 @@ public class NewsController {
     AccountRepository accountRepository;
 
     @GetMapping("/news")
-    public String newsPage(@SessionAttribute int id, Model model) throws AccStorageException {
-        List<Post> posts = accountRepository.getFriendsPosts(id);
+    public String newsPage(@AuthenticationPrincipal Account activeUser, Model model) throws AccStorageException {
+        List<Post> posts = accountRepository.getFriendsPosts(activeUser);
 
         model.addAttribute("posts", posts);
 

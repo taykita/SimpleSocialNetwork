@@ -1,6 +1,7 @@
 package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,24 +22,20 @@ public class MainPageController {
     AccountRepository accountRepository;
 
     @GetMapping("")
-    public String redirect(HttpSession session) {
-        if (session.getAttribute("id") == null) {
-            return "redirect:login";
-        }
+    public String redirect() {
         return "redirect:main";
     }
 
     @GetMapping("/main")
-    public String mainPage(@SessionAttribute Integer id, Model model) throws AccStorageException {
+    public String mainPage(@AuthenticationPrincipal Account activeUser, Model model) throws AccStorageException {
         model.addAttribute("post", new Post());
 
-        Account account = accountRepository.get(id);
-        List<Post> posts = accountRepository.getPosts(id);
+        List<Post> posts = accountRepository.getPosts(activeUser.getId());
 
         if (posts != null) {
             model.addAttribute("posts", posts);
         }
-        model.addAttribute("name", account.getUserName());
+        model.addAttribute("name", activeUser.getUsername());
         return "main";
     }
 
