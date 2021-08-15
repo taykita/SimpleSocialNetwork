@@ -219,6 +219,18 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
+    public List<Post> getPosts(int userId, int count) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
+                    .setParameter("id", userId)
+                    .setMaxResults(count)
+                    .getResultList();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPost Error.", e);
+        }
+    }
+
+    @Override
     public List<Post> getFriendsPosts(Account user) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
