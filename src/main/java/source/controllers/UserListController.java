@@ -13,7 +13,7 @@ import java.util.List;
 @Controller
 public class UserListController {
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @GetMapping("/user-list")
     public String userListPage(Model model) throws AccStorageException {

@@ -9,13 +9,13 @@ import source.controllers.entity.Account;
 @Controller
 public class HomePageController {
 
-@GetMapping("/home")
-public String homePage(Model model){
+    @GetMapping("")
+    public String homePage(Model model) {
 
-    updateModel(model);
+        updateModel(model);
 
-    return "home";
-}
+        return "home";
+    }
 
     private void updateModel(Model model) {
         if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account) {

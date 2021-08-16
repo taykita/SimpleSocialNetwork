@@ -11,23 +11,22 @@
 
 </head>
 <body>
-    <main class="home">
-        <h1>BookNetwork</h1>
-        <h6>Маленький проект социальной сети</h6>
-        <div class="p-2 mb-3">
-            <p th:utext="(${isAuth} ? '
-                    Вы авторизованы!
-                    <form action=&quot;main&quot; method=&quot;get&quot;>
-                        <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Моя страница</button>
-                    </form>
-                ' : '
-                    Вы не авторизованы!
-                    <form action=&quot;login&quot; method=&quot;get&quot;>
-                        <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Авторизоваться</button>
-                    </form>
-            ')"></p>
-        </div>
-    </main>
-
+<main class="home">
+    <h1>BookNetwork</h1>
+    <h6>Маленький проект социальной сети</h6>
+    <div class="p-2 mb-3">
+        <p th:utext="(${isAuth} ? '
+                Вы авторизованы!
+                <form action=&quot;main&quot; method=&quot;get&quot;>
+                    <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Моя страница</button>
+                </form>
+            ' : '
+                Вы не авторизованы!
+                <form action=&quot;login&quot; method=&quot;get&quot;>
+                    <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Авторизоваться</button>
+                </form>
+        ')"></p>
+    </div>
+</main>
 </body>
 </html>

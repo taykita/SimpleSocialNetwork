@@ -16,12 +16,7 @@ import java.util.List;
 @Controller
 public class MainPageController {
     @Autowired
-    AccountRepository accountRepository;
-
-    @GetMapping("")
-    public String redirect() {
-        return "redirect:main";
-    }
+    private AccountRepository accountRepository;
 
     @GetMapping("/main")
     public String mainPage(@AuthenticationPrincipal Account activeUser, HttpServletRequest request, Model model) throws AccStorageException {

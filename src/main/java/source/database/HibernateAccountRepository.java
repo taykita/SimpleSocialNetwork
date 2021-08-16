@@ -16,13 +16,14 @@ import java.util.List;
 
 @Repository
 public class HibernateAccountRepository implements AccountRepository {
-    @Autowired
-    public HibernateAccountRepository(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    public HibernateAccountRepository(SessionFactory sessionFactory, PasswordEncoder passwordEncoder) {
+        this.sessionFactory = sessionFactory;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    private final PasswordEncoder passwordEncoder;
 
     private final SessionFactory sessionFactory;
 
@@ -235,7 +236,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
 
-            for (Account account: getFriends(user)) {
+            for (Account account : getFriends(user)) {
                 ids.add(account.getId());
             }
 
@@ -252,7 +253,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
 
-            for (Account account: getFriends(user)) {
+            for (Account account : getFriends(user)) {
                 ids.add(account.getId());
             }
 

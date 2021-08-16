@@ -1,7 +1,6 @@
 package source.controllers.authorization.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 

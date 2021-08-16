@@ -17,7 +17,7 @@ import java.util.List;
 public class UserPageController {
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal Account activeUser,

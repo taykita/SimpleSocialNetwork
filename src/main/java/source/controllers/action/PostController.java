@@ -5,7 +5,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
@@ -18,7 +20,8 @@ import java.util.Date;
 public class PostController {
     @Autowired
     AccountRepository accountRepository;
-//TODO Разобраться с отображением ошибки
+
+    //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")
     public String createPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
                              @AuthenticationPrincipal Account activeUser) throws AccStorageException {
@@ -39,7 +42,7 @@ public class PostController {
 
     @PostMapping("/edit-post")
     public String editPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
-                             @RequestParam int id) throws AccStorageException {
+                           @RequestParam int id) throws AccStorageException {
         if (bindingResult.hasErrors())
             return "redirect:edit-post";
 
