@@ -21,17 +21,16 @@ import javax.servlet.ServletContext;
 @ComponentScan("source.controllers, source.database")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
-    private final ApplicationContext applicationContext;
-    private final ServletContext servletContext;
-
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext) {
+    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext, HibernateUtil hibernateUtil) {
         this.applicationContext = applicationContext;
         this.servletContext = servletContext;
+        this.hibernateUtil = hibernateUtil;
     }
 
-    @Autowired
-    private HibernateUtil hibernateUtil;
+    private final ApplicationContext applicationContext;
+    private final ServletContext servletContext;
+    private final HibernateUtil hibernateUtil;
 
     @Bean
     public SessionFactory sessionFactory() {

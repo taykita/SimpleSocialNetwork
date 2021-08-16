@@ -11,7 +11,7 @@ public class EmailValidator
         implements ConstraintValidator<ValidEmail, String> {
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @Override
     public void initialize(ValidEmail constraintAnnotation) {

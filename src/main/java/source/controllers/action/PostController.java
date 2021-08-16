@@ -19,7 +19,11 @@ import java.util.Date;
 @Controller
 public class PostController {
     @Autowired
-    AccountRepository accountRepository;
+    public PostController(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
+
+    private final AccountRepository accountRepository;
 
     //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")

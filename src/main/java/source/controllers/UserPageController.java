@@ -5,8 +5,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
+import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
@@ -15,29 +17,33 @@ import java.util.List;
 
 @Controller
 public class UserPageController {
-
     @Autowired
-    private AccountRepository accountRepository;
+    public UserPageController(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
+    }
+
+    private final AccountRepository accountRepository;
 
     @GetMapping("/user-page")
-    public String userPage(@AuthenticationPrincipal Account activeUser,
-                           HttpServletRequest request, Model model) throws AccStorageException {
+    public String userPage(@AuthenticationPrincipal User activeUser,
+                           @RequestParam Integer id,
+                           @RequestParam(required = false, defaultValue = "10") int count,
+                           Model model) throws AccStorageException {
 
-        int id = getId(request);
         if (isActiveUser(activeUser, id)) {
             return "redirect:main";
         }
 
-        int count = getCount(request);
+        Account user = accountRepository.get(activeUser.getId());
 
         List<Post> posts = accountRepository.getPosts(id, count);
 
-        updateModel(activeUser, model, id, count, posts);
+        updateModel(user, model, id, count, posts);
 
         return "user-page";
     }
 
-    private boolean isActiveUser(Account activeUser, int id) {
+    private boolean isActiveUser(User activeUser, int id) {
         return id == activeUser.getId();
     }
 
@@ -50,22 +56,9 @@ public class UserPageController {
 
         model.addAttribute("count", count + 10);
         model.addAttribute("posts", posts);
-
         model.addAttribute("name", userAccount.getName());
         model.addAttribute("isFriend", isFriend(activeUser, userAccount));
         model.addAttribute("id", id);
-    }
-
-    private int getCount(HttpServletRequest request) {
-        String rawCount = request.getParameter("count");
-        int count;
-
-        if (rawCount == null) {
-            count = 10;
-        } else {
-            count = Integer.parseInt(rawCount);
-        }
-        return count;
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {

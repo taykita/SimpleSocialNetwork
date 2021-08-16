@@ -18,11 +18,15 @@ import javax.validation.Valid;
 
 @Controller
 public class AuthorizationController {
+    @Autowired
+    public AuthorizationController(AccountRepository accountRepository, HttpSession session) {
+        this.accountRepository = accountRepository;
+        this.session = session;
+    }
 
-    @Autowired
-    AccountRepository accountRepository;
-    @Autowired
-    HttpSession session;
+    private final AccountRepository accountRepository;
+
+    private final HttpSession session;
 
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
