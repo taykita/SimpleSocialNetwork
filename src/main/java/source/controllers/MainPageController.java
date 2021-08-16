@@ -22,8 +22,7 @@ public class MainPageController {
     public String mainPage(@AuthenticationPrincipal Account activeUser, HttpServletRequest request, Model model) throws AccStorageException {
         model.addAttribute("post", new Post());
 
-        String rawCount = request.getParameter("count");
-        int count = checkCount(rawCount);
+        int count = getCount(request);
 
         List<Post> posts = accountRepository.getPosts(activeUser.getId(), count);
 
@@ -38,8 +37,10 @@ public class MainPageController {
         model.addAttribute("name", activeUser.getName());
     }
 
-    private int checkCount(String rawCount) {
+    private int getCount(HttpServletRequest request) {
+        String rawCount = request.getParameter("count");
         int count;
+
         if (rawCount == null) {
             count = 10;
         } else {

@@ -20,8 +20,7 @@ public class NewsController {
 
     @GetMapping("/news")
     public String newsPage(@AuthenticationPrincipal Account activeUser, HttpServletRequest request, Model model) throws AccStorageException {
-        String rawCount = request.getParameter("count");
-        int count = checkCount(rawCount);
+        int count = getCount(request);
 
         List<Post> posts = accountRepository.getFriendsPosts(activeUser, count);
 
@@ -35,8 +34,10 @@ public class NewsController {
         model.addAttribute("posts", posts);
     }
 
-    private int checkCount(String rawCount) {
+    private int getCount(HttpServletRequest request) {
+        String rawCount = request.getParameter("count");
         int count;
+
         if (rawCount == null) {
             count = 10;
         } else {
