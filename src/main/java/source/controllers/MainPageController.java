@@ -28,12 +28,7 @@ public class MainPageController {
         model.addAttribute("post", new Post());
 
         String rawCount = request.getParameter("count");
-        int count;
-        if (rawCount == null) {
-            count = 10;
-        } else {
-            count = Integer.parseInt(rawCount);
-        }
+        int count = checkCount(rawCount);
 
         List<Post> posts = accountRepository.getPosts(activeUser.getId(), count);
 
@@ -42,6 +37,16 @@ public class MainPageController {
 
         model.addAttribute("name", activeUser.getName());
         return "main";
+    }
+
+    private int checkCount(String rawCount) {
+        int count;
+        if (rawCount == null) {
+            count = 10;
+        } else {
+            count = Integer.parseInt(rawCount);
+        }
+        return count;
     }
 
 }

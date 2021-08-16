@@ -18,7 +18,7 @@ import java.util.List;
 public class UserPageController {
 
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal Account activeUser,
@@ -29,30 +29,37 @@ public class UserPageController {
         }
 
         String rawCount = request.getParameter("count");
+        int count = checkCount(rawCount);
+
+        List<Post> posts = accountRepository.getPosts(id, count);
+
+        updateModel(activeUser, model, id, count, posts);
+        return "user-page";
+    }
+
+    private void updateModel(Account activeUser, Model model, int id, int count, List<Post> posts) throws AccStorageException {
+        Account userAccount = accountRepository.get(id);
+
+        model.addAttribute("count", count + 10);
+        model.addAttribute("posts", posts);
+
+        model.addAttribute("name", userAccount.getName());
+        model.addAttribute("isFriend", isFriend(activeUser, userAccount));
+        model.addAttribute("id", id);
+    }
+
+    private int checkCount(String rawCount) {
         int count;
         if (rawCount == null) {
             count = 10;
         } else {
             count = Integer.parseInt(rawCount);
         }
-
-        List<Post> posts = accountRepository.getPosts(id, count);
-
-        model.addAttribute("count", count + 10);
-        model.addAttribute("posts", posts);
-
-        model.addAttribute("name", getUserName(id));
-        model.addAttribute("isFriend", isFriend(activeUser, accountRepository.get(id)));
-        model.addAttribute("id", id);
-        return "user-page";
+        return count;
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {
         return accountRepository.isFriend(user, friend);
-    }
-
-    private String getUserName(Integer id) throws AccStorageException {
-        return accountRepository.get(id).getName();
     }
 
 }
