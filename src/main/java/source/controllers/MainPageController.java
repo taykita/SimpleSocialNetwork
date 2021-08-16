@@ -32,11 +32,15 @@ public class MainPageController {
 
         List<Post> posts = accountRepository.getPosts(activeUser.getId(), count);
 
+        updateModel(activeUser, model, count, posts);
+
+        return "main";
+    }
+
+    private void updateModel(Account activeUser, Model model, int count, List<Post> posts) {
         model.addAttribute("count", count + 10);
         model.addAttribute("posts", posts);
-
         model.addAttribute("name", activeUser.getName());
-        return "main";
     }
 
     private int checkCount(String rawCount) {

@@ -12,14 +12,18 @@ public class HomePageController {
 @GetMapping("/home")
 public String homePage(Model model){
 
-    if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account) {
-        model.addAttribute("isAuth", true);
-    } else {
-        model.addAttribute("isAuth", false);
-    }
+    updateModel(model);
 
     return "home";
 }
+
+    private void updateModel(Model model) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account) {
+            model.addAttribute("isAuth", true);
+        } else {
+            model.addAttribute("isAuth", false);
+        }
+    }
 
 
 }

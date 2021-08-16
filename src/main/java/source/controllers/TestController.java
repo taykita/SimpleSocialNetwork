@@ -20,15 +20,6 @@ public class TestController {
 
     @GetMapping("/test")
     public String test(Model model) throws AccStorageException {
-
-        Post post = new Post();
-
-        post.setDate(new Date().toString());
-        post.setText("text");
-        post.setAccount(accountRepository.get("123@123"));
-
-        model.addAttribute("post", post);
-
         return "test";
     }
 

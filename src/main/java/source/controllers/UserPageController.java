@@ -5,7 +5,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
@@ -18,23 +17,32 @@ import java.util.List;
 public class UserPageController {
 
     @Autowired
-    private AccountRepository accountRepository;
+    AccountRepository accountRepository;
 
     @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal Account activeUser,
                            HttpServletRequest request, Model model) throws AccStorageException {
-        int id = Integer.parseInt(request.getParameter("id"));
-        if (id == activeUser.getId()) {
+
+        int id = getId(request);
+        if (isActiveUser(activeUser, id)) {
             return "redirect:main";
         }
 
-        String rawCount = request.getParameter("count");
-        int count = checkCount(rawCount);
+        int count = getCount(request);
 
         List<Post> posts = accountRepository.getPosts(id, count);
 
         updateModel(activeUser, model, id, count, posts);
+
         return "user-page";
+    }
+
+    private boolean isActiveUser(Account activeUser, int id) {
+        return id == activeUser.getId();
+    }
+
+    private int getId(HttpServletRequest request) {
+        return Integer.parseInt(request.getParameter("id"));
     }
 
     private void updateModel(Account activeUser, Model model, int id, int count, List<Post> posts) throws AccStorageException {
@@ -48,8 +56,10 @@ public class UserPageController {
         model.addAttribute("id", id);
     }
 
-    private int checkCount(String rawCount) {
+    private int getCount(HttpServletRequest request) {
+        String rawCount = request.getParameter("count");
         int count;
+
         if (rawCount == null) {
             count = 10;
         } else {

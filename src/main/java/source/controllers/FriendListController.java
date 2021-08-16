@@ -14,13 +14,17 @@ import java.util.List;
 @Controller
 public class FriendListController {
     @Autowired
-    AccountRepository accountRepository;
+    private AccountRepository accountRepository;
 
     @GetMapping("/friend-list")
     public String friendListPage(@AuthenticationPrincipal Account activeUser, Model model) throws AccStorageException {
         List<Account> allUsers = accountRepository.getFriends(activeUser);
 
-        model.addAttribute("users", allUsers.toArray());
+        updateModel(model, allUsers);
         return "friend-list";
+    }
+
+    private void updateModel(Model model, List<Account> allUsers) {
+        model.addAttribute("users", allUsers.toArray());
     }
 }

@@ -26,10 +26,14 @@ public class NewsController {
 
         List<Post> posts = accountRepository.getFriendsPosts(activeUser, count);
 
-        model.addAttribute("count", count + 10);
-        model.addAttribute("posts", posts);
+        updateModel(model, count, posts);
 
         return "news";
+    }
+
+    private void updateModel(Model model, int count, List<Post> posts) {
+        model.addAttribute("count", count + 10);
+        model.addAttribute("posts", posts);
     }
 
     private int checkCount(String rawCount) {
