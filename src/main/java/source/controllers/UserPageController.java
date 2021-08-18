@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
@@ -63,6 +64,19 @@ public class UserPageController {
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {
         return accountRepository.isFriend(user, friend);
+    }
+
+    @GetMapping("/user-page/get-posts")
+    @ResponseBody
+    public List<Post> getPosts(@RequestParam int id,
+                               @RequestParam(required = false, defaultValue = "10") int count) throws AccStorageException {
+
+        int postsLength = accountRepository.getPostsLength(id);
+        if (count + 9 <= postsLength) {
+            return accountRepository.getPosts(id, count, count + 9);
+        } else {
+            return accountRepository.getPosts(id, count, postsLength);
+        }
     }
 
 }

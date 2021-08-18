@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
+import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
@@ -28,13 +29,13 @@ public class PostController {
     //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")
     public String createPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
-                             @AuthenticationPrincipal Account activeUser) throws AccStorageException {
+                             @AuthenticationPrincipal User activeUser) throws AccStorageException {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
         post.setDate(new Date().toString());
 
-        accountRepository.addPost(post, activeUser);
+        accountRepository.addPost(post, accountRepository.get(activeUser.getId()));
         return "redirect:main";
     }
 

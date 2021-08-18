@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
@@ -40,6 +41,21 @@ public class NewsController {
     private void updateModel(Model model, int count, List<Post> posts) {
         model.addAttribute("count", count + 10);
         model.addAttribute("posts", posts);
+    }
+
+    @GetMapping("/news/get-posts")
+    @ResponseBody
+    public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
+                               @RequestParam(required = false, defaultValue = "10") int count) throws AccStorageException {
+
+        Account user = accountRepository.get(activeUser.getId());
+
+        int friendsPostsLength = accountRepository.getFriendsPostsLength(user);
+        if (count + 9 <= friendsPostsLength) {
+            return accountRepository.getFriendsPosts(user, count, count + 9);
+        } else {
+            return accountRepository.getFriendsPosts(user, count, friendsPostsLength);
+        }
     }
 
 }

@@ -215,7 +215,7 @@ public class HibernateAccountRepository implements AccountRepository {
                     .setParameter("id", userId)
                     .getResultList();
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addPost Error.", e);
+            throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 
@@ -227,7 +227,20 @@ public class HibernateAccountRepository implements AccountRepository {
                     .setMaxResults(count)
                     .getResultList();
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addPost Error.", e);
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public List<Post> getPosts(int userId, int firstCount, int maxCount) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
+                    .setParameter("id", userId)
+                    .setFirstResult(firstCount)
+                    .setMaxResults(maxCount)
+                    .getResultList();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 
@@ -244,7 +257,7 @@ public class HibernateAccountRepository implements AccountRepository {
                     .setParameterList("ids", ids)
                     .getResultList();
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addPost Error.", e);
+            throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 
@@ -262,7 +275,56 @@ public class HibernateAccountRepository implements AccountRepository {
                     .setMaxResults(count)
                     .getResultList();
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addPost Error.", e);
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public List<Post> getFriendsPosts(Account user, int firstCount, int maxCount) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            List<Integer> ids = new ArrayList<>();
+
+            for (Account account : getFriends(user)) {
+                ids.add(account.getId());
+            }
+
+            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID IN (:ids) ORDER BY id DESC")
+                    .setParameterList("ids", ids)
+                    .setFirstResult(firstCount)
+                    .setMaxResults(maxCount)
+                    .getResultList();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public int getFriendsPostsLength(Account user) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            List<Integer> ids = new ArrayList<>();
+
+            for (Account account : getFriends(user)) {
+                ids.add(account.getId());
+            }
+
+            Object result = session.createQuery("SELECT COUNT(*) FROM Post WHERE ACC_ID IN (:ids)")
+                    .setParameterList("ids", ids)
+                    .uniqueResult();
+            return Integer.parseInt(result.toString());
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public int getPostsLength(int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Object result = session.createQuery("SELECT COUNT(*) FROM Post WHERE ACC_ID = :id")
+                    .setParameter("id", userId)
+                    .uniqueResult();
+            return Integer.parseInt(result.toString());
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 }
