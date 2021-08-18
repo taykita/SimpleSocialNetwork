@@ -1,11 +1,13 @@
 let currentCount = 1;
 $(document).off('.data-api')
 $(function () {
+    $(document).ready(get);
+    $('#load-post').click(get);
 
-    $('#load-post').click(function () {
+    function get() {
         let data = {count: currentCount};
         $.get("news/get-posts", data, success, "json");
-    });
+    }
 
     function success(posts) {
         let div = document.getElementById('post');

@@ -4,11 +4,13 @@ let searchParams = new URLSearchParams(url.search.substring(1));
 let currentId = searchParams.get("id");
 $(document).off('.data-api')
 $(function () {
+    $(document).ready(get);
+    $('#load-post').click(get);
 
-    $('#load-post').click(function () {
+    function get() {
         let data = {count: currentCount, id: currentId};
         $.get("user-page/get-posts", data, success, "json");
-    });
+    }
 
     function success(posts) {
         let div = document.getElementById('post');
