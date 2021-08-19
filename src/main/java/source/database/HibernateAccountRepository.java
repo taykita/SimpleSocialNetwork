@@ -162,8 +162,8 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            session.createQuery("INSERT INTO (acc_id, text, date) post " +
-                    "VALUES ('" + user.getId() + "', '" + post.getText() + "', now())");
+            session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) " +
+                    "VALUES (" + user.getId() + ", '" + post.getText() + "', now())").executeUpdate();
 
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -184,13 +184,15 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
+    //TODO заменить параметры
     @Override
     public void updatePost(Post oldPost, Post newPost) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            oldPost.setText(newPost.getText());
-            session.update(oldPost);
+            session.createSQLQuery("UPDATE Post " +
+                    "SET text='" + newPost.getText() + "' " +
+                    "WHERE id=" + oldPost.getId() + ";").executeUpdate();
 
             session.getTransaction().commit();
         } catch (HibernateException e) {
@@ -231,12 +233,10 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public List<Post> getPosts(int userId, int firstCount, int maxCount) throws AccStorageException {
+    public List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
-                    .setParameter("id", userId)
-                    .setFirstResult(firstCount)
-                    .setMaxResults(maxCount)
+            return (List<Post>) session.createSQLQuery("SELECT * FROM " +
+                    "Post WHERE ACC_ID = " + userId + " AND id > " + firstPostId + " ORDER BY id DESC LIMIT " + maxCount + ";")
                     .getResultList();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);

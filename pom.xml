@@ -180,76 +180,76 @@
 
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>com.github.slavaz</groupId>
-                        <artifactId>embedded-postgresql-maven-plugin</artifactId>
-                        <configuration>
-                            <pgServerVersion>latest</pgServerVersion>
-                            <pgServerPort>15432</pgServerPort>
-                            <dbName>booknetwork_db</dbName>
-                            <userName>admin</userName>
-                            <password>admin</password>
-                            <pgLocale>no</pgLocale>
-                            <pgCharset>no</pgCharset>
-                        </configuration>
-                        <dependencies>
-                            <dependency>
-                                <groupId>org.slf4j</groupId>
-                                <artifactId>slf4j-api</artifactId>
-                                <version>1.7.32</version>
-                            </dependency>
-                            <dependency>
-                                <groupId>ch.qos.logback</groupId>
-                                <artifactId>logback-classic</artifactId>
-                                <version>1.2.3</version>
-                            </dependency>
-                        </dependencies>
+<!--                    <plugin>-->
+<!--                        <groupId>com.github.slavaz</groupId>-->
+<!--                        <artifactId>embedded-postgresql-maven-plugin</artifactId>-->
+<!--                        <configuration>-->
+<!--                            <pgServerVersion>latest</pgServerVersion>-->
+<!--                            <pgServerPort>15432</pgServerPort>-->
+<!--                            <dbName>booknetwork_db</dbName>-->
+<!--                            <userName>admin</userName>-->
+<!--                            <password>admin</password>-->
+<!--                            <pgLocale>no</pgLocale>-->
+<!--                            <pgCharset>no</pgCharset>-->
+<!--                        </configuration>-->
+<!--                        <dependencies>-->
+<!--                            <dependency>-->
+<!--                                <groupId>org.slf4j</groupId>-->
+<!--                                <artifactId>slf4j-api</artifactId>-->
+<!--                                <version>1.7.32</version>-->
+<!--                            </dependency>-->
+<!--                            <dependency>-->
+<!--                                <groupId>ch.qos.logback</groupId>-->
+<!--                                <artifactId>logback-classic</artifactId>-->
+<!--                                <version>1.2.3</version>-->
+<!--                            </dependency>-->
+<!--                        </dependencies>-->
 
-                    </plugin>
+<!--                    </plugin>-->
 
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <version>1.1</version>
-                        <dependencies>
-                            <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-                            <dependency>
-                                <groupId>org.postgresql</groupId>
-                                <artifactId>postgresql</artifactId>
-                                <version>42.2.18</version>
-                            </dependency>
-                        </dependencies>
-                        <executions>
-                            <execution>
-                                <id>id.verify</id>
-                                <phase>verify</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-<!--                            TODO Подумать над тем как привязать к embedded-postgresql:start       -->
+<!--                    <plugin>-->
+<!--                        <groupId>org.apache.maven.plugins</groupId>-->
+<!--                        <artifactId>maven-antrun-plugin</artifactId>-->
+<!--                        <version>1.1</version>-->
+<!--                        <dependencies>-->
+<!--                            &lt;!&ndash; https://mvnrepository.com/artifact/org.postgresql/postgresql &ndash;&gt;-->
+<!--                            <dependency>-->
+<!--                                <groupId>org.postgresql</groupId>-->
+<!--                                <artifactId>postgresql</artifactId>-->
+<!--                                <version>42.2.18</version>-->
+<!--                            </dependency>-->
+<!--                        </dependencies>-->
+<!--                        <executions>-->
+<!--                            <execution>-->
+<!--                                <id>id.verify</id>-->
+<!--                                <phase>verify</phase>-->
+<!--                                <goals>-->
+<!--                                    <goal>run</goal>-->
+<!--                                </goals>-->
+<!--&lt;!&ndash;                            TODO Подумать над тем как привязать к embedded-postgresql:start       &ndash;&gt;-->
 
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <tasks>
-                                <sql driver="org.postgresql.Driver"
-                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"
-                                     userid="admin"
-                                     password="admin"
-                                     src="src/external/resources/Create_table.sql">
-                                </sql>
+<!--                            </execution>-->
+<!--                        </executions>-->
+<!--                        <configuration>-->
+<!--                            <tasks>-->
+<!--                                <sql driver="org.postgresql.Driver"-->
+<!--                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"-->
+<!--                                     userid="admin"-->
+<!--                                     password="admin"-->
+<!--                                     src="src/external/resources/Create_table.sql">-->
+<!--                                </sql>-->
 
-                                <sql driver="org.postgresql.Driver"
-                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"
-                                     userid="admin"
-                                     password="admin"
-                                     delimiter="/"
-                                     delimitertype="row"
-                                     src="src/external/resources/Create_constraint.sql">
-                                </sql>
-                            </tasks>
-                        </configuration>
-                    </plugin>
+<!--                                <sql driver="org.postgresql.Driver"-->
+<!--                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"-->
+<!--                                     userid="admin"-->
+<!--                                     password="admin"-->
+<!--                                     delimiter="/"-->
+<!--                                     delimitertype="row"-->
+<!--                                     src="src/external/resources/Create_constraint.sql">-->
+<!--                                </sql>-->
+<!--                            </tasks>-->
+<!--                        </configuration>-->
+<!--                    </plugin>-->
 
                     <plugin>
                         <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->

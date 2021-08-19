@@ -18,7 +18,6 @@ $(function () {
                 '   <div class="col-md-7">\n' +
                 '       <div class="p-2">\n' +
                 '           <div class="post">\n' +
-                '               <h6 class="list">' + posts[i].userName + '</h6>\n' +
                 '               <p class="list">' + posts[i].date + '</p>\n' +
                 '               <p class="list">' + posts[i].text + '</p>\n' +
                 '           </div>\n' +

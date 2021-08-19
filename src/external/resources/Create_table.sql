@@ -13,10 +13,10 @@ create table if not exists Accounts_Accounts (
 );
 
 create table if not exists POST (
-	id int4 not null,
+	id serial not null,
 	ACC_ID int4,
 	TEXT varchar(200),
-	DATE timestamp with time zone,
+	DATE timestamp without time zone,
 	primary key (id)
 );
 
