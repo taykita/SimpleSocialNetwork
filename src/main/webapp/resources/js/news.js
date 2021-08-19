@@ -9,6 +9,16 @@ $(function () {
         $.get("news/get-posts", data, success, "json");
     }
 
+    // $(window).scroll(function() {
+    //
+    //     let target = $(this).scrollTop();
+    //
+    //     if(target == 1) {
+    //         get();
+    //     }
+    //
+    // });
+
     function success(posts) {
         let div = document.getElementById('post');
         let innerHTML = '';

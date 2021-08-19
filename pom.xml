@@ -227,18 +227,28 @@
                                     <goal>run</goal>
                                 </goals>
 <!--                            TODO Подумать над тем как привязать к embedded-postgresql:start       -->
-                                <configuration>
-                                    <tasks>
-                                        <sql driver="org.postgresql.Driver"
-                                             url="jdbc:postgresql://localhost:15432/booknetwork_db"
-                                             userid="admin"
-                                             password="admin"
-                                             src="src/external/resources/Test.sql">
-                                        </sql>
-                                    </tasks>
-                                </configuration>
+
                             </execution>
                         </executions>
+                        <configuration>
+                            <tasks>
+                                <sql driver="org.postgresql.Driver"
+                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"
+                                     userid="admin"
+                                     password="admin"
+                                     src="src/external/resources/Create_table.sql">
+                                </sql>
+
+                                <sql driver="org.postgresql.Driver"
+                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"
+                                     userid="admin"
+                                     password="admin"
+                                     delimiter="/"
+                                     delimitertype="row"
+                                     src="src/external/resources/Create_constraint.sql">
+                                </sql>
+                            </tasks>
+                        </configuration>
                     </plugin>
 
                     <plugin>

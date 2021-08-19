@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
+import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
@@ -62,7 +63,7 @@ public class AuthorizationController {
     public String showLoginPage(Model model,
                                 @RequestParam(value = "error", required = false) String error,
                                 @RequestParam(value = "logout", required = false) String logout) {
-        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Account) {
+        if (SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof User) {
             return "redirect:" + "main";
         }
 

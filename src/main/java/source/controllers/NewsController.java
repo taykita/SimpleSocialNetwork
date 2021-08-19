@@ -52,9 +52,11 @@ public class NewsController {
 
         int friendsPostsLength = accountRepository.getFriendsPostsLength(user);
         if (count + 9 <= friendsPostsLength) {
-            return accountRepository.getFriendsPosts(user, count, count + 9);
+            List<Post> friendsPosts = accountRepository.getFriendsPosts(user, count, count + 9);
+            return friendsPosts;
         } else {
-            return accountRepository.getFriendsPosts(user, count, friendsPostsLength);
+            List<Post> friendsPosts = accountRepository.getFriendsPosts(user, count, friendsPostsLength);
+            return friendsPosts;
         }
     }
 

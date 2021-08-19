@@ -33,8 +33,6 @@ public class PostController {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
-        post.setDate(new Date().toString());
-
         accountRepository.addPost(post, accountRepository.get(activeUser.getId()));
         return "redirect:main";
     }

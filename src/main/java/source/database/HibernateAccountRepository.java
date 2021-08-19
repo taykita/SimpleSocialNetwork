@@ -162,10 +162,9 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            post.setUserName(user.getName());
-            post.setAccount(user);
+            session.createQuery("INSERT INTO (acc_id, text, date) post " +
+                    "VALUES ('" + user.getId() + "', '" + post.getText() + "', now())");
 
-            session.save(post);
             session.getTransaction().commit();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addPost Error.", e);

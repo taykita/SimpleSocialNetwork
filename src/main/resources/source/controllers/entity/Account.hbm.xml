@@ -16,14 +16,6 @@
             </many-to-many>
         </set>
 
-<!--        <list name="posts" table="POST"  cascade="all"-->
-<!--              lazy="false" fetch="select" inverse="true">-->
-<!--            <key>-->
-<!--                <column name="POST_ID"/>-->
-<!--            </key>-->
-<!--            <list-index column="idx"/>-->
-<!--            <one-to-many class="source.controllers.entity.Post"/>-->
-<!--        </list>-->
 
     </class>
 
@@ -44,8 +36,6 @@
         <property name="text" type="string" column="TEXT"/>
 
         <property name="date" type="string" column="DATE"/>
-
-        <property name="userName" type="string" column="USERNAME"/>
 
     </class>
 
