@@ -45,7 +45,7 @@ public interface AccountRepository {
 
     List<Post> getFriendsPosts(Account user, int count) throws AccStorageException;
 
-    List<Post> getFriendsPosts(Account user, int firstCount, int maxCount) throws AccStorageException;
+    List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException;
 
     int getFriendsPostsLength(Account user) throws AccStorageException;
 

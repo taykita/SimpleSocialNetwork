@@ -1,7 +1,7 @@
 <hibernate-mapping package="source.controllers.entity">
     <class name="Account" table="Accounts">
         <id name="id" type="int" column="id">
-            <generator class="native"/>
+            <generator class="identity"/>
         </id>
         <property name="email" type="string" column="EMAIL"/>
         <property name="pass" type="string" column="PASS"/>
@@ -25,7 +25,7 @@
         </meta>
 
         <id name="id" type="int" column="id">
-            <generator class="native"/>
+            <generator class="identity"/>
         </id>
 
         <many-to-one name="account" class="source.controllers.entity.Account" fetch="select">

@@ -69,14 +69,9 @@ public class UserPageController {
     @GetMapping("/user-page/get-posts")
     @ResponseBody
     public List<Post> getPosts(@RequestParam int id,
-                               @RequestParam(required = false, defaultValue = "10") int count) throws AccStorageException {
+                               @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        int postsLength = accountRepository.getPostsLength(id);
-        if (count + 9 <= postsLength) {
-            return accountRepository.getPosts(id, count, count + 9);
-        } else {
-            return accountRepository.getPosts(id, count, postsLength);
-        }
+        return accountRepository.getPosts(id, firstPostId, 10);
     }
 
 }

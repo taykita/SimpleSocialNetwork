@@ -49,14 +49,9 @@ public class MainPageController {
     @GetMapping("/main/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
-                               @RequestParam(required = false, defaultValue = "10") int count) throws AccStorageException {
+                               @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        int postsLength = accountRepository.getPostsLength(activeUser.getId());
-        if (count + 9 <= postsLength) {
-            return accountRepository.getPosts(activeUser.getId(), count, count + 9);
-        } else {
-            return accountRepository.getPosts(activeUser.getId(), count, postsLength);
-        }
+        return accountRepository.getPosts(activeUser.getId(), firstPostId, 10);
     }
 
 }

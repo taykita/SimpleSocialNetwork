@@ -42,7 +42,7 @@ public class PostController {
         accountRepository.deletePost(accountRepository.getPost(id));
         return "redirect:main";
     }
-
+//TODO Изменить на передачу id, а не Post
     @PostMapping("/edit-post")
     public String editPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
                            @RequestParam int id) throws AccStorageException {
@@ -54,9 +54,10 @@ public class PostController {
     }
 
     @PostMapping("/edit-post-page")
-    public String editPostPage(@RequestParam int id, Model model) {
+    public String editPostPage(@RequestParam int id, Model model) throws AccStorageException {
         model.addAttribute("post", new Post());
         model.addAttribute("postId", id);
+        model.addAttribute("oldText", accountRepository.getPost(id).getText());
 
         return "edit-post";
     }

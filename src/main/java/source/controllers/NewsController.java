@@ -46,18 +46,10 @@ public class NewsController {
     @GetMapping("/news/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
-                               @RequestParam(required = false, defaultValue = "10") int count) throws AccStorageException {
+                               @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        Account user = accountRepository.get(activeUser.getId());
-
-        int friendsPostsLength = accountRepository.getFriendsPostsLength(user);
-        if (count + 9 <= friendsPostsLength) {
-            List<Post> friendsPosts = accountRepository.getFriendsPosts(user, count, count + 9);
-            return friendsPosts;
-        } else {
-            List<Post> friendsPosts = accountRepository.getFriendsPosts(user, count, friendsPostsLength);
-            return friendsPosts;
-        }
+        int id = activeUser.getId();
+        return accountRepository.getFriendsPosts(accountRepository.get(id), firstPostId, 10);
     }
 
 }

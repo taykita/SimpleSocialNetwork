@@ -17,7 +17,7 @@
                 <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
                 <div class="form-floating">
                     <div class="input-group post-window">
-                        <textarea class="form-control" th:field="*{text}"></textarea>
+                        <textarea class="form-control" th:field="*{text}" th:text="${oldText}">...</textarea>
                     </div>
                 </div>
                 <input type="text" name="id" th:value="${postId}" hidden/>

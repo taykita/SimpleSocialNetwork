@@ -1,11 +1,11 @@
-let currentCount = 1;
+let currentFirstPostId = 2147483647;
 $(document).off('.data-api')
 $(function () {
     $(document).ready(get);
-    $('#load-post').click();
+    $('#load-post').click(get);
 
     function get() {
-        let data = {count: currentCount};
+        let data = {firstPostId: currentFirstPostId};
         $.get("main/get-posts", data, success, "json");
     }
 
@@ -48,6 +48,6 @@ $(function () {
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
-        currentCount += 10;
+        currentFirstPostId = posts[posts.length-1].id;
     }
 });

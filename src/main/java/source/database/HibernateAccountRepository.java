@@ -12,6 +12,7 @@ import source.exception.AccStorageException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 @Repository
@@ -223,7 +224,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId, int count) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
+            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID = :id ORDER BY id DESC")
                     .setParameter("id", userId)
                     .setMaxResults(count)
                     .getResultList();
@@ -235,8 +236,11 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createSQLQuery("SELECT * FROM " +
-                    "Post WHERE ACC_ID = " + userId + " AND id > " + firstPostId + " ORDER BY id DESC LIMIT " + maxCount + ";")
+            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID = :acc_id " +
+                    "AND ID < :firstPostId ORDER BY id DESC")
+                    .setParameter("acc_id", userId)
+                    .setParameter("firstPostId", firstPostId)
+                    .setMaxResults(maxCount)
                     .getResultList();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
@@ -279,7 +283,7 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public List<Post> getFriendsPosts(Account user, int firstCount, int maxCount) throws AccStorageException {
+    public List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
 
@@ -287,16 +291,49 @@ public class HibernateAccountRepository implements AccountRepository {
                 ids.add(account.getId());
             }
 
-            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID IN (:ids) ORDER BY id DESC")
+            Iterator results = session.createQuery("SELECT (Post.id, Post.ACC_ID, Post.TEXT, Post.DATE, Accounts.user_name) " +
+                    "FROM Post join Accounts on Post.ACC_ID=Accounts.id WHERE Post.ACC_ID IN (:ids) " +
+                    "AND Post.ID < :firstPostId ORDER BY Post.id DESC")
                     .setParameterList("ids", ids)
-                    .setFirstResult(firstCount)
+                    .setParameter("firstPostId", firstPostId)
                     .setMaxResults(maxCount)
-                    .getResultList();
+                    .getResultList()
+                    .iterator();
+
+            List<Post> posts = new ArrayList<>();
+
+            while (results.hasNext()) {
+                Object[] row = (Object[]) results.next();
+                Post post = new Post();
+                post.setId((Integer) row[0]);
+                post.setText((String) row[2]);
+                post.setDate((String) row[3]);
+                post.setUserName((String) row[4]);
+                posts.add(post);
+            }
+
+//            StringBuilder ids = new StringBuilder();
+//            List<Account> friends = getFriends(user);
+//            for (int i = 0; i < friends.size()-1; i++) {
+//                ids.append(friends.get(i).getId()).append(", ");
+//            }
+//            ids.append(friends.get(friends.size()-1));
+//
+//            Iterator results = session.createSQLQuery("SELECT (Post.id, Post.ACC_ID, Post.TEXT, Post.DATE, Accounts.user_name) " +
+//                    "FROM Post join Accounts on Post.ACC_ID=Accounts.id WHERE Post.ACC_ID IN (" + ids + ") " +
+//                    "AND Post.ID < " + firstPostId +" ORDER BY Post.id DESC LIMIT " + maxCount + ";")
+//                    .list()
+//                    .iterator();
+//
+//            List<Post> posts = new ArrayList<>();
+
+            return posts;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 
+    //TODO Убрать
     @Override
     public int getFriendsPostsLength(Account user) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
@@ -315,6 +352,7 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
+    //TODO Убрать
     @Override
     public int getPostsLength(int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {

@@ -1,4 +1,4 @@
-let currentCount = 1;
+let currentFirstPostId = 2147483647;
 let url = new URL(window.location.href);
 let searchParams = new URLSearchParams(url.search.substring(1));
 let currentId = searchParams.get("id");
@@ -8,7 +8,7 @@ $(function () {
     $('#load-post').click(get);
 
     function get() {
-        let data = {count: currentCount, id: currentId};
+        let data = {firstPostId: currentFirstPostId, id: currentId};
         $.get("user-page/get-posts", data, success, "json");
     }
 
@@ -21,7 +21,6 @@ $(function () {
                 '   <div class="col-md-7">\n' +
                 '       <div class="p-2">\n' +
                 '           <div class="post">\n' +
-                '               <h6 class="list">' + posts[i].userName + '</h6>\n' +
                 '               <p class="list">' + posts[i].date + '</p>\n' +
                 '               <p class="list">' + posts[i].text + '</p>\n' +
                 '           </div>\n' +
@@ -32,6 +31,6 @@ $(function () {
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
-        currentCount += 10;
+        currentFirstPostId = posts[posts.length-1].id;
     }
 });

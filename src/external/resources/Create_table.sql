@@ -1,5 +1,5 @@
 create table if not exists Accounts (
-	id int4 not null,
+	ID serial not null,
 	EMAIL varchar(50),
 	PASS varchar(100),
 	USER_NAME varchar(50),
@@ -13,7 +13,7 @@ create table if not exists Accounts_Accounts (
 );
 
 create table if not exists POST (
-	id serial not null,
+	ID serial not null,
 	ACC_ID int4,
 	TEXT varchar(200),
 	DATE timestamp without time zone,
