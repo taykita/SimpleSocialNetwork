@@ -27,22 +27,17 @@ public class MainPageController {
 
     @GetMapping("/main")
     public String mainPage(@AuthenticationPrincipal User activeUser,
-                           @RequestParam(required = false, defaultValue = "10") int count,
                            Model model) throws AccStorageException {
 
         Account user = accountRepository.get(activeUser.getId());
 
-        List<Post> posts = accountRepository.getPosts(activeUser.getId(), count);
-
-        updateModel(user, model, count, posts);
+        updateModel(user, model);
 
         return "main";
     }
 
-    private void updateModel(Account activeUser, Model model, int count, List<Post> posts) {
+    private void updateModel(Account activeUser, Model model) {
         model.addAttribute("post", new Post());
-        model.addAttribute("count", count + 10);
-        model.addAttribute("posts", posts);
         model.addAttribute("name", activeUser.getName());
     }
 

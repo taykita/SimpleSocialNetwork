@@ -55,9 +55,12 @@ public class PostController {
 
     @PostMapping("/edit-post-page")
     public String editPostPage(@RequestParam int id, Model model) throws AccStorageException {
-        model.addAttribute("post", new Post());
+        Post post = new Post();
+        String text = accountRepository.getPost(id).getText();
+        post.setText(text);
+        model.addAttribute("post", post);
         model.addAttribute("postId", id);
-        model.addAttribute("oldText", accountRepository.getPost(id).getText());
+
 
         return "edit-post";
     }

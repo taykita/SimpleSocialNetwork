@@ -35,19 +35,8 @@ public interface AccountRepository {
 
     Post getPost(int postId) throws AccStorageException;
 
-    List<Post> getPosts(int userId) throws AccStorageException;
-
-    List<Post> getPosts(int userId, int count) throws AccStorageException;
-
     List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException;
-
-    List<Post> getFriendsPosts(Account user) throws AccStorageException;
-
-    List<Post> getFriendsPosts(Account user, int count) throws AccStorageException;
 
     List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException;
 
-    int getFriendsPostsLength(Account user) throws AccStorageException;
-
-    int getPostsLength(int userId) throws AccStorageException;
 }

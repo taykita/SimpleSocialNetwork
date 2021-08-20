@@ -27,13 +27,7 @@ public class TestController {
     @GetMapping("/testJSON")
     @ResponseBody
     public List<Post> testJSON(@RequestParam(required = false) int count) throws AccStorageException {
-        Account user = accountRepository.get("123@123");
-        int friendsPostsLength = accountRepository.getFriendsPostsLength(user);
-        if (count + 9 <= friendsPostsLength) {
-            return accountRepository.getFriendsPosts(user, count, count + 9);
-        } else {
-            return accountRepository.getFriendsPosts(user, count, friendsPostsLength);
-        }
+        return accountRepository.getFriendsPosts(accountRepository.get("123@123"), count, count + 9);
     }
 
 }

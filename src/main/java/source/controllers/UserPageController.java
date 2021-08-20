@@ -28,7 +28,6 @@ public class UserPageController {
     @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal User activeUser,
                            @RequestParam Integer id,
-                           @RequestParam(required = false, defaultValue = "10") int count,
                            Model model) throws AccStorageException {
 
         if (isActiveUser(activeUser, id)) {
@@ -37,9 +36,8 @@ public class UserPageController {
 
         Account user = accountRepository.get(activeUser.getId());
 
-        List<Post> posts = accountRepository.getPosts(id, count);
 
-        updateModel(user, model, id, count, posts);
+        updateModel(user, model, id);
 
         return "user-page";
     }
@@ -48,15 +46,9 @@ public class UserPageController {
         return id == activeUser.getId();
     }
 
-    private int getId(HttpServletRequest request) {
-        return Integer.parseInt(request.getParameter("id"));
-    }
-
-    private void updateModel(Account activeUser, Model model, int id, int count, List<Post> posts) throws AccStorageException {
+    private void updateModel(Account activeUser, Model model, int id) throws AccStorageException {
         Account userAccount = accountRepository.get(id);
 
-        model.addAttribute("count", count + 10);
-        model.addAttribute("posts", posts);
         model.addAttribute("name", userAccount.getName());
         model.addAttribute("isFriend", isFriend(activeUser, userAccount));
         model.addAttribute("id", id);

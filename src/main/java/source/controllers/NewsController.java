@@ -25,22 +25,8 @@ public class NewsController {
     private final AccountRepository accountRepository;
 
     @GetMapping("/news")
-    public String newsPage(@AuthenticationPrincipal User activeUser,
-                           @RequestParam(required = false, defaultValue = "10") int count,
-                           Model model) throws AccStorageException {
-
-        Account user = accountRepository.get(activeUser.getId());
-
-        List<Post> posts = accountRepository.getFriendsPosts(user, count);
-
-        updateModel(model, count, posts);
-
+    public String newsPage() {
         return "news";
-    }
-
-    private void updateModel(Model model, int count, List<Post> posts) {
-        model.addAttribute("count", count + 10);
-        model.addAttribute("posts", posts);
     }
 
     @GetMapping("/news/get-posts")

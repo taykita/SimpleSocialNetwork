@@ -20,7 +20,7 @@ create table if not exists POST (
 	primary key (id)
 );
 
-CREATE SEQUENCE if not exists  hibernate_sequence
+CREATE SEQUENCE if not exists hibernate_sequence
     INCREMENT 1
     START 1
     MINVALUE 1
