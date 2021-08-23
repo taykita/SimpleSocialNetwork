@@ -9,6 +9,10 @@
 
     <link href="resources/css/news.css" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+            integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
     <script src="resources/js/news.js"></script>
@@ -20,19 +24,19 @@
             <div class="position-sticky">
                 <div class="p-2 mb-3">
                     <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                        <a class="btn btn-md btn-secondary" href="main">
+                        <a class="btn btn-md btn-secondary" href="/main">
                             Моя страница
                         </a>
                         <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
                         </a>
-                        <a class="btn btn-md btn-secondary active" href="news">
+                        <a class="btn btn-md btn-secondary active" th:href="@{'/news/' + ${id}}">
                             Новости
                         </a>
-                        <a class="btn btn-md btn-secondary" href="friend-list">
+                        <a class="btn btn-md btn-secondary" href="/friend-list">
                             Друзья
                         </a>
-                        <a class="btn btn-md btn-secondary" href="user-list">
+                        <a class="btn btn-md btn-secondary" href="/user-list">
                             Список пользователей
                         </a>
                     </div>
@@ -47,7 +51,7 @@
                     </div>
                     <div class="col-md-2">
                         <div class="exitB">
-                            <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
+                            <a class="w-30 btn btn-lg btn-secondary" href="/exit" type="submit">Выход</a>
                         </div>
                     </div>
                 </div>

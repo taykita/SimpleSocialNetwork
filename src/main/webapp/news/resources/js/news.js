@@ -1,8 +1,45 @@
 let currentFirstPostId = 2147483647;
 $(document).off('.data-api')
+
+let url = window.location.href;
+let last = url.split('/').pop();
+
+function connect() {
+    let socket = new SockJS('/123');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+        stompClient.subscribe('/news/' + last, function (post) {
+            showGreeting(JSON.parse(post));
+        });
+    });
+}
+
+function showGreeting(post) {
+    let div = document.getElementById('post');
+    let innerHTML = '';
+    innerHTML +=
+        '<div class="row">\n' +
+        '   <div class="col-md-7">\n' +
+        '       <div class="p-2">\n' +
+        '           <div class="post">\n' +
+        '               <h6 class="list">' + post.userName + '</h6>\n' +
+        '               <p class="list">' + post.date + '</p>\n' +
+        '               <p class="list">' + post.text + '</p>\n' +
+        '           </div>\n' +
+        '       </div>\n' +
+        '   </div>\n' +
+        '</div>\n';
+    let innerDiv = document.createElement('div');
+    innerDiv.innerHTML = innerHTML;
+    div.insertAdjacentElement("beforebegin", innerDiv);
+}
+
 $(function () {
     $(document).ready(get);
     $('#load-post').click(get);
+
+    connect();
 
     function get() {
         let data = {firstPostId: currentFirstPostId};

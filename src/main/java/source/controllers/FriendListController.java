@@ -26,11 +26,12 @@ public class FriendListController {
         Account user = accountRepository.get(activeUser.getId());
         List<Account> allUsers = accountRepository.getFriends(user);
 
-        updateModel(model, allUsers);
+        updateModel(model, allUsers, user.getId());
         return "friend-list";
     }
 
-    private void updateModel(Model model, List<Account> allUsers) {
+    private void updateModel(Model model, List<Account> allUsers, int id) {
         model.addAttribute("users", allUsers.toArray());
+        model.addAttribute("id", id);
     }
 }

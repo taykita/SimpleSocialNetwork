@@ -1,6 +1,8 @@
 package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,12 +26,14 @@ public class NewsController {
 
     private final AccountRepository accountRepository;
 
-    @GetMapping("/news")
-    public String newsPage() {
+
+    @GetMapping("/news/{id}")
+    public String newsPage(@AuthenticationPrincipal User activeUser, Model model) {
+        model.addAttribute("id", activeUser.getId());
         return "news";
     }
 
-    @GetMapping("/news/get-posts")
+    @GetMapping("/news/{id}/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {

@@ -37,7 +37,7 @@ public class UserPageController {
         Account user = accountRepository.get(activeUser.getId());
 
 
-        updateModel(user, model, id);
+        updateModel(user, model, id, activeUser.getId());
 
         return "user-page";
     }
@@ -46,12 +46,13 @@ public class UserPageController {
         return id == activeUser.getId();
     }
 
-    private void updateModel(Account activeUser, Model model, int id) throws AccStorageException {
+    private void updateModel(Account activeUser, Model model, int id, int activeUserId) throws AccStorageException {
         Account userAccount = accountRepository.get(id);
 
         model.addAttribute("name", userAccount.getName());
         model.addAttribute("isFriend", isFriend(activeUser, userAccount));
         model.addAttribute("id", id);
+        model.addAttribute("activeUserId", activeUserId);
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {

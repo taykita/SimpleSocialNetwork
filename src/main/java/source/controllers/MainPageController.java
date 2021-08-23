@@ -39,6 +39,7 @@ public class MainPageController {
     private void updateModel(Account activeUser, Model model) {
         model.addAttribute("post", new Post());
         model.addAttribute("name", activeUser.getName());
+        model.addAttribute("id", activeUser.getId());
     }
 
     @GetMapping("/main/get-posts")

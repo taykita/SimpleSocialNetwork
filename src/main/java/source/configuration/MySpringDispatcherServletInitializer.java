@@ -13,7 +13,7 @@ public class MySpringDispatcherServletInitializer
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{SpringConfig.class, WebSecurityConfig.class};
+        return new Class[]{SpringConfig.class, WebSecurityConfig.class, WebSocketConfig.class};
     }
 
     @Override

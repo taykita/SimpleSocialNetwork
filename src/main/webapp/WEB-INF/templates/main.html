@@ -9,6 +9,10 @@
 
     <link href="resources/css/main.css" rel="stylesheet">
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"
+            integrity="sha512-iKDtgDyTHjAitUDdLljGhenhPwrbBfqTKWO1mkhSFH3A7blITC9MhYon6SjnMhp4o0rADGw9yAC6EW4t5a4K3g=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
     <script src="resources/js/main.js"></script>
@@ -26,7 +30,7 @@
                         <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
                         </a>
-                        <a class="btn btn-md btn-secondary" href="news">
+                        <a class="btn btn-md btn-secondary" th:href="@{'news/' + ${id}}">
                             Новости
                         </a>
                         <a class="btn btn-md btn-secondary" href="friend-list">
@@ -61,6 +65,7 @@
             </div>
             <h1>Посты</h1>
 
+            <input type ="text" name="id" value="' + ${id} + '" hidden />
 
             <div class="row">
                 <div class="col-md-7">
@@ -71,7 +76,7 @@
                             <label for="text" th:field="*{text}">Введите текст</label>
                         </div>
 
-                        <button class="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
+                        <button class="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
                     </form>
                 </div>
             </div>
