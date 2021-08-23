@@ -10,7 +10,9 @@ function connect() {
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/news/' + last, function (post) {
-            showGreeting(JSON.parse(post));
+            console.log("getting post");
+            let postObj = JSON.parse(post.body);
+            showGreeting(postObj);
         });
     });
 }

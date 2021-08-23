@@ -65,7 +65,7 @@
             </div>
             <h1>Посты</h1>
 
-            <input type ="text" name="id" value="' + ${id} + '" hidden />
+            <input type ="text" id="id" name="id" th:value="${id}" hidden />
 
             <div class="row">
                 <div class="col-md-7">
@@ -78,6 +78,7 @@
 
                         <button class="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
                     </form>
+                    <button class="w-100 btn btn-lg btn-dark" type="submit" id="send1">Опубликовать</button>
                 </div>
             </div>
 

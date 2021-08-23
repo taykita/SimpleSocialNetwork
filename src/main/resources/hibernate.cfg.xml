@@ -10,7 +10,7 @@
 
 <!--        <property name="hibernate.hbm2ddl.auto">update</property>-->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-        <property name="hibernate.connection.url">jdbc:postgresql://${host.port}/booknetwork_db</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://78.24.220.161/booknetwork_db</property>
         <property name="hibernate.connection.username">admin</property>
         <property name="hibernate.connection.password">admin</property>
         <property name="hibernate.connection.characterEncoding">utf8</property>
