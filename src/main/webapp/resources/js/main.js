@@ -8,24 +8,12 @@ function connect() {
     });
 }
 
-function sendName() {
-      const message = {
-        name: $("#text").val(),
-        id: $("#id").val(),
-      };
-    stompClient.send("/app/hello", {}, JSON.stringify(message));
-}
-
 let currentFirstPostId = 2147483647;
 $(document).off('.data-api')
 $(function () {
     $(document).ready(get);
     $('#load-post').click(get);
     connect();
-
-    $("#send").click(function() {
-        sendName();
-    });
 
     function get() {
         let data = {firstPostId: currentFirstPostId};

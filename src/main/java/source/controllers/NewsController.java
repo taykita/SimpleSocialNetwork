@@ -33,7 +33,7 @@ public class NewsController {
         return "news";
     }
 
-    @GetMapping("/news/{id}/get-posts")
+    @GetMapping("/news/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {

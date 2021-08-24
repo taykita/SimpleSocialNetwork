@@ -1,6 +1,7 @@
 package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,9 +19,12 @@ public class TestController {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/test")
     public String test(Model model) throws AccStorageException {
+        Post post = accountRepository.getPost(1);
         return "test";
     }
 

@@ -27,7 +27,7 @@ public interface AccountRepository {
 
     List<Account> getFriends(Account user) throws AccStorageException;
 
-    void addPost(Post post, Account user) throws AccStorageException;
+    Post addPost(Post post, Account user) throws AccStorageException;
 
     void deletePost(Post post) throws AccStorageException;
 

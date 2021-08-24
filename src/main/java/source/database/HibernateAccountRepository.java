@@ -161,16 +161,18 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public void addPost(Post post, Account user) throws AccStorageException {
+    public Post addPost(Post post, Account user) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) VALUES (:id, :text, now())")
+            int id = (int) session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) VALUES (:id, :text, now()) RETURNING ID;")
                     .setParameter("id", user.getId())
                     .setParameter("text", post.getText())
-                    .executeUpdate();
+                    .getSingleResult();
 
             session.getTransaction().commit();
+
+            return getPost(id);
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addPost Error.", e);
         }
@@ -261,27 +263,13 @@ public class HibernateAccountRepository implements AccountRepository {
                 Object[] row = (Object[]) results.next();
                 Post post = new Post();
                 post.setId((Integer) row[0]);
-                post.setDate((String) row[2]);
+                post.setText((String) row[2]);
                 Timestamp timestamp = (Timestamp) row[3];
-                post.setText(new Date(timestamp.getTime()).toString());
+                //TODO Сделать нормально отображение времени
+                post.setDate(new Date(timestamp.getTime()).toString());
                 post.setUserName((String) row[4]);
                 posts.add(post);
             }
-
-//            StringBuilder ids = new StringBuilder();
-//            List<Account> friends = getFriends(user);
-//            for (int i = 0; i < friends.size()-1; i++) {
-//                ids.append(friends.get(i).getId()).append(", ");
-//            }
-//            ids.append(friends.get(friends.size()-1));
-//
-//            Iterator results = session.createSQLQuery("SELECT (Post.id, Post.ACC_ID, Post.TEXT, Post.DATE, Accounts.user_name) " +
-//                    "FROM Post join Accounts on Post.ACC_ID=Accounts.id WHERE Post.ACC_ID IN (" + ids + ") " +
-//                    "AND Post.ID < " + firstPostId +" ORDER BY Post.id DESC LIMIT " + maxCount + ";")
-//                    .list()
-//                    .iterator();
-//
-//            List<Post> posts = new ArrayList<>();
 
             return posts;
         } catch (HibernateException e) {

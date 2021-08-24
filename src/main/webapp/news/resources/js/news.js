@@ -12,12 +12,12 @@ function connect() {
         stompClient.subscribe('/news/' + last, function (post) {
             console.log("getting post");
             let postObj = JSON.parse(post.body);
-            showGreeting(postObj);
+            showPost(postObj);
         });
     });
 }
 
-function showGreeting(post) {
+function showPost(post) {
     let div = document.getElementById('post');
     let innerHTML = '';
     innerHTML +=
@@ -34,7 +34,7 @@ function showGreeting(post) {
         '</div>\n';
     let innerDiv = document.createElement('div');
     innerDiv.innerHTML = innerHTML;
-    div.insertAdjacentElement("beforebegin", innerDiv);
+    div.insertAdjacentElement("afterbegin", innerDiv);
 }
 
 $(function () {
@@ -47,16 +47,6 @@ $(function () {
         let data = {firstPostId: currentFirstPostId};
         $.get("news/get-posts", data, success, "json");
     }
-
-    // $(window).scroll(function() {
-    //
-    //     let target = $(this).scrollTop();
-    //
-    //     if(target == 1) {
-    //         get();
-    //     }
-    //
-    // });
 
     function success(posts) {
         let div = document.getElementById('post');

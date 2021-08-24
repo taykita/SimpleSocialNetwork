@@ -1,6 +1,7 @@
 package source.controllers.action;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,14 +17,17 @@ import source.exception.AccStorageException;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.List;
 
 @Controller
 public class PostController {
     @Autowired
-    public PostController(AccountRepository accountRepository) {
+    public PostController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate) {
         this.accountRepository = accountRepository;
+        this.messagingTemplate = messagingTemplate;
     }
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
 
     //TODO Разобраться с отображением ошибки
@@ -33,7 +37,16 @@ public class PostController {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
-        accountRepository.addPost(post, accountRepository.get(activeUser.getId()));
+        Account account = accountRepository.get(activeUser.getId());
+        post = accountRepository.addPost(post, account);
+
+        post.setUserName(account.getName());
+        List<Account> friends = accountRepository.getFriends(account);
+        for (Account friend: friends) {
+            messagingTemplate.convertAndSend("/news/" + friend.getId(), post);
+            messagingTemplate.convertAndSend("/user-page/" + friend.getId(), post);
+        }
+
         return "redirect:main";
     }
 
@@ -42,7 +55,7 @@ public class PostController {
         accountRepository.deletePost(accountRepository.getPost(id));
         return "redirect:main";
     }
-//TODO Изменить на передачу id, а не Post
+
     @PostMapping("/edit-post")
     public String editPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
                            @RequestParam int id) throws AccStorageException {

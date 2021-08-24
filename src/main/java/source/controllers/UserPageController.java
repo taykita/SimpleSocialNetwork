@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
@@ -25,9 +26,9 @@ public class UserPageController {
 
     private final AccountRepository accountRepository;
 
-    @GetMapping("/user-page")
+    @GetMapping("/user-page/{id}")
     public String userPage(@AuthenticationPrincipal User activeUser,
-                           @RequestParam Integer id,
+                           @PathVariable Integer id,
                            Model model) throws AccStorageException {
 
         if (isActiveUser(activeUser, id)) {

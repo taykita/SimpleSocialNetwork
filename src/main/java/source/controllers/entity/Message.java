@@ -2,22 +2,22 @@ package source.controllers.entity;
 
 public class Message {
 
-    private String name;
+    private String text;
     private int id;
 
     public Message() {
     }
 
     public Message(String name) {
-        this.name = name;
+        this.text = name;
     }
 
-    public String getName() {
-        return name;
+    public String getText() {
+        return text;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setText(String text) {
+        this.text = text;
     }
 
 
