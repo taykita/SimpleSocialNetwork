@@ -134,6 +134,13 @@
 
     <build>
         <finalName>SimpleSocialNetwork</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.tomcat.maven</groupId>
@@ -207,36 +214,46 @@
         <profile>
             <id>local</id>
             <properties>
-                <host.port>localhost/15432</host.port>
+                <host.port>localhost:15432</host.port>
             </properties>
             <build>
                 <plugins>
-<!--                    <plugin>-->
-<!--                        <groupId>com.github.slavaz</groupId>-->
-<!--                        <artifactId>embedded-postgresql-maven-plugin</artifactId>-->
-<!--                        <configuration>-->
-<!--                            <pgServerVersion>latest</pgServerVersion>-->
-<!--                            <pgServerPort>15432</pgServerPort>-->
-<!--                            <dbName>booknetwork_db</dbName>-->
-<!--                            <userName>admin</userName>-->
-<!--                            <password>admin</password>-->
-<!--                            <pgLocale>no</pgLocale>-->
-<!--                            <pgCharset>no</pgCharset>-->
-<!--                        </configuration>-->
-<!--                        <dependencies>-->
-<!--                            <dependency>-->
-<!--                                <groupId>org.slf4j</groupId>-->
-<!--                                <artifactId>slf4j-api</artifactId>-->
-<!--                                <version>1.7.32</version>-->
-<!--                            </dependency>-->
-<!--                            <dependency>-->
-<!--                                <groupId>ch.qos.logback</groupId>-->
-<!--                                <artifactId>logback-classic</artifactId>-->
-<!--                                <version>1.2.3</version>-->
-<!--                            </dependency>-->
-<!--                        </dependencies>-->
+                    <plugin>
+                        <groupId>com.github.slavaz</groupId>
+                        <artifactId>embedded-postgresql-maven-plugin</artifactId>
+                        <configuration>
+                            <pgServerVersion>latest</pgServerVersion>
+                            <pgServerPort>15432</pgServerPort>
+                            <dbName>booknetwork_db</dbName>
+                            <userName>admin</userName>
+                            <password>admin</password>
+                            <pgLocale>no</pgLocale>
+                            <pgCharset>no</pgCharset>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>
+                                        start
+                                    </goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.slf4j</groupId>
+                                <artifactId>slf4j-api</artifactId>
+                                <version>1.7.32</version>
+                            </dependency>
+                            <dependency>
+                                <groupId>ch.qos.logback</groupId>
+                                <artifactId>logback-classic</artifactId>
+                                <version>1.2.3</version>
+                            </dependency>
+                        </dependencies>
 
-<!--                    </plugin>-->
+                    </plugin>
 
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
@@ -257,30 +274,16 @@
                                 <goals>
                                     <goal>run</goal>
                                 </goals>
-<!--                            TODO Подумать над тем как привязать к embedded-postgresql:start       -->
-
                             </execution>
                         </executions>
                         <configuration>
-                            <tasks defoult="table">
-                                <task name="table">
-                                    <sql driver="org.postgresql.Driver"
-                                         url="jdbc:postgresql://localhost:15432/booknetwork_db"
-                                         userid="admin"
-                                         password="admin"
-                                         src="src/external/resources/Create_table.sql">
-                                    </sql>
-                                </task>
-                                <task name="constraint" depends="table">
-                                    <sql driver="org.postgresql.Driver"
-                                         url="jdbc:postgresql://localhost:15432/booknetwork_db"
-                                         userid="admin"
-                                         password="admin"
-                                         delimiter="/"
-                                         delimitertype="row"
-                                         src="src/external/resources/Create_constraint.sql">
-                                    </sql>
-                                </task>
+                            <tasks>
+                                <sql driver="org.postgresql.Driver"
+                                     url="jdbc:postgresql://localhost:15432/booknetwork_db"
+                                     userid="admin"
+                                     password="admin"
+                                     src="src/external/resources/Create_table.sql">
+                                </sql>
                             </tasks>
 
                         </configuration>
@@ -291,6 +294,14 @@
                         <groupId>org.eclipse.jetty</groupId>
                         <artifactId>jetty-maven-plugin</artifactId>
                         <version>9.4.43.v20210629</version>
+                        <executions>
+                            <execution>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>

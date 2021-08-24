@@ -20,9 +20,17 @@ create table if not exists POST (
 	primary key (id)
 );
 
-CREATE SEQUENCE if not exists hibernate_sequence
-    INCREMENT 1
-    START 1
-    MINVALUE 1
-    MAXVALUE 9223372036854775807
-    CACHE 1;
+alter table if exists Accounts_Accounts
+    	add constraint USER_ID_CONST
+    	foreign key (USER_ID)
+    	references Accounts;
+
+alter table if exists Accounts_Accounts
+        add constraint ACC_ID_CONST
+        foreign key (ACC_ID)
+        references Accounts;
+
+alter table if exists POST
+    	add constraint POST_ACC_ID_CONST
+    	foreign key (ACC_ID)
+    	references Accounts;

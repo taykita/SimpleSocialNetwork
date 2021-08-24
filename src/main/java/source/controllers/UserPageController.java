@@ -32,7 +32,7 @@ public class UserPageController {
                            Model model) throws AccStorageException {
 
         if (isActiveUser(activeUser, id)) {
-            return "redirect:main";
+            return "redirect:/main";
         }
 
         Account user = accountRepository.get(activeUser.getId());

@@ -44,9 +44,9 @@ $(function () {
 
     $(window).scroll(function () {
         if($(window).height() + $(window).scrollTop() + 40 >= $(document).height() && !block) {
-                block = true;
-                get();
-            }
+            block = true;
+            get();
+        }
     });
 
     connect();
