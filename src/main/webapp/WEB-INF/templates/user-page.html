@@ -15,7 +15,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
-    <script src="/resources/js/user-page.js"></script>
+    <script src="resources/js/user-page.js"></script>
 </head>
 <body>
 <main class="main">
@@ -24,19 +24,19 @@
             <div class="position-sticky">
                 <div class="p-2 mb-3">
                     <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                        <a class="btn btn-md btn-secondary" href="main">
+                        <a class="btn btn-md btn-secondary" href="../main">
                             Моя страница
                         </a>
                         <a class="btn btn-md btn-secondary" href="#">
                             Сообщения
                         </a>
-                        <a class="btn btn-md btn-secondary" th:href="@{'news/' + ${activeUserId}}">
+                        <a class="btn btn-md btn-secondary" th:href="@{'../news/' + ${activeUserId}}">
                             Новости
                         </a>
-                        <a class="btn btn-md btn-secondary" href="friend-list">
+                        <a class="btn btn-md btn-secondary" href="../friend-list">
                             Друзья
                         </a>
-                        <a class="btn btn-md btn-secondary" href="user-list">
+                        <a class="btn btn-md btn-secondary" href="../user-list">
                             Список пользователей
                         </a>
                     </div>

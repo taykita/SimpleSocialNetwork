@@ -60,7 +60,7 @@ public class UserPageController {
         return accountRepository.isFriend(user, friend);
     }
 
-    @GetMapping("/user-page/get-posts")
+    @GetMapping("/user-page/{id}/get-posts")
     @ResponseBody
     public List<Post> getPosts(@RequestParam int id,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {

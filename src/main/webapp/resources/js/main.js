@@ -1,5 +1,7 @@
 let stompClient = null;
 
+let block = false;
+
 function connect() {
     let socket = new SockJS('/123');
     stompClient = Stomp.over(socket);
@@ -13,6 +15,14 @@ $(document).off('.data-api')
 $(function () {
     $(document).ready(get);
     $('#load-post').click(get);
+
+    $(window).scroll(function () {
+        if($(window).height() + $(window).scrollTop() + 40 >= $(document).height() && !block) {
+                block = true;
+                get();
+            }
+    });
+
     connect();
 
     function get() {
@@ -60,5 +70,6 @@ $(function () {
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
         currentFirstPostId = posts[posts.length-1].id;
+        block = false;
     }
 });

@@ -1,8 +1,10 @@
 let currentFirstPostId = 2147483647;
-let url = new URL(window.location.href);
-let searchParams = new URLSearchParams(url.search.substring(1));
-let currentId = searchParams.get("id");
 $(document).off('.data-api')
+
+let url = window.location.href;
+let currentId = url.split('/').pop();
+
+let block = false;
 
 function connect() {
     let socket = new SockJS('/123');
@@ -25,8 +27,8 @@ function showPost(post) {
         '   <div class="col-md-7">\n' +
         '       <div class="p-2">\n' +
         '           <div class="post">\n' +
-        '               <p class="list">' + posts[i].date + '</p>\n' +
-        '               <p class="list">' + posts[i].text + '</p>\n' +
+        '               <p class="list">' + post.date + '</p>\n' +
+        '               <p class="list">' + post.text + '</p>\n' +
         '           </div>\n' +
         '       </div>\n' +
         '   </div>\n' +
@@ -39,6 +41,13 @@ function showPost(post) {
 $(function () {
     $(document).ready(get);
     $('#load-post').click(get);
+
+    $(window).scroll(function () {
+        if($(window).height() + $(window).scrollTop() + 40 >= $(document).height() && !block) {
+                block = true;
+                get();
+            }
+    });
 
     connect();
 
@@ -67,5 +76,6 @@ $(function () {
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
         currentFirstPostId = posts[posts.length-1].id;
+        block = false;
     }
 });
