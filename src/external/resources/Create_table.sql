@@ -10,6 +10,12 @@ create table if not exists Accounts_Accounts (
 	ACC_ID int4 not null,
 	USER_ID int4 not null,
 	primary key (ACC_ID, USER_ID)
+	add constraint USER_ID_CONST
+        foreign key (USER_ID)
+        references Accounts;
+    add constraint ACC_ID_CONST
+        foreign key (ACC_ID)
+        references Accounts;
 );
 
 create table if not exists POST (
@@ -18,19 +24,7 @@ create table if not exists POST (
 	TEXT varchar(200),
 	DATE timestamp without time zone,
 	primary key (id)
-);
-
-alter table if exists Accounts_Accounts
-    	add constraint USER_ID_CONST
-    	foreign key (USER_ID)
-    	references Accounts;
-
-alter table if exists Accounts_Accounts
-        add constraint ACC_ID_CONST
+	add constraint POST_ACC_ID_CONST
         foreign key (ACC_ID)
         references Accounts;
-
-alter table if exists POST
-    	add constraint POST_ACC_ID_CONST
-    	foreign key (ACC_ID)
-    	references Accounts;
+);

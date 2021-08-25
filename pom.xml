@@ -17,7 +17,6 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <spring.version>5.2.15.RELEASE</spring.version>
-        <host.port>78.24.220.161</host.port>
     </properties>
 
     <dependencies>
@@ -197,22 +196,7 @@
 
     <profiles>
         <profile>
-            <id>jetty</id>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
-                        <groupId>org.eclipse.jetty</groupId>
-                        <artifactId>jetty-maven-plugin</artifactId>
-                        <version>9.4.43.v20210629</version>
-                    </plugin>
-                </plugins>
-            </build>
-
-        </profile>
-        <profile>
-            <id>local</id>
+            <id>localDatabase</id>
             <properties>
                 <host.port>localhost:15432</host.port>
             </properties>
@@ -288,7 +272,21 @@
 
                         </configuration>
                     </plugin>
+                </plugins>
+            </build>
+        </profile>
 
+        <profile>
+            <id>remoteDatabase</id>
+            <properties>
+                <host.port>78.24.220.161</host.port>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>jetty</id>
+            <build>
+                <plugins>
                     <plugin>
                         <!-- https://mvnrepository.com/artifact/org.eclipse.jetty/jetty-maven-plugin -->
                         <groupId>org.eclipse.jetty</groupId>
@@ -305,7 +303,6 @@
                     </plugin>
                 </plugins>
             </build>
-
         </profile>
     </profiles>
 </project>
