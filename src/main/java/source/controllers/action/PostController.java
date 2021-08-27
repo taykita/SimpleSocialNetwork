@@ -43,9 +43,9 @@ public class PostController {
         post.setUserName(account.getName());
         List<Account> friends = accountRepository.getFriends(account);
         for (Account friend: friends) {
-            messagingTemplate.convertAndSend("/news/" + friend.getId(), post);
+            messagingTemplate.convertAndSendToUser(friend.getEmail(), "/queue/feed", post);
         }
-        messagingTemplate.convertAndSend("/user-page/" + account.getId(), post);
+        messagingTemplate.convertAndSend("/queue/user-page/" + activeUser.getId(), post);
 
 
         return "redirect:main";

@@ -1,6 +1,7 @@
 package source.database;
 
 import source.controllers.entity.Account;
+import source.controllers.entity.Message;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 
@@ -41,4 +42,7 @@ public interface AccountRepository {
 
     List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException;
 
+    void addMessage(Message message) throws AccStorageException;
+
+    Message getMessage(int id) throws AccStorageException;
 }

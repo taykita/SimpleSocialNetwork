@@ -40,6 +40,11 @@ public class MainPageController {
         model.addAttribute("post", new Post());
         model.addAttribute("name", activeUser.getName());
         model.addAttribute("id", activeUser.getId());
+        model.addAttribute("isMain", true);
+        model.addAttribute("isChat", false);
+        model.addAttribute("isNews", false);
+        model.addAttribute("isFriends", false);
+        model.addAttribute("isUsers", false);
     }
 
     @GetMapping("/main/get-posts")

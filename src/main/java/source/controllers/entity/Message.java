@@ -3,15 +3,10 @@ package source.controllers.entity;
 public class Message {
 
     private String text;
-    private int id;
+    private int chatId;
+    private String name;
 
-    public Message() {
-    }
-
-    public Message(String name) {
-        this.text = name;
-    }
-
+//TODO Подумать над @JsonProperty
     public String getText() {
         return text;
     }
@@ -21,11 +16,19 @@ public class Message {
     }
 
 
-    public int getId() {
-        return id;
+    public int getChatId() {
+        return chatId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

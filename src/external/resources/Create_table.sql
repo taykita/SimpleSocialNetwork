@@ -18,13 +18,23 @@ create table if not exists Accounts_Accounts (
         references Accounts;
 );
 
-create table if not exists POST (
+create table if not exists Post (
 	ID serial not null,
 	ACC_ID int4,
 	TEXT varchar(200),
 	DATE timestamp without time zone,
 	primary key (id)
 	add constraint POST_ACC_ID_CONST
+        foreign key (ACC_ID)
+        references Accounts;
+);
+
+create table if not exists Message (
+	ID serial not null,
+	ACC_ID int4,
+	TEXT varchar(200),
+	primary key (id)
+	add constraint MESSAGE_ACC_ID_CONST
         foreign key (ACC_ID)
         references Accounts;
 );

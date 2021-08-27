@@ -24,8 +24,17 @@ public class UserListController {
     @GetMapping("/user-list")
     public String userListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
         List<Account> allUsers = accountRepository.getAll();
+        updateModel(activeUser, model, allUsers);
+        return "all-users";
+    }
+
+    private void updateModel(User activeUser, Model model, List<Account> allUsers) {
         model.addAttribute("users", allUsers.toArray());
         model.addAttribute("id", activeUser.getId());
-        return "all-users";
+        model.addAttribute("isMain", false);
+        model.addAttribute("isChat", false);
+        model.addAttribute("isNews", false);
+        model.addAttribute("isFriends", false);
+        model.addAttribute("isUsers", true);
     }
 }

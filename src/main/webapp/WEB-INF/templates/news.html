@@ -20,29 +20,9 @@
 <body>
 <main class="main">
     <div class="row">
-        <div class="col-md-3 ">
-            <div class="position-sticky">
-                <div class="p-2 mb-3">
-                    <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                        <a class="btn btn-md btn-secondary" href="/main">
-                            Моя страница
-                        </a>
-                        <a class="btn btn-md btn-secondary" href="#">
-                            Сообщения
-                        </a>
-                        <a class="btn btn-md btn-secondary active" th:href="@{'/news/' + ${id}}">
-                            Новости
-                        </a>
-                        <a class="btn btn-md btn-secondary" href="/friend-list">
-                            Друзья
-                        </a>
-                        <a class="btn btn-md btn-secondary" href="/user-list">
-                            Список пользователей
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <div th:replace="~{pattern :: copy}"></div>
+
         <div class="col-md-9">
             <div class="row">
                 <div class="row">

@@ -35,7 +35,7 @@ function disconnect() {
 function sendName() {
       const message = {
         name: $("#name").val(),
-        id: 3,
+        chatId: 3,
       };
     stompClient.send("/app/hello", {}, JSON.stringify(message));
 }

@@ -13,21 +13,21 @@ import source.exception.AccStorageException;
 import java.util.List;
 
 @Controller
-public class FriendListController {
+public class ChatListController {
     @Autowired
-    public FriendListController(AccountRepository accountRepository) {
+    public ChatListController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     private final AccountRepository accountRepository;
 
-    @GetMapping("/friend-list")
-    public String friendListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
+    @GetMapping("/chat-list")
+    public String chatListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
         Account user = accountRepository.get(activeUser.getId());
         List<Account> allUsers = accountRepository.getFriends(user);
 
         updateModel(model, allUsers, user.getId());
-        return "friend-list";
+        return "chat-list";
     }
 
     private void updateModel(Model model, List<Account> allUsers, int id) {
@@ -35,9 +35,9 @@ public class FriendListController {
         model.addAttribute("id", id);
 
         model.addAttribute("isMain", false);
-        model.addAttribute("isChat", false);
+        model.addAttribute("isChat", true);
         model.addAttribute("isNews", false);
-        model.addAttribute("isFriends", true);
+        model.addAttribute("isFriends", false);
         model.addAttribute("isUsers", false);
     }
 }

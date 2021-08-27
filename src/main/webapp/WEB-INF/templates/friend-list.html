@@ -12,34 +12,15 @@
 <body>
 <main class="main">
     <div class="row">
-        <div class="col-md-3 ">
-            <div class="position-sticky">
-                <div class="p-2 mb-3">
-                    <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                        <a class="btn btn-md btn-secondary" href="main">
-                            Моя страница
-                        </a>
-                        <a class="btn btn-md btn-secondary" href="#">
-                            Сообщения
-                        </a>
-                        <a class="btn btn-md btn-secondary" th:href="@{'news/' + ${id}}">
-                            Новости
-                        </a>
-                        <a class="btn btn-md btn-secondary active" href="friend-list">
-                            Друзья
-                        </a>
-                        <a class="btn btn-md btn-secondary" href="user-list">
-                            Список пользователей
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <div th:replace="~{pattern :: copy}"></div>
+
         <div class="col-md-9">
+<!--        TODO Сделать replace-->
             <div class="row">
                 <div class="row">
                     <div class="col-md-10">
-                        <h1>Список пользователей</h1>
+                        <h1 th:text="${name}">...</h1>
                     </div>
                     <div class="col-md-2">
                         <div class="exitB">
@@ -48,13 +29,13 @@
                     </div>
                 </div>
             </div>
-
+    
             <th:block th:each="user : ${users}">
                 <div class="row">
                     <div class="col-md-5">
                         <div class="p-2">
                             <div class="user">
-                                <a th:href="@{'user-page/' + ${user.id}}">
+                                <a th:href="@{'user-page?id=' + ${user.id}}">
                                     <h5 th:text="${user.name}">..</h5>
                                 </a>
                                 <a th:href="@{'delete-friend?id=' + ${user.id}}">

@@ -20,9 +20,6 @@
     </class>
 
     <class name="Post" table="Post">
-        <meta attribute="class-description">
-            This class contains the users posts.
-        </meta>
 
         <id name="id" type="int" column="id">
             <generator class="identity"/>
@@ -36,6 +33,20 @@
         <property name="text" type="string" column="TEXT"/>
 
         <property name="date" type="string" column="DATE"/>
+
+    </class>
+
+    <class name="Message" table="Message">
+
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <many-to-one name="account" class="source.controllers.entity.Account" fetch="select">
+            <column name="ACC_ID"/>
+        </many-to-one>
+
+        <property name="text" type="string" column="TEXT"/>
 
     </class>
 

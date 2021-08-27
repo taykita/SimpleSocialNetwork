@@ -1,8 +1,9 @@
 let currentFirstPostId = 2147483647;
 $(document).off('.data-api')
 
-let url = window.location.href;
-let currentId = url.split('/').pop();
+let url = new URL(window.location.href);
+let searchParams = new URLSearchParams(url.search.substring(1));
+let currentId = searchParams.get("id");
 
 let block = false;
 
@@ -11,7 +12,7 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/user-page/' + currentId, function (post) {
+        stompClient.subscribe('/queue/user-page/' + currentId, function (post) {
             console.log("getting post");
             let postObj = JSON.parse(post.body);
             showPost(postObj);

@@ -26,9 +26,9 @@ public class UserPageController {
 
     private final AccountRepository accountRepository;
 
-    @GetMapping("/user-page/{id}")
+    @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal User activeUser,
-                           @PathVariable Integer id,
+                           @RequestParam Integer id,
                            Model model) throws AccStorageException {
 
         if (isActiveUser(activeUser, id)) {
@@ -54,13 +54,18 @@ public class UserPageController {
         model.addAttribute("isFriend", isFriend(activeUser, userAccount));
         model.addAttribute("id", id);
         model.addAttribute("activeUserId", activeUserId);
+        model.addAttribute("isMain", false);
+        model.addAttribute("isChat", false);
+        model.addAttribute("isNews", false);
+        model.addAttribute("isFriends", false);
+        model.addAttribute("isUsers", false);
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {
         return accountRepository.isFriend(user, friend);
     }
 
-    @GetMapping("/user-page/{id}/get-posts")
+    @GetMapping("/user-page/get-posts")
     @ResponseBody
     public List<Post> getPosts(@RequestParam int id,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {

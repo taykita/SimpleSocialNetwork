@@ -27,13 +27,18 @@ public class NewsController {
     private final AccountRepository accountRepository;
 
 
-    @GetMapping("/news/{id}")
+    @GetMapping("/news")
     public String newsPage(@AuthenticationPrincipal User activeUser, Model model) {
         model.addAttribute("id", activeUser.getId());
+        model.addAttribute("isMain", false);
+        model.addAttribute("isChat", false);
+        model.addAttribute("isNews", true);
+        model.addAttribute("isFriends", false);
+        model.addAttribute("isUsers", false);
         return "news";
     }
 
-    @GetMapping("/news/{id}/get-posts")
+    @GetMapping("/news/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {

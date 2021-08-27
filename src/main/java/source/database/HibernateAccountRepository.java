@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Account;
+import source.controllers.entity.Message;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 
@@ -274,6 +275,28 @@ public class HibernateAccountRepository implements AccountRepository {
             return posts;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public void addMessage(Message message) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+            session.beginTransaction();
+
+            session.save(message);
+
+            session.getTransaction().commit();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addMessage Error");
+        }
+    }
+
+    @Override
+    public Message getMessage(int id) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+            return session.get(Message.class, id);
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addMessage Error");
         }
     }
 

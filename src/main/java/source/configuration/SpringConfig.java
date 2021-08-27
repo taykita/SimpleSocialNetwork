@@ -72,9 +72,5 @@ public class SpringConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
-        registry.addResourceHandler("/news/**")
-                .addResourceLocations("/news/");
-        registry.addResourceHandler("/user-page/**")
-                .addResourceLocations("/user-page/");
     }
 }
