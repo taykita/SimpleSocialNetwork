@@ -6,13 +6,18 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
 import source.controllers.entity.Message;
+import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
+
+import java.util.List;
 
 @Controller
 public class ChatController {
@@ -50,8 +55,17 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws AccStorageException {
-        accountRepository.addMessage(message);
+//        message.setAccount(accountRepository.get(activeUser.getId()));
+//        accountRepository.addMessage(message);
         messagingTemplate.convertAndSend("/queue/chat/" + message.getChatId(), message);
+    }
+
+    @GetMapping("/chat/get-messages")
+    @ResponseBody
+    public List<Message> getMessages(@RequestParam(required = false, defaultValue = "1") int firstMessageId,
+                                     @RequestParam int chatId) throws AccStorageException {
+
+        return accountRepository.getMessages(chatId, firstMessageId, 10);
     }
 
 }

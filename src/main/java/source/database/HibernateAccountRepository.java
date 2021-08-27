@@ -296,7 +296,35 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()){
             return session.get(Message.class, id);
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addMessage Error");
+            throw new AccStorageException("Hibernate getMessage Error");
+        }
+    }
+
+    @Override
+    public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+            Iterator results = session.createSQLQuery("SELECT m.id, m.CHAT_ID, m.TEXT, a.user_name FROM message as m JOIN accounts as a ON p.ACC_ID=a.id WHERE chat_id == :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
+                    .setParameter("chatId", chatId)
+                    .setParameter("firstMessageId", firstMessageId)
+                    .setParameter("maxCount", maxCount)
+                    .getResultList()
+                    .iterator();
+
+            List<Message> messages = new ArrayList<>();
+
+            while (results.hasNext()) {
+                Object[] row = (Object[]) results.next();
+                Message message = new Message();
+                message.setId((Integer) row[0]);
+                message.setText((String) row[1]);
+                message.setName((String) row[2]);
+                message.setChatId(chatId);
+                messages.add(message);
+            }
+
+            return messages;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getMessages Error");
         }
     }
 

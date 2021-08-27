@@ -2,9 +2,11 @@ package source.controllers.entity;
 
 public class Message {
 
+    private Account account;
     private String text;
     private int chatId;
     private String name;
+    private int id;
 
 //TODO Подумать над @JsonProperty
     public String getText() {
@@ -30,5 +32,21 @@ public class Message {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

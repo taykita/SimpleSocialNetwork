@@ -29,12 +29,13 @@ create table if not exists Post (
         references Accounts;
 );
 
-create table if not exists Message (
-	ID serial not null,
-	ACC_ID int4,
-	TEXT varchar(200),
-	primary key (id)
-	add constraint MESSAGE_ACC_ID_CONST
-        foreign key (ACC_ID)
-        references Accounts;
-);
+--create table if not exists Message (
+--	ID serial not null,
+--	ACC_ID int4,
+--	CHAT_ID int4,
+--	TEXT varchar(200),
+--	primary key (ID)
+--    add constraint MESSAGE_ACC_ID_CONST
+--        foreign key (ACC_ID)
+--        references Accounts;
+--);
