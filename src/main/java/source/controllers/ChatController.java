@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +16,8 @@ import source.controllers.entity.Message;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.database.ChatRepository;
+import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -22,11 +25,13 @@ import java.util.List;
 @Controller
 public class ChatController {
     @Autowired
-    public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate) {
+    public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate, ChatRepository chatRepository) {
         this.accountRepository = accountRepository;
         this.messagingTemplate = messagingTemplate;
+        this.chatRepository = chatRepository;
     }
 
+    private final ChatRepository chatRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
 
@@ -34,6 +39,10 @@ public class ChatController {
     public String chatPage(@AuthenticationPrincipal User activeUser,
                            @RequestParam int id,
                            Model model) throws AccStorageException {
+        if (chatRepository.exist(id)) {
+            
+        }
+
         Account friend = accountRepository.get(id);
 
         updateModel(activeUser, model, friend);
@@ -45,19 +54,16 @@ public class ChatController {
         model.addAttribute("name", friend.getName());
         model.addAttribute("userName", activeUser.getUsername());
         model.addAttribute("chatId", activeUser.getId() + friend.getId());
-
-        model.addAttribute("isMain", false);
-        model.addAttribute("isChat", false);
-        model.addAttribute("isNews", false);
-        model.addAttribute("isFriends", false);
-        model.addAttribute("isUsers", false);
+        model.addAttribute("active", SideMenuEnum.NONE);
     }
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws AccStorageException {
+        User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
 //        message.setAccount(accountRepository.get(activeUser.getId()));
 //        accountRepository.addMessage(message);
-        messagingTemplate.convertAndSend("/queue/chat/" + message.getChatId(), message);
+//        messagingTemplate.convertAndSend("/queue/chat/" + message.getChatId(), message);
     }
 
     @GetMapping("/chat/get-messages")

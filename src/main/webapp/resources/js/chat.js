@@ -29,7 +29,7 @@ function showPost(messageText) {
     div.insertAdjacentElement("afterbegin", innerDiv);
 }
 
-function sendName() {
+function send() {
     const message = {
         text: $("#text").val(),
         chatId: chatId,
@@ -49,7 +49,7 @@ $(function () {
 //    });
     connect();
     // $('#chat-list').scrollTop($('#chat-list').prop("scrollHeight"));
-    $( "#send" ).click(function() { sendName(); });
+    $( "#send" ).click(function() { send(); });
 
     function get() {
         let data = {firstMessageID: currentFirstMessageId};

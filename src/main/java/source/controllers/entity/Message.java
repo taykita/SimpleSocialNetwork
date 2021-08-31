@@ -3,8 +3,8 @@ package source.controllers.entity;
 public class Message {
 
     private Account account;
+    private Chat chat;
     private String text;
-    private int chatId;
     private String name;
     private int id;
 
@@ -17,14 +17,6 @@ public class Message {
         this.text = text;
     }
 
-
-    public int getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(int chatId) {
-        this.chatId = chatId;
-    }
 
     public String getName() {
         return name;
@@ -48,5 +40,13 @@ public class Message {
 
     public void setAccount(Account account) {
         this.account = account;
+    }
+
+    public Chat getChat() {
+        return chat;
+    }
+
+    public void setChat(Chat chat) {
+        this.chat = chat;
     }
 }

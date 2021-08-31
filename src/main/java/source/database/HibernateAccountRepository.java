@@ -318,7 +318,6 @@ public class HibernateAccountRepository implements AccountRepository {
                 message.setId((Integer) row[0]);
                 message.setText((String) row[1]);
                 message.setName((String) row[2]);
-                message.setChatId(chatId);
                 messages.add(message);
             }
 

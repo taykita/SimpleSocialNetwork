@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import source.controllers.entity.Account;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -29,12 +30,8 @@ public class UserListController {
     }
 
     private void updateModel(User activeUser, Model model, List<Account> allUsers) {
-        model.addAttribute("users", allUsers.toArray());
+        model.addAttribute("users", allUsers);
         model.addAttribute("id", activeUser.getId());
-        model.addAttribute("isMain", false);
-        model.addAttribute("isChat", false);
-        model.addAttribute("isNews", false);
-        model.addAttribute("isFriends", false);
-        model.addAttribute("isUsers", true);
+        model.addAttribute("active", SideMenuEnum.USERS);
     }
 }

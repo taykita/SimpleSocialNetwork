@@ -11,6 +11,7 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -40,11 +41,7 @@ public class MainPageController {
         model.addAttribute("post", new Post());
         model.addAttribute("name", activeUser.getName());
         model.addAttribute("id", activeUser.getId());
-        model.addAttribute("isMain", true);
-        model.addAttribute("isChat", false);
-        model.addAttribute("isNews", false);
-        model.addAttribute("isFriends", false);
-        model.addAttribute("isUsers", false);
+        model.addAttribute("active", SideMenuEnum.MAIN);
     }
 
     @GetMapping("/main/get-posts")

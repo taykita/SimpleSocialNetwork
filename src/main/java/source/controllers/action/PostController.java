@@ -47,7 +47,6 @@ public class PostController {
         }
         messagingTemplate.convertAndSend("/queue/user-page/" + activeUser.getId(), post);
 
-
         return "redirect:main";
     }
 

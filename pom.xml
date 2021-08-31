@@ -149,7 +149,7 @@
                     <url>http://booknetwork.site/manager/text</url>
 <!--                              <url>http://localhost:8080/manager/text</url>-->
                     <server>my-tomcat</server>
-                    <path>/myapp</path>
+                    <path>/</path>
                 </configuration>
             </plugin>
         </plugins>

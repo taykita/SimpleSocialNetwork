@@ -9,24 +9,24 @@
 
 </head>
 <body>
-
+<!--TODO изменить название -->
     <div class="col-md-3" th:fragment="copy">
         <div class="position-sticky">
             <div class="p-2 mb-3">
                 <div class="btn-group-vertical btn-group-toggle " data-toggle="buttons">
-                    <a class="btn btn-md btn-secondary" th:classappend="${isMain ? 'active' : ''}" href="main">
+                    <a class="btn btn-md btn-secondary" th:classappend="${active.name() == 'MAIN'} ? ${'active'} : ${''}" href="main">
                         Моя страница
                     </a>
-                    <a class="btn btn-md btn-secondary" th:classappend="${isChat ? 'active' : ''}" href="chat-list">
+                    <a class="btn btn-md btn-secondary" th:classappend="${active.name() == 'CHAT'} ? ${'active'} : ${''}" href="chat-list">
                         Сообщения
                     </a>
-                    <a class="btn btn-md btn-secondary" th:classappend="${isNews ? 'active' : ''}" href="news">
+                    <a class="btn btn-md btn-secondary" th:classappend="${active.name() == 'NEWS'} ? ${'active'} : ${''}" href="news">
                         Новости
                     </a>
-                    <a class="btn btn-md btn-secondary" th:classappend="${isFriends ? 'active' : ''}" href="friend-list">
+                    <a class="btn btn-md btn-secondary" th:classappend="${active.name() == 'FRIENDS'} ? ${'active'} : ${''}" href="friend-list">
                         Друзья
                     </a>
-                    <a class="btn btn-md btn-secondary" th:classappend="${isUsers ? 'active' : ''}" href="user-list">
+                    <a class="btn btn-md btn-secondary" th:classappend="${active.name() == 'USERS'} ? ${'active'} : ${''}" href="user-list">
                         Список пользователей
                     </a>
                 </div>

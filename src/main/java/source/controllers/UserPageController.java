@@ -12,6 +12,7 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -54,11 +55,7 @@ public class UserPageController {
         model.addAttribute("isFriend", isFriend(activeUser, userAccount));
         model.addAttribute("id", id);
         model.addAttribute("activeUserId", activeUserId);
-        model.addAttribute("isMain", false);
-        model.addAttribute("isChat", false);
-        model.addAttribute("isNews", false);
-        model.addAttribute("isFriends", false);
-        model.addAttribute("isUsers", false);
+        model.addAttribute("active", SideMenuEnum.NONE);
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {

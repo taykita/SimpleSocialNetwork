@@ -13,6 +13,7 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -30,11 +31,7 @@ public class NewsController {
     @GetMapping("/news")
     public String newsPage(@AuthenticationPrincipal User activeUser, Model model) {
         model.addAttribute("id", activeUser.getId());
-        model.addAttribute("isMain", false);
-        model.addAttribute("isChat", false);
-        model.addAttribute("isNews", true);
-        model.addAttribute("isFriends", false);
-        model.addAttribute("isUsers", false);
+        model.addAttribute("active", SideMenuEnum.NEWS);
         return "news";
     }
 
