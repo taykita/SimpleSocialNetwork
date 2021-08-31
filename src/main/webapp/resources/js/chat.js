@@ -1,6 +1,7 @@
 $(document).off('.data-api')
 let currentFirstMessageId = 2147483647;
 let chatId;
+let block = false;
 function connect() {
     let socket = new SockJS('/123');
     stompClient = Stomp.over(socket);
@@ -52,7 +53,7 @@ $(function () {
     $( "#send" ).click(function() { send(); });
 
     function get() {
-        let data = {firstMessageID: currentFirstMessageId};
+        let data = {firstMessageId: currentFirstMessageId, chatId: chatId};
         $.get("chat/get-messages", data, success, "json");
     }
 

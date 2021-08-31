@@ -65,8 +65,9 @@ public class ChatController {
     }
 
     @MessageMapping("/chat")
-    public void chatHandler(Message message) throws AccStorageException {
-        User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public void chatHandler(Message message) throws Exception {
+        //TODO В параметр user передавать друга
+//        User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         chatRepository.addMessage(message);
         messagingTemplate.convertAndSendToUser(activeUser.getUsername(),
                 "/queue/chat/" + message.getChatId(), message);

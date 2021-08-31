@@ -1,11 +1,18 @@
 package source.controllers.entity;
 
-public class Message {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
+public class Message {
+    @JsonIgnore
     private int chatId;
+    @JsonProperty("date")
     private String date;
+    @JsonProperty("text")
     private String text;
+    @JsonProperty("name")
     private String name;
+    @JsonProperty("id")
     private int id;
 
 //TODO Подумать над @JsonProperty

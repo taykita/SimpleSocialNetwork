@@ -97,7 +97,6 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-
             user.getAccountSet().add(friend);
             friend.getAccountSet().add(user);
 

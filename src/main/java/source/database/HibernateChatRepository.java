@@ -4,6 +4,7 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.exception.AccStorageException;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+@Repository
 public class HibernateChatRepository implements ChatRepository{
 
     @Autowired
@@ -32,10 +34,11 @@ public class HibernateChatRepository implements ChatRepository{
             chat.setName(name);
 
             int id = (Integer) session.save(chat);
-            String queryString = "INSERT INTO Chat (CHAT_ID, ACC_ID) VALUES (" + id + ", :accId);";
             for (int accId: ids) {
-                session.createQuery(queryString)
-                    .setParameter("accId", accId);
+                session.createSQLQuery("INSERT INTO Accounts_chat (CHAT_ID, ACC_ID) VALUES (:chatId, :accId);")
+                        .setParameter("chatId", id)
+                        .setParameter("accId", accId)
+                        .executeUpdate();
             }
 
             session.getTransaction().commit();
@@ -58,7 +61,7 @@ public class HibernateChatRepository implements ChatRepository{
     @Override
     public boolean exist(int accId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery("SELECT * FROM Accounts_Chat WHERE ACC_ID = :accId;")
+            return session.createSQLQuery("SELECT * FROM Accounts_Chat WHERE ACC_ID = :accId")
                     .setParameter("accId", accId)
                     .uniqueResult() != null;
         } catch (HibernateException e) {
@@ -96,8 +99,8 @@ public class HibernateChatRepository implements ChatRepository{
     public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()){
 
-            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id JOIN Chat AS c ON ac.chat_id = c.id " +
-                    "JOIN Accounts AS a ON ac.acc_id = a.id WHERE c.id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount;")
+            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id JOIN Chat AS c ON ac.chat_id = c.id " +
+                    "JOIN Accounts AS a ON ac.acc_id = a.id WHERE c.id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
                     .setParameter("chatId", chatId)
                     .setParameter("firstMessageId", firstMessageId)
                     .setParameter("maxCount", maxCount)
@@ -114,6 +117,7 @@ public class HibernateChatRepository implements ChatRepository{
                 message.setDate(new Date(timestamp.getTime()).toString());
                 message.setName((String) row[2]);
                 messages.add(message);
+                message.setId((Integer) row[3]);
             }
 
             return messages;
