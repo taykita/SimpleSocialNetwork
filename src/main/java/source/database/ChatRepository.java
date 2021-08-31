@@ -13,9 +13,11 @@ public interface ChatRepository {
 
     boolean exist(int id) throws AccStorageException;
 
-    Message addMessage(Message message, int chatId) throws AccStorageException;
+    Message addMessage(Message message) throws AccStorageException;
 
     Message getMessage(int id) throws AccStorageException;
 
-    List<Message> getMessages(int chatId) throws AccStorageException;
+    List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException;
+
+    List<Chat> getChats(int userId) throws AccStorageException;
 }

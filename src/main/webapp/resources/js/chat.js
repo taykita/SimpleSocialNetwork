@@ -6,7 +6,7 @@ function connect() {
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
-        stompClient.subscribe('/queue/chat/' + chatId, function (messageText) {
+        stompClient.subscribe('/user/queue/chat/' + chatId, function (messageText) {
             console.log("getting post");
             let postObj = JSON.parse(messageText.body);
             showPost(postObj);
@@ -33,20 +33,20 @@ function send() {
     const message = {
         text: $("#text").val(),
         chatId: chatId,
-        name: $("#name").val(),
+        name: $("#userName").val(),
     };
     stompClient.send("/app/chat", {}, JSON.stringify(message));
 }
 
 $(function () {
-//    $(document).ready(get);
+    $(document).ready(get);
     chatId = $("#chatId").val();
-//    $(window).scroll(function () {
-//        if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
-//            block = true;
-//            get();
-//        }
-//    });
+    $(window).scroll(function () {
+        if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
+            block = true;
+            get();
+        }
+    });
     connect();
     // $('#chat-list').scrollTop($('#chat-list').prop("scrollHeight"));
     $( "#send" ).click(function() { send(); });
@@ -65,6 +65,7 @@ $(function () {
                 '   <div class="d-flex w-100 align-items-center justify-content-between">\n' +
                 '       <strong class="mb-1">' + messageText[i].name + '</strong>\n' +
                 '   </div>\n' +
+                '   <div class="col-10 mb-1 small">' + messageText[i].date + '</div>\n' +
                 '   <div class="col-10 mb-1 small">' + messageText[i].text + '</div>\n' +
                 '</p>'
         }

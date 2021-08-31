@@ -23,10 +23,9 @@
         
         <property name="show_sql">true</property>
         <property name="hibernate.format_sql">true</property>
-        
-<!--        <property name="default_schema">testhibernate</property>-->
 
         <mapping resource="source/controllers/entity/Account.hbm.xml"/>
+        <mapping resource="source/controllers/entity/Chat.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

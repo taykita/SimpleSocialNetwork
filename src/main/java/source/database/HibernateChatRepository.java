@@ -4,11 +4,14 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import source.controllers.entity.Account;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.exception.AccStorageException;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class HibernateChatRepository implements ChatRepository{
@@ -53,18 +56,24 @@ public class HibernateChatRepository implements ChatRepository{
     }
 
     @Override
-    public boolean exist(int id) throws AccStorageException {
-        return get(id) != null;
+    public boolean exist(int accId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createSQLQuery("SELECT * FROM Accounts_Chat WHERE ACC_ID = :accId;")
+                    .setParameter("accId", accId)
+                    .uniqueResult() != null;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getChat Error.", e);
+        }
     }
 
     @Override
-    public Message addMessage(Message message, int chatId) throws AccStorageException {
+    public Message addMessage(Message message) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
             int id = (int) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID) VALUES (:text, now(), :chat_id) RETURNING ID;")
                     .setParameter("text", message.getText())
-                    .setParameter("chat_id", chatId)
+                    .setParameter("chat_id", message.getChatId())
                     .getSingleResult();
 
             session.getTransaction().commit();
@@ -84,8 +93,57 @@ public class HibernateChatRepository implements ChatRepository{
     }
 
     @Override
-    public List<Message> getMessages(int chatId) throws AccStorageException {
-        return null;
+    public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+
+            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id JOIN Chat AS c ON ac.chat_id = c.id " +
+                    "JOIN Accounts AS a ON ac.acc_id = a.id WHERE c.id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount;")
+                    .setParameter("chatId", chatId)
+                    .setParameter("firstMessageId", firstMessageId)
+                    .setParameter("maxCount", maxCount)
+                    .getResultList()
+                    .iterator();
+
+            List<Message> messages = new ArrayList<>();
+
+            while (result.hasNext()) {
+                Object[] row = (Object[]) result.next();
+                Message message = new Message();
+                message.setText((String) row[0]);
+                Timestamp timestamp = (Timestamp) row[1];
+                message.setDate(new Date(timestamp.getTime()).toString());
+                message.setName((String) row[2]);
+                messages.add(message);
+            }
+
+            return messages;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getMessages Error");
+        }
+    }
+
+    @Override
+    public List<Chat> getChats(int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+
+            Iterator result = session.createSQLQuery("SELECT c.id, c.name FROM Accounts_Chat as ac JOIN Chat AS c ON ac.chat_id=c.id WHERE ac.ACC_id=:userId")
+                    .setParameter("userId", userId)
+                    .getResultList()
+                    .iterator();
+            List<Chat> chats = new ArrayList<>();
+
+            while (result.hasNext()) {
+                Object[] row = (Object[]) result.next();
+                Chat chat = new Chat();
+                chat.setId((Integer) row[0]);
+                chat.setName((String) row[1]);
+                chats.add(chat);
+            }
+
+            return chats;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getChats Error");
+        }
     }
 
 }

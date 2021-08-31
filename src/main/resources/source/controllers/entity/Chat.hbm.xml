@@ -1,0 +1,22 @@
+<hibernate-mapping package="source.controllers.entity">
+    <class name="Chat" table="Chat">
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+        <property name="name" type="string" column="NAME"/>
+
+    </class>
+
+    <class name="Message" table="Message">
+
+        <id name="id" type="int" column="id">
+            <generator class="identity"/>
+        </id>
+
+        <property name="text" type="string" column="TEXT"/>
+
+        <property name="date" type="string" column="DATE"/>
+
+    </class>
+
+</hibernate-mapping>

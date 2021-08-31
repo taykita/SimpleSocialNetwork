@@ -2,8 +2,8 @@ package source.controllers.entity;
 
 public class Message {
 
-    private Account account;
-    private Chat chat;
+    private int chatId;
+    private String date;
     private String text;
     private String name;
     private int id;
@@ -34,19 +34,19 @@ public class Message {
         this.id = id;
     }
 
-    public Account getAccount() {
-        return account;
+    public int getChatId() {
+        return chatId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setChatId(int chatId) {
+        this.chatId = chatId;
     }
 
-    public Chat getChat() {
-        return chat;
+    public String getDate() {
+        return date;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

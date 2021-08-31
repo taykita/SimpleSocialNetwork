@@ -29,11 +29,27 @@
                 </div>
             </div>
 
-            <th:block th:each="user : ${users}">
+            <th:block th:each="chat : ${chats}">
                 <div class="row">
                     <div class="col-md-5">
                         <div class="p-2">
                             <form action="chat" method="post">
+                                <input type="text" name="id" th:value="${chat.id}" hidden>
+                                <a href="#" onclick="this.parentNode.submit()">
+                                    <h5 th:text="${chat.name}"></h5>
+                                </a>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </th:block>
+
+            <h4>Создать чат</h4>
+            <th:block th:each="user : ${users}">
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="p-2">
+                            <form action="create-chat" method="post">
                                 <input type="text" name="id" th:value="${user.id}" hidden>
                                 <a href="#" onclick="this.parentNode.submit()">
                                     <h5 th:text="${user.name}"></h5>

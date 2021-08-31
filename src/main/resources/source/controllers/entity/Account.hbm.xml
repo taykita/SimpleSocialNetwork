@@ -36,20 +36,4 @@
 
     </class>
 
-<!--    <class name="Message" table="Message">-->
-
-<!--        <id name="id" type="int" column="id">-->
-<!--            <generator class="identity"/>-->
-<!--        </id>-->
-
-<!--        <property name="CHAT_ID" type="int" column="CHAT_ID"/>-->
-
-<!--        <many-to-one name="account" class="source.controllers.entity.Account" fetch="select">-->
-<!--            <column name="ACC_ID"/>-->
-<!--        </many-to-one>-->
-
-<!--        <property name="text" type="string" column="TEXT"/>-->
-
-<!--    </class>-->
-
 </hibernate-mapping>
