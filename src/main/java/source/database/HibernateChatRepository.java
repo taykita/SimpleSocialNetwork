@@ -5,6 +5,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import source.controllers.entity.Account;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.exception.AccStorageException;
@@ -145,6 +146,27 @@ public class HibernateChatRepository implements ChatRepository{
             }
 
             return chats;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getChats Error");
+        }
+    }
+
+    @Override
+    public List<String> getUsersEmail(int chatId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()){
+
+            Iterator result = session.createSQLQuery("SELECT a.email FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+                    .setParameter("chatId", chatId)
+                    .getResultList()
+                    .iterator();
+
+            List<String> usersEmail = new ArrayList<>();
+
+            while (result.hasNext()) {
+                usersEmail.add((String) result.next());
+            }
+
+            return usersEmail;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getChats Error");
         }

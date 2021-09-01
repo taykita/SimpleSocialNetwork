@@ -1,5 +1,6 @@
 package source.database;
 
+import source.controllers.entity.Account;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.exception.AccStorageException;
@@ -20,4 +21,6 @@ public interface ChatRepository {
     List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException;
 
     List<Chat> getChats(int userId) throws AccStorageException;
+
+    List<String> getUsersEmail(int chatId) throws AccStorageException;
 }

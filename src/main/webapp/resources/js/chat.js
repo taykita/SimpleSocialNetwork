@@ -42,7 +42,7 @@ function send() {
 $(function () {
     $(document).ready(get);
     chatId = $("#chatId").val();
-    $(window).scroll(function () {
+    $('#chat-list').scroll(function () {
         if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
             block = true;
             get();

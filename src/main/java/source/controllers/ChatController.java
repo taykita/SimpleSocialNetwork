@@ -51,26 +51,29 @@ public class ChatController {
                            Model model) throws AccStorageException {
 
         Chat chat = chatRepository.get(id);
+        Account account = accountRepository.get(activeUser.getId());
 
-        updateModel(activeUser, model, chat);
+        updateModel(account, model, chat);
 
         return "chat";
     }
 
-    private void updateModel(User activeUser, Model model, Chat chat) {
+    private void updateModel(Account account, Model model, Chat chat) {
+
         model.addAttribute("name", chat.getName());
-        model.addAttribute("userName", activeUser.getUsername());
+        model.addAttribute("userName", account.getName());
         model.addAttribute("chatId", chat.getId());
         model.addAttribute("active", SideMenuEnum.NONE);
     }
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
-        //TODO В параметр user передавать друга
-//        User activeUser = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         chatRepository.addMessage(message);
-        messagingTemplate.convertAndSendToUser(activeUser.getUsername(),
-                "/queue/chat/" + message.getChatId(), message);
+
+        for (String user: chatRepository.getUsersEmail(message.getChatId())) {
+            messagingTemplate.convertAndSendToUser(user,
+                    "/queue/chat/" + message.getChatId(), message);
+        }
     }
 
     @GetMapping("/chat/get-messages")

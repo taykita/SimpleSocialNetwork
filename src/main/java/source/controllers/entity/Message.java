@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Message {
-    @JsonIgnore
+    @JsonProperty("chatId")
     private int chatId;
     @JsonProperty("date")
     private String date;
