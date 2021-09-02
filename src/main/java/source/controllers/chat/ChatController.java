@@ -1,11 +1,9 @@
-package source.controllers;
+package source.controllers.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,8 +19,6 @@ import source.database.ChatRepository;
 import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
-import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -76,7 +72,7 @@ public class ChatController {
     public void chatHandler(Message message) throws Exception {
         message = chatRepository.addMessage(message);
 
-        for (String user: chatRepository.getUsersEmail(message.getChatId())) {
+        for (String user : chatRepository.getUsersEmail(message.getChatId())) {
             messagingTemplate.convertAndSendToUser(user,
                     "/queue/chat/" + message.getChatId(), message);
         }

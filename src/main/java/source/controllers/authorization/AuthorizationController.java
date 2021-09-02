@@ -14,7 +14,6 @@ import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 @Controller

@@ -1,4 +1,4 @@
-package source.controllers.action;
+package source.controllers.friend;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

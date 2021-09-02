@@ -1,4 +1,4 @@
-package source.controllers.action;
+package source.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -16,7 +16,6 @@ import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 @Controller
