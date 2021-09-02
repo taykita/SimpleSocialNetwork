@@ -2,6 +2,7 @@ $(document).off('.data-api')
 let currentFirstMessageId = 2147483647;
 let chatId;
 let block = false;
+
 function connect() {
     let socket = new SockJS('/123');
     stompClient = Stomp.over(socket);
@@ -39,6 +40,7 @@ function send() {
         accId: $("#userId").val(),
     };
     stompClient.send("/app/chat", {}, JSON.stringify(message));
+    $('#text').val('');
 }
 
 $(function () {
@@ -53,8 +55,16 @@ $(function () {
 //    });
     connect();
     // $('#chat-list').scrollTop($('#chat-list').prop("scrollHeight"));
-    $( "#load-message" ).click(function () { get(); });
-    $( "#send" ).click(function() { send(); });
+    $(document).keypress(function (e) {
+        if (e.keyCode === 13)
+            send();
+    });
+    $("#load-message").click(function () {
+        get();
+    });
+    $("#send").click(function () {
+        send();
+    });
 
     function get() {
         let data = {firstMessageId: currentFirstMessageId, chatId: chatId};
@@ -77,7 +87,7 @@ $(function () {
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
-        currentFirstMessageId = messageText[messageText.length-1].id;
+        currentFirstMessageId = messageText[messageText.length - 1].id;
         block = false;
     }
 
