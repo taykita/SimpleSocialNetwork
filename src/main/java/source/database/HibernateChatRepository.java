@@ -75,9 +75,10 @@ public class HibernateChatRepository implements ChatRepository{
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            int id = (int) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID) VALUES (:text, now(), :chat_id) RETURNING ID;")
+            int id = (int) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID, ACC_ID) VALUES (:text, now(), :chatId, :accId) RETURNING ID;")
                     .setParameter("text", message.getText())
-                    .setParameter("chat_id", message.getChatId())
+                    .setParameter("chatId", message.getChatId())
+                    .setParameter("accId", message.getAccId())
                     .getSingleResult();
 
             session.getTransaction().commit();
@@ -100,8 +101,8 @@ public class HibernateChatRepository implements ChatRepository{
     public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()){
 
-            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id JOIN Chat AS c ON ac.chat_id = c.id " +
-                    "JOIN Accounts AS a ON ac.acc_id = a.id WHERE c.id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
+            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id AND m.acc_id = ac.acc_id JOIN Accounts AS a ON m.acc_id = a.id " +
+                    "WHERE ac.chat_id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
                     .setParameter("chatId", chatId)
                     .setParameter("firstMessageId", firstMessageId)
                     .setParameter("maxCount", maxCount)

@@ -27,7 +27,7 @@ function showPost(messageText) {
         '</p>'
     let innerDiv = document.createElement('div');
     innerDiv.innerHTML = innerHTML;
-    div.insertAdjacentElement("afterbegin", innerDiv);
+    div.insertAdjacentElement("beforeend", innerDiv);
 }
 
 function send() {
@@ -35,6 +35,7 @@ function send() {
         text: $("#text").val(),
         chatId: chatId,
         name: $("#userName").val(),
+        accId: $("#userId").val(),
     };
     stompClient.send("/app/chat", {}, JSON.stringify(message));
 }
@@ -42,14 +43,16 @@ function send() {
 $(function () {
     $(document).ready(get);
     chatId = $("#chatId").val();
-    $('#chat-list').scroll(function () {
-        if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
-            block = true;
-            get();
-        }
-    });
+//    $('#chat-list').scroll(function () {
+//        console.log($('#chat-list').height() + $('#chat-list').scrollTop());
+//        if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
+//            block = true;
+//            get();
+//        }
+//    });
     connect();
     // $('#chat-list').scrollTop($('#chat-list').prop("scrollHeight"));
+    $( "#load-message" ).click(function () { get(); });
     $( "#send" ).click(function() { send(); });
 
     function get() {
@@ -72,7 +75,7 @@ $(function () {
         }
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
-        div.insertAdjacentElement("afterbegin", innerDiv);
+        div.insertAdjacentElement("beforeend", innerDiv);
         currentFirstMessageId = messageText[messageText.length-1].id;
         block = false;
     }

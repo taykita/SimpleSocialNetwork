@@ -3,6 +3,7 @@ package source.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -11,26 +12,31 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import source.controllers.entity.*;
+import source.controllers.entity.Account;
+import source.controllers.entity.Chat;
+import source.controllers.entity.Message;
+import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
 import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
+import javax.servlet.http.HttpSession;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 
 @Controller
 public class ChatController {
     @Autowired
-    public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate, ChatRepository chatRepository) {
+    public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate,
+                          ChatRepository chatRepository, HttpSession session) {
         this.accountRepository = accountRepository;
         this.messagingTemplate = messagingTemplate;
         this.chatRepository = chatRepository;
+        this.session = session;
     }
 
+    private final HttpSession session;
     private final ChatRepository chatRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
@@ -62,12 +68,14 @@ public class ChatController {
 
         model.addAttribute("name", chat.getName());
         model.addAttribute("userName", account.getName());
+        model.addAttribute("userId", account.getId());
         model.addAttribute("chatId", chat.getId());
         model.addAttribute("active", SideMenuEnum.NONE);
     }
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
+        //TODO Поработать над getMessage в addMessage
         chatRepository.addMessage(message);
 
         for (String user: chatRepository.getUsersEmail(message.getChatId())) {

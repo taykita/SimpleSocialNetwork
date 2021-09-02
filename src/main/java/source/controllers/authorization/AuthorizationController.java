@@ -20,14 +20,12 @@ import javax.validation.Valid;
 @Controller
 public class AuthorizationController {
     @Autowired
-    public AuthorizationController(AccountRepository accountRepository, HttpSession session) {
+    public AuthorizationController(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.session = session;
     }
 
     private final AccountRepository accountRepository;
 
-    private final HttpSession session;
 
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
@@ -48,7 +46,6 @@ public class AuthorizationController {
         } else {
             accountRepository.add(account);
 
-            session.setAttribute("id", account.getId());
             return "redirect:" + "login";
         }
     }

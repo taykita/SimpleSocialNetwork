@@ -28,7 +28,7 @@ body {
 }
 
 .main .chat-list {
-    height: 75vh;
+    height: 65vh;
     border: 1px solid #C1C1C1;
     overflow-y: scroll;
 }

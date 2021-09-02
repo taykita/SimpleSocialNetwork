@@ -25,7 +25,7 @@ public class FriendController {
     public String addFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
         Account user = accountRepository.get(activeUser.getId());
         accountRepository.addFriend(user, accountRepository.get(id));
-        return "redirect:" + "user-page/" + id;
+        return "redirect:" + "user-page?id=" + id;
     }
 
     @GetMapping("/delete-friend")

@@ -1,9 +1,10 @@
 package source.controllers.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class Message {
+    @JsonProperty("accId")
+    private int accId;
     @JsonProperty("chatId")
     private int chatId;
     @JsonProperty("date")
@@ -55,5 +56,13 @@ public class Message {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public int getAccId() {
+        return accId;
+    }
+
+    public void setAccId(int accId) {
+        this.accId = accId;
     }
 }

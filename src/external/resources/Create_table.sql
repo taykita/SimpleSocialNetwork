@@ -40,10 +40,14 @@ create table if not exists Message (
 	TEXT varchar(200),
 	DATE timestamp without time zone,
 	CHAT_ID int4,
+	ACC_ID int4,
 	primary key (id),
-	constraint CHAT_ACC_ID_CONST
+	constraint MESSAGE_CHAT_ID_CONST
         foreign key (CHAT_ID)
-        references Chat
+        references Chat,
+	constraint MESSAGE_ACC_ID_CONST
+        foreign key (ACC_ID)
+        references Accounts
 );
 
 create table if not exists Accounts_Chat (
