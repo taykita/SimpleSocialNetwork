@@ -22,6 +22,7 @@ import source.enums.SideMenuEnum;
 import source.exception.AccStorageException;
 
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,14 +30,12 @@ import java.util.List;
 public class ChatController {
     @Autowired
     public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate,
-                          ChatRepository chatRepository, HttpSession session) {
+                          ChatRepository chatRepository) {
         this.accountRepository = accountRepository;
         this.messagingTemplate = messagingTemplate;
         this.chatRepository = chatRepository;
-        this.session = session;
     }
 
-    private final HttpSession session;
     private final ChatRepository chatRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
@@ -75,8 +74,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
-        //TODO Поработать над getMessage в addMessage
-        chatRepository.addMessage(message);
+        message = chatRepository.addMessage(message);
 
         for (String user: chatRepository.getUsersEmail(message.getChatId())) {
             messagingTemplate.convertAndSendToUser(user,

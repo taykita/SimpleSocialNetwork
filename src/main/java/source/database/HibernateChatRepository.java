@@ -75,14 +75,14 @@ public class HibernateChatRepository implements ChatRepository{
         try (Session session = sessionFactory.openSession()) {
             session.beginTransaction();
 
-            int id = (int) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID, ACC_ID) VALUES (:text, now(), :chatId, :accId) RETURNING ID;")
+            Timestamp date = (Timestamp) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID, ACC_ID) VALUES (:text, now(), :chatId, :accId) RETURNING DATE;")
                     .setParameter("text", message.getText())
                     .setParameter("chatId", message.getChatId())
                     .setParameter("accId", message.getAccId())
                     .getSingleResult();
-
+            message.setDate(date.toString());
             session.getTransaction().commit();
-            return getMessage(id);
+            return message;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addMessage Error.", e);
         }
@@ -116,7 +116,7 @@ public class HibernateChatRepository implements ChatRepository{
                 Message message = new Message();
                 message.setText((String) row[0]);
                 Timestamp timestamp = (Timestamp) row[1];
-                message.setDate(new Date(timestamp.getTime()).toString());
+                message.setDate(timestamp.toString());
                 message.setName((String) row[2]);
                 messages.add(message);
                 message.setId((Integer) row[3]);

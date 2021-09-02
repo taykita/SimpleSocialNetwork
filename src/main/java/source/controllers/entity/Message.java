@@ -16,7 +16,6 @@ public class Message {
     @JsonProperty("id")
     private int id;
 
-//TODO Подумать над @JsonProperty
     public String getText() {
         return text;
     }

@@ -41,10 +41,4 @@ public interface AccountRepository {
     List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException;
 
     List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException;
-
-    void addMessage(Message message) throws AccStorageException;
-
-    Message getMessage(int id) throws AccStorageException;
-
-    List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException;
 }

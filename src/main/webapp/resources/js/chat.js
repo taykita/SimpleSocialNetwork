@@ -23,11 +23,12 @@ function showPost(messageText) {
         '   <div class="d-flex w-100 align-items-center justify-content-between">\n' +
         '       <strong class="mb-1">' + messageText.name + '</strong>\n' +
         '   </div>\n' +
+        '   <div class="col-10 mb-1 small">' + messageText.date + '</div>\n' +
         '   <div class="col-10 mb-1 small">' + messageText.text + '</div>\n' +
         '</p>'
     let innerDiv = document.createElement('div');
     innerDiv.innerHTML = innerHTML;
-    div.insertAdjacentElement("beforeend", innerDiv);
+    div.insertAdjacentElement("afterbegin", innerDiv);
 }
 
 function send() {

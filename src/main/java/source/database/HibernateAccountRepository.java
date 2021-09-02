@@ -265,8 +265,7 @@ public class HibernateAccountRepository implements AccountRepository {
                 post.setId((Integer) row[0]);
                 post.setText((String) row[2]);
                 Timestamp timestamp = (Timestamp) row[3];
-                //TODO Сделать нормально отображение времени
-                post.setDate(new Date(timestamp.getTime()).toString());
+                post.setDate(timestamp.toString());
                 post.setUserName((String) row[4]);
                 posts.add(post);
             }
@@ -277,53 +276,5 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
-    @Override
-    public void addMessage(Message message) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
-            session.beginTransaction();
-
-            session.save(message);
-
-            session.getTransaction().commit();
-        } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addMessage Error");
-        }
-    }
-
-    @Override
-    public Message getMessage(int id) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
-            return session.get(Message.class, id);
-        } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate getMessage Error");
-        }
-    }
-
-    @Override
-    public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
-            Iterator results = session.createSQLQuery("SELECT m.id, m.CHAT_ID, m.TEXT, a.user_name FROM message as m JOIN accounts as a ON p.ACC_ID=a.id WHERE chat_id == :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
-                    .setParameter("chatId", chatId)
-                    .setParameter("firstMessageId", firstMessageId)
-                    .setParameter("maxCount", maxCount)
-                    .getResultList()
-                    .iterator();
-
-            List<Message> messages = new ArrayList<>();
-
-            while (results.hasNext()) {
-                Object[] row = (Object[]) results.next();
-                Message message = new Message();
-                message.setId((Integer) row[0]);
-                message.setText((String) row[1]);
-                message.setName((String) row[2]);
-                messages.add(message);
-            }
-
-            return messages;
-        } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate getMessages Error");
-        }
-    }
 
 }

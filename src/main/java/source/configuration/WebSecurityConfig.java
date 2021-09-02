@@ -14,7 +14,6 @@ import source.controllers.authorization.MyUserDetailsService;
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    //TODO home-page не забыть сделать
     @Autowired
     private MyUserDetailsService userDetailsService;
 
