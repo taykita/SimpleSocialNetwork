@@ -5,6 +5,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
@@ -34,7 +35,7 @@ public class EditMainAcc {
 
     @PostMapping("/edit-acc")
     public String editAcc(@AuthenticationPrincipal User activeUser,
-                          @RequestParam(required = false) Account newAccount,
+                          @ModelAttribute("newAccount") Account newAccount,
                           @RequestParam(required = false) String chPass,
                           @RequestParam(required = false) String oldPass) throws AccStorageException {
         Account currentAccount = accountRepository.getAccount(activeUser.getId());
@@ -49,7 +50,7 @@ public class EditMainAcc {
             currentAccount.setEmail(newAccount.getEmail());
             isEdit = true;
         }
-        if (newAccount.getPass() != null &&
+        if (!newAccount.getPass().equals("") &&
                 !currentAccount.getPass().equals(oldPass) &&
                 newAccount.getPass().equals(chPass)) {
             currentAccount.setPass(newAccount.getPass());
@@ -59,6 +60,6 @@ public class EditMainAcc {
             accountRepository.updateAccount(currentAccount);
         }
 
-        return "edit-acc";
+        return "redirect:main";
     }
 }
