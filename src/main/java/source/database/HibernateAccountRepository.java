@@ -3,15 +3,14 @@ package source.database;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Account;
-import source.controllers.entity.Message;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,23 +31,45 @@ public class HibernateAccountRepository implements AccountRepository {
     private final SessionFactory sessionFactory;
 
     @Override
-    public Account add(Account account) throws AccStorageException {
+    public Account addAccount(Account account) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            try {
+                int id = (Integer) session.save(account);
+                account.setPass(passwordEncoder.encode(account.getPass()));
+                account.setId(id);
 
-            int id = (Integer) session.save(account);
-            account.setPass(passwordEncoder.encode(account.getPass()));
-            account.setId(id);
-
-            session.getTransaction().commit();
-            return account;
+                transaction.commit();
+                return account;
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate add Error.", e);
         }
     }
 
     @Override
-    public Account get(int id) throws AccStorageException {
+    public Account updateAccount(Account account) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.update(account);
+
+                transaction.commit();
+                return account;
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate add Error.", e);
+        }
+    }
+
+    @Override
+    public Account getAccount(int id) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             return session.get(Account.class, id);
         } catch (HibernateException e) {
@@ -57,7 +78,7 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public Account get(String email) throws AccStorageException {
+    public Account getAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             return (Account) session.createQuery("from Account where email = :email")
                     .setParameter("email", email)
@@ -68,7 +89,7 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public boolean exist(String email) throws AccStorageException {
+    public boolean existAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("select email from Account where email = :email")
                     .setParameter("email", email)
@@ -80,11 +101,11 @@ public class HibernateAccountRepository implements AccountRepository {
 
     @Override
     public boolean confirmPass(String email, String pass) throws AccStorageException {
-        return get(email).getPass().equals(pass);
+        return getAccount(email).getPass().equals(pass);
     }
 
     @Override
-    public List<Account> getAll() throws AccStorageException {
+    public List<Account> getAllAccounts() throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             return (List<Account>) session.createQuery("from Account").list();
         } catch (HibernateException e) {
@@ -95,15 +116,22 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public void addFriend(Account user, Account friend) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
 
-            user.getAccountSet().add(friend);
-            friend.getAccountSet().add(user);
+            Transaction transaction = session.beginTransaction();
+            try {
+                user.getAccountSet().add(friend);
+                friend.getAccountSet().add(user);
 
-            session.update(user);
-            session.update(friend);
+                session.update(user);
+                session.update(friend);
 
-            session.getTransaction().commit();
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+
+
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addFriend Error.", e);
         }
@@ -112,15 +140,19 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public void deleteFriend(Account user, Account friend) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            try {
+                removeFromFriends(user, friend);
+                removeFromFriends(friend, user);
 
-            removeFromFriends(user, friend);
-            removeFromFriends(friend, user);
+                session.update(user);
+                session.update(friend);
 
-            session.update(user);
-            session.update(friend);
-
-            session.getTransaction().commit();
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate deleteFriend Error.", e);
         }
@@ -138,18 +170,22 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public boolean isFriend(Account user, Account friend) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
-
-            boolean exist = false;
-            for (Account account : user.getAccountSet()) {
-                if (account.equals(friend)) {
-                    exist = true;
-                    break;
+            Transaction transaction = session.beginTransaction();
+            try {
+                boolean exist = false;
+                for (Account account : user.getAccountSet()) {
+                    if (account.equals(friend)) {
+                        exist = true;
+                        break;
+                    }
                 }
-            }
 
-            session.getTransaction().commit();
-            return exist;
+                transaction.commit();
+                return exist;
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate isFriend Error.", e);
         }
@@ -163,16 +199,20 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Post addPost(Post post, Account user) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            try {
+                int id = (int) session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) VALUES (:id, :text, now()) RETURNING ID;")
+                        .setParameter("id", user.getId())
+                        .setParameter("text", post.getText())
+                        .getSingleResult();
 
-            int id = (int) session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) VALUES (:id, :text, now()) RETURNING ID;")
-                    .setParameter("id", user.getId())
-                    .setParameter("text", post.getText())
-                    .getSingleResult();
+                transaction.commit();
 
-            session.getTransaction().commit();
-
-            return getPost(id);
+                return getPost(id);
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addPost Error.", e);
         }
@@ -181,11 +221,15 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public void deletePost(Post post) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.delete(post);
 
-            session.delete(post);
-
-            session.getTransaction().commit();
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addPost Error.", e);
         }
@@ -195,14 +239,18 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public void updatePost(Post oldPost, Post newPost) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createSQLQuery("UPDATE Post SET text=:text WHERE id=:id")
+                        .setParameter("text", newPost.getText())
+                        .setParameter("id", oldPost.getId())
+                        .executeUpdate();
 
-            session.createSQLQuery("UPDATE Post SET text=:text WHERE id=:id")
-                    .setParameter("text", newPost.getText())
-                    .setParameter("id", oldPost.getId())
-                    .executeUpdate();
-
-            session.getTransaction().commit();
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate updatePost Error.", e);
         }

@@ -8,11 +8,11 @@ import source.exception.AccStorageException;
 import java.util.List;
 
 public interface ChatRepository {
-    Chat add(List<Integer> ids, String name) throws AccStorageException;
+    Chat addChat(List<Integer> ids, String name) throws AccStorageException;
 
-    Chat get(int id) throws AccStorageException;
+    Chat getChat(int id) throws AccStorageException;
 
-    boolean exist(int id) throws AccStorageException;
+    boolean existChat(int id) throws AccStorageException;
 
     Message addMessage(Message message) throws AccStorageException;
 

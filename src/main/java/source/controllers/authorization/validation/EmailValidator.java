@@ -27,6 +27,6 @@ public class EmailValidator
     }
 
     private boolean validateEmail(String email) throws AccStorageException {
-        return !accountRepository.exist(email);
+        return !accountRepository.existAccount(email);
     }
 }

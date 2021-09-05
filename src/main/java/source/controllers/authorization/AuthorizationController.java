@@ -40,10 +40,10 @@ public class AuthorizationController {
     }
 
     private String registration(Account account) throws AccStorageException {
-        if (accountRepository.exist(account.getEmail())) {
+        if (accountRepository.existAccount(account.getEmail())) {
             return "redirect:" + "sign";
         } else {
-            accountRepository.add(account);
+            accountRepository.addAccount(account);
 
             return "redirect:" + "login";
         }

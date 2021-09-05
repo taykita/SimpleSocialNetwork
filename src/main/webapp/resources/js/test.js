@@ -13,7 +13,7 @@ function setConnected(connected) {
 }
 
 function connect() {
-    let socket = new SockJS('/123');
+    let socket = new SockJS('/socket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         setConnected(true);

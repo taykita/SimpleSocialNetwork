@@ -28,10 +28,8 @@
                 <div class="col-md-10">
                     <h1 th:text="${name}">Имя_пользователя</h1>
                 </div>
-                <div class="col-md-2">
-                    <div class="exitB">
-                        <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
-                    </div>
+                <div class="col-md-2 exitB">
+                    <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
                 </div>
             </div>
             <div class="row">
@@ -41,30 +39,32 @@
                 </div>
                 <div class="col-md-9">
                     <p>Информация</p>
+                    <div class="col-md-2 p-2 exitB">
+                        <a class="w-30 btn btn-lg btn-secondary" href="edit-acc" type="submit">Редактировать</a>
+                    </div>
                 </div>
             </div>
             <h1>Посты</h1>
 
             <input type ="text" id="id" name="id" th:value="${id}" hidden />
 
-            <div class="row">
-                <div class="col-md-7">
-                    <form th:action="@{create-post}" th:method="POST" th:object="${post}">
-                        <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
-                        <div class="form-floating">
-                            <input type="text" class="form-control" name="text" id="text">
-                            <label for="text" th:field="*{text}">Введите текст</label>
-                        </div>
+            <div class="row col-md-7">
+                <form th:action="@{create-post}" th:method="POST" th:object="${post}">
+                    <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
+                    <div class="form-floating">
+                        <input type="text" class="form-control" name="text" id="text">
+                        <label for="text" th:field="*{text}">Введите текст</label>
+                    </div>
 
-                        <button class="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
-                    </form>
-                </div>
+                    <button class="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
+                </form>
             </div>
 
             <div id="post">
 
             </div>
 
+            <!--                TODO Разобрать странности с div здесь-->
             <div class="row">
                 <div class="col-md-2">
                     <div class="pt-2 pb-1">

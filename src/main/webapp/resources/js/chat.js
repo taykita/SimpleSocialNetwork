@@ -4,7 +4,7 @@ let chatId;
 let block = false;
 
 function connect() {
-    let socket = new SockJS('/123');
+    let socket = new SockJS('/socket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
@@ -68,10 +68,10 @@ $(function () {
 
     function get() {
         let data = {firstMessageId: currentFirstMessageId, chatId: chatId};
-        $.get("chat/get-messages", data, success, "json");
+        $.get("chat/get-messages", data, showMessageList, "json");
     }
 
-    function success(messageText) {
+    function showMessageList(messageText) {
         let div = document.getElementById('chat-list');
         let innerHTML = '';
         for (let i = 0; i < messageText.length; i++) {

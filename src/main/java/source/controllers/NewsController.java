@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
-import source.enums.SideMenuEnum;
+import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class NewsController {
     @GetMapping("/news")
     public String newsPage(@AuthenticationPrincipal User activeUser, Model model) {
         model.addAttribute("id", activeUser.getId());
-        model.addAttribute("active", SideMenuEnum.NEWS);
+        model.addAttribute("active", SideMenuItems.NEWS);
         return "news";
     }
 
@@ -38,7 +38,7 @@ public class NewsController {
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
         int id = activeUser.getId();
-        return accountRepository.getFriendsPosts(accountRepository.get(id), firstPostId, 10);
+        return accountRepository.getFriendsPosts(accountRepository.getAccount(id), firstPostId, 10);
     }
 
 }

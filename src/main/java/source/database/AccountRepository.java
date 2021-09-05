@@ -8,17 +8,19 @@ import source.exception.AccStorageException;
 import java.util.List;
 
 public interface AccountRepository {
-    Account add(Account account) throws AccStorageException;
+    Account addAccount(Account account) throws AccStorageException;
 
-    Account get(int id) throws AccStorageException;
+    Account updateAccount(Account account) throws AccStorageException;
 
-    Account get(String email) throws AccStorageException;
+    Account getAccount(int id) throws AccStorageException;
 
-    boolean exist(String email) throws AccStorageException;
+    Account getAccount(String email) throws AccStorageException;
+
+    boolean existAccount(String email) throws AccStorageException;
 
     boolean confirmPass(String email, String pass) throws AccStorageException;
 
-    List<Account> getAll() throws AccStorageException;
+    List<Account> getAllAccounts() throws AccStorageException;
 
     void addFriend(Account user, Account friend) throws AccStorageException;
 

@@ -1,4 +1,4 @@
-package source.controllers;
+package source.controllers.main;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -11,7 +11,7 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
-import source.enums.SideMenuEnum;
+import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class MainPageController {
     public String mainPage(@AuthenticationPrincipal User activeUser,
                            Model model) throws AccStorageException {
 
-        Account user = accountRepository.get(activeUser.getId());
+        Account user = accountRepository.getAccount(activeUser.getId());
 
         updateModel(user, model);
 
@@ -41,7 +41,7 @@ public class MainPageController {
         model.addAttribute("post", new Post());
         model.addAttribute("name", activeUser.getName());
         model.addAttribute("id", activeUser.getId());
-        model.addAttribute("active", SideMenuEnum.MAIN);
+        model.addAttribute("active", SideMenuItems.MAIN);
     }
 
     @GetMapping("/main/get-posts")

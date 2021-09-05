@@ -3,7 +3,7 @@ let stompClient = null;
 let block = false;
 
 function connect() {
-    let socket = new SockJS('/123');
+    let socket = new SockJS('/socket');
     stompClient = Stomp.over(socket);
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
@@ -27,10 +27,10 @@ $(function () {
 
     function get() {
         let data = {firstPostId: currentFirstPostId};
-        $.get("main/get-posts", data, success, "json");
+        $.get("main/get-posts", data, showPostList, "json");
     }
 
-    function success(posts) {
+    function showPostList(posts) {
         let div = document.getElementById('post');
         let innerHTML = '';
         for (let i = 0; i < posts.length; i++) {

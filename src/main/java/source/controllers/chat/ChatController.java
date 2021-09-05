@@ -16,9 +16,10 @@ import source.controllers.entity.Message;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
-import source.enums.SideMenuEnum;
+import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,21 +39,23 @@ public class ChatController {
 
     @PostMapping("/create-chat")
     public String createChat(@AuthenticationPrincipal User activeUser,
-                             @RequestParam int id) throws AccStorageException {
-        if (!chatRepository.exist(id)) {
-            chatRepository.add(Arrays.asList(activeUser.getId(), id), accountRepository.get(id).getName());
-        }
+                             @RequestParam Integer[] accIds,
+                             @RequestParam(required = false, defaultValue = "default") String name) throws AccStorageException {
+
+        List<Integer> ids = new ArrayList<>(Arrays.asList(accIds));
+        ids.add(activeUser.getId());
+        chatRepository.addChat(ids, name);
 
         return "redirect:chat-list";
     }
 
-    @PostMapping("/chat")
+    @GetMapping("/chat")
     public String chatPage(@AuthenticationPrincipal User activeUser,
                            @RequestParam int id,
                            Model model) throws AccStorageException {
 
-        Chat chat = chatRepository.get(id);
-        Account account = accountRepository.get(activeUser.getId());
+        Chat chat = chatRepository.getChat(id);
+        Account account = accountRepository.getAccount(activeUser.getId());
 
         updateModel(account, model, chat);
 
@@ -65,7 +68,7 @@ public class ChatController {
         model.addAttribute("userName", account.getName());
         model.addAttribute("userId", account.getId());
         model.addAttribute("chatId", chat.getId());
-        model.addAttribute("active", SideMenuEnum.NONE);
+        model.addAttribute("active", SideMenuItems.NONE);
     }
 
     @MessageMapping("/chat")

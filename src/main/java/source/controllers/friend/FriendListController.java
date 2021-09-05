@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import source.controllers.entity.Account;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
-import source.enums.SideMenuEnum;
+import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class FriendListController {
 
     @GetMapping("/friend-list")
     public String friendListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
-        Account user = accountRepository.get(activeUser.getId());
+        Account user = accountRepository.getAccount(activeUser.getId());
         List<Account> allFriends = accountRepository.getFriends(user);
 
         updateModel(model, allFriends, user.getId());
@@ -34,6 +34,6 @@ public class FriendListController {
     private void updateModel(Model model, List<Account> allFriends, int id) {
         model.addAttribute("users", allFriends);
         model.addAttribute("id", id);
-        model.addAttribute("active", SideMenuEnum.FRIENDS);
+        model.addAttribute("active", SideMenuItems.FRIENDS);
     }
 }

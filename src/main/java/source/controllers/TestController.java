@@ -30,7 +30,7 @@ public class TestController {
     @GetMapping("/testJSON")
     @ResponseBody
     public List<Post> testJSON(@RequestParam(required = false) int count) throws AccStorageException {
-        return accountRepository.getFriendsPosts(accountRepository.get("123@123"), count, count + 9);
+        return accountRepository.getFriendsPosts(accountRepository.getAccount("123@123"), count, count + 9);
     }
 
 }

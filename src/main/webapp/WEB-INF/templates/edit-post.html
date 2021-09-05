@@ -11,19 +11,17 @@
 </head>
 <body>
 <main class="main">
-    <div class="row">
-        <div class="col-md-12">
-            <form th:action="@{edit-post}" th:method="POST" th:object="${post}">
-                <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
-                <div class="form-floating">
-                    <div class="input-group post-window">
-                        <textarea class="form-control" th:field="*{text}">...</textarea>
-                    </div>
+    <div class="row col-md-12">
+        <form th:action="@{edit-post}" th:method="POST" th:object="${post}">
+            <div th:if="${#fields.hasErrors('text')}" th:errors="*{text}">...</div>
+            <div class="form-floating">
+                <div class="input-group post-window">
+                    <textarea class="form-control" th:field="*{text}">...</textarea>
                 </div>
-                <input type="text" name="id" th:value="${postId}" hidden/>
-                <button class="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
-            </form>
-        </div>
+            </div>
+            <input type="text" name="id" th:value="${postId}" hidden/>
+            <button class="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
+        </form>
     </div>
 </main>
 </body>

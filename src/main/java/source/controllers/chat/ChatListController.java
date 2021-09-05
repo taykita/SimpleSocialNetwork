@@ -10,7 +10,7 @@ import source.controllers.entity.Chat;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
-import source.enums.SideMenuEnum;
+import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class ChatListController {
 
     @GetMapping("/chat-list")
     public String chatListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
-        Account user = accountRepository.get(activeUser.getId());
+        Account user = accountRepository.getAccount(activeUser.getId());
 
         List<Chat> allChats = chatRepository.getChats(user.getId());
         List<Account> allFriends = accountRepository.getFriends(user);
@@ -41,6 +41,6 @@ public class ChatListController {
         model.addAttribute("chats", allChats);
         model.addAttribute("users", allFriends);
         model.addAttribute("id", id);
-        model.addAttribute("active", SideMenuEnum.CHAT);
+        model.addAttribute("active", SideMenuItems.CHAT);
     }
 }

@@ -23,15 +23,15 @@ public class FriendController {
 
     @PostMapping("/add-friend")
     public String addFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
-        Account user = accountRepository.get(activeUser.getId());
-        accountRepository.addFriend(user, accountRepository.get(id));
+        Account user = accountRepository.getAccount(activeUser.getId());
+        accountRepository.addFriend(user, accountRepository.getAccount(id));
         return "redirect:" + "user-page?id=" + id;
     }
 
     @GetMapping("/delete-friend")
     public String deleteFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
-        Account user = accountRepository.get(activeUser.getId());
-        accountRepository.deleteFriend(user, accountRepository.get(id));
+        Account user = accountRepository.getAccount(activeUser.getId());
+        accountRepository.deleteFriend(user, accountRepository.getAccount(id));
         return "redirect:" + "friend-list";
     }
 

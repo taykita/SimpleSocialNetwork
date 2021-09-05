@@ -36,7 +36,7 @@ public class PostController {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
-        Account account = accountRepository.get(activeUser.getId());
+        Account account = accountRepository.getAccount(activeUser.getId());
         post = accountRepository.addPost(post, account);
 
         post.setUserName(account.getName());

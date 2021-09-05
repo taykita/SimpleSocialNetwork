@@ -17,73 +17,45 @@
 
         <div class="col-md-9">
             <div class="row">
-                <div class="row">
-                    <div class="col-md-10">
-                        <h1>Чат</h1>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="exitB">
-                            <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
-                        </div>
-                    </div>
+                <div class="col-md-10">
+                    <h1>Чат</h1>
+                </div>
+                <div class="col-md-2 exitB">
+                    <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
                 </div>
             </div>
 
             <th:block th:each="chat : ${chats}">
-                <div class="row">
-                    <div class="col-md-5">
-                        <div class="p-2">
-                            <form action="chat" method="post">
-                                <input type="text" name="id" th:value="${chat.id}" hidden>
-                                <a href="#" onclick="this.parentNode.submit()">
-                                    <h5 th:text="${chat.name}"></h5>
-                                </a>
-                            </form>
-                        </div>
-                    </div>
+                <div class="row col-md-5 p-2">
+                    <form action="chat" method="get">
+                        <input type="text" name="id" th:value="${chat.id}" hidden>
+                        <a href="#" onclick="this.parentNode.submit()">
+                            <h5 th:text="${chat.name}"></h5>
+                        </a>
+                    </form>
                 </div>
             </th:block>
 
             <h4>Создать чат</h4>
-            <th:block th:each="user : ${users}">
+            <form action="create-chat" method="post">
+                <th:block th:each="user : ${users}">
+                    <div class="row col-md-5 p-2">
+                        <input type="checkbox" th:attr='value=${user.id}' name="accIds" th:text="${user.name}">
+                    </div>
+                </th:block>
+                <div class="row col-md-5 p-2">
+                    <input type="text" class="form-control" name="name" id="name">
+                    <label for="name">Введите текст</label>
+                </div>
                 <div class="row">
-                    <div class="col-md-5">
-                        <div class="p-2">
-                            <form action="create-chat" method="post">
-                                <input type="text" name="id" th:value="${user.id}" hidden>
-                                <a href="#" onclick="this.parentNode.submit()">
-                                    <h5 th:text="${user.name}"></h5>
-                                </a>
-                            </form>
-                        </div>
+                    <div class="col-md-2 pt-3 pb-2">
+                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Создать чат</button>
                     </div>
                 </div>
-            </th:block>
+            </form>
 
         </div>
     </div>
 </main>
 </body>
 </html>
-
-<!--<form action="chat" method="post">-->
-<!--    <th:block th:each="user : ${users}">-->
-<!--        <div class="row">-->
-<!--            <div class="col-md-5">-->
-<!--                <div class="p-2">-->
-<!--                    <div>-->
-<!--                        &lt;!&ndash;                                    <input type="checkbox" th:name="${user.id}" th:value="${user.id}">&ndash;&gt;-->
-<!--                        &lt;!&ndash;                                    <label th:for="${user.id}" th:text="${user.name}">...</label>&ndash;&gt;-->
-
-<!--                        <input type="checkbox" th:field="*{users}" th:value="${user}" />-->
-<!--                        <label th:for="${#ids.prev('users')}"-->
-<!--                               th:text="${user.name}">...</label>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </th:block>-->
-<!--    <div>-->
-<!--        <button type="submit">Создать чат</button>-->
-<!--    </div>-->
-<!--</form>-->
