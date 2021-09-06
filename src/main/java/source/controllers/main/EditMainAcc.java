@@ -2,6 +2,7 @@ package source.controllers.main;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +17,12 @@ import source.exception.AccStorageException;
 @Controller
 public class EditMainAcc {
     @Autowired
-    public EditMainAcc(AccountRepository accountRepository) {
+    public EditMainAcc(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
         this.accountRepository = accountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
+    private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
 
     @GetMapping("/edit-acc")
@@ -53,7 +56,7 @@ public class EditMainAcc {
         if (!newAccount.getPass().equals("") &&
                 !currentAccount.getPass().equals(oldPass) &&
                 newAccount.getPass().equals(chPass)) {
-            currentAccount.setPass(newAccount.getPass());
+            currentAccount.setPass(passwordEncoder.encode(newAccount.getPass()));
             isEdit = true;
         }
         if (isEdit) {
