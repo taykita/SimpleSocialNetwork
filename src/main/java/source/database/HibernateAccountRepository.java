@@ -119,11 +119,16 @@ public class HibernateAccountRepository implements AccountRepository {
 
             Transaction transaction = session.beginTransaction();
             try {
-                user.getAccountSet().add(friend);
-                friend.getAccountSet().add(user);
+                session.createSQLQuery("INSERT INTO Accounts_Accounts (ACC_ID, USER_ID) VALUES (:accId, :userId);")
+                        .setParameter("accId", user.getId())
+                        .setParameter("userId", friend.getId())
+                        .executeUpdate();
 
-                session.update(user);
-                session.update(friend);
+                session.createSQLQuery("INSERT INTO Accounts_Accounts (ACC_ID, USER_ID) VALUES (:accId, :userId);")
+                        .setParameter("accId", friend.getId())
+                        .setParameter("userId", user.getId())
+                        .executeUpdate();
+
 
                 transaction.commit();
             } catch (HibernateException e) {
@@ -142,11 +147,10 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                removeFromFriends(user, friend);
-                removeFromFriends(friend, user);
-
-                session.update(user);
-                session.update(friend);
+                session.createSQLQuery("DELETE FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                        .setParameter("accId", user.getId())
+                        .setParameter("userId", friend.getId())
+                        .executeUpdate();
 
                 transaction.commit();
             } catch (HibernateException e) {
@@ -158,30 +162,16 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
-    private void removeFromFriends(Account userAcc, Account friendAcc) {
-        for (Account account : userAcc.getAccountSet()) {
-            if (account.equals(friendAcc)) {
-                userAcc.getAccountSet().remove(account);
-                break;
-            }
-        }
-    }
-
     @Override
     public boolean isFriend(Account user, Account friend) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                boolean exist = false;
-                for (Account account : user.getAccountSet()) {
-                    if (account.equals(friend)) {
-                        exist = true;
-                        break;
-                    }
-                }
+                return session.createSQLQuery("SELECT * FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                        .setParameter("accId", user.getId())
+                        .setParameter("userId", friend.getId())
+                        .uniqueResult() != null;
 
-                transaction.commit();
-                return exist;
             } catch (HibernateException e) {
                 transaction.rollback();
                 throw e;
@@ -192,8 +182,18 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public List<Account> getFriends(Account user) throws AccStorageException {
-        return Arrays.asList(user.getAccountSet().toArray(new Account[0]));
+    public List<Account> getFriends(int userId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+
+            List<Account> friends = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Accounts as aa ON a.id = aa.user_id WHERE aa.acc_id = :userId")
+                    .setParameter("userId", userId)
+                    .addEntity(Account.class)
+                    .getResultList();
+
+            return friends;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
     }
 
     @Override
@@ -294,7 +294,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
 
-            for (Account account : getFriends(user)) {
+            for (Account account : getFriends(user.getId())) {
                 ids.add(account.getId());
             }
 

@@ -28,7 +28,7 @@ public interface AccountRepository {
 
     boolean isFriend(Account user, Account friend) throws AccStorageException;
 
-    List<Account> getFriends(Account user) throws AccStorageException;
+    List<Account> getFriends(int userId) throws AccStorageException;
 
     Post addPost(Post post, Account user) throws AccStorageException;
 

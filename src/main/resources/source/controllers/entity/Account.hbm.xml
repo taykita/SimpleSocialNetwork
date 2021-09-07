@@ -7,7 +7,7 @@
         <property name="pass" type="string" column="PASS"/>
         <property name="name" type="string" column="USER_NAME"/>
         <set name="accountSet" table="Accounts_Accounts"
-             inverse="false" lazy="false" fetch="select" cascade="all">
+             inverse="false" fetch="select" cascade="all">
             <key>
                 <column name="ACC_ID"/>
             </key>

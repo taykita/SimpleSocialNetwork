@@ -40,7 +40,7 @@ public class PostController {
         post = accountRepository.addPost(post, account);
 
         post.setUserName(account.getName());
-        List<Account> friends = accountRepository.getFriends(account);
+        List<Account> friends = accountRepository.getFriends(account.getId());
         for (Account friend: friends) {
             messagingTemplate.convertAndSendToUser(friend.getEmail(), "/queue/feed", post);
         }

@@ -28,12 +28,11 @@ public class ChatListController {
 
     @GetMapping("/chat-list")
     public String chatListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
-        Account user = accountRepository.getAccount(activeUser.getId());
 
-        List<Chat> allChats = chatRepository.getChats(user.getId());
-        List<Account> allFriends = accountRepository.getFriends(user);
+        List<Chat> allChats = chatRepository.getChats(activeUser.getId());
+        List<Account> allFriends = accountRepository.getFriends(activeUser.getId());
 
-        updateModel(model, allFriends, allChats, user.getId());
+        updateModel(model, allFriends, allChats, activeUser.getId());
         return "chat-list";
     }
 

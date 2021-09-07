@@ -24,10 +24,9 @@ public class FriendListController {
 
     @GetMapping("/friend-list")
     public String friendListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
-        Account user = accountRepository.getAccount(activeUser.getId());
-        List<Account> allFriends = accountRepository.getFriends(user);
+        List<Account> allFriends = accountRepository.getFriends(activeUser.getId());
 
-        updateModel(model, allFriends, user.getId());
+        updateModel(model, allFriends, activeUser.getId());
         return "friend-list";
     }
 
