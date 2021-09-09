@@ -164,7 +164,7 @@ public class HibernateChatRepository implements ChatRepository{
     public List<String> getUsersEmail(int chatId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()){
 
-            Iterator result = session.createSQLQuery("SELECT a.email FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+            Iterator result = session.createSQLQuery("SELECT a.email FROM Accounts as a LEFT OUTER JOIN Accounts_Chat as ac ON a.id = ac.acc_id LEFT OUTER JOIN Accounts_PrivateChat as ap ON a.id = ap.user_id WHERE ac.chat_id = :chatId OR ap.chat_id = :chatId")
                     .setParameter("chatId", chatId)
                     .getResultList()
                     .iterator();
@@ -216,7 +216,15 @@ public class HibernateChatRepository implements ChatRepository{
 
     @Override
     public Chat getPrivateChat(int userId, int friendId) throws AccStorageException {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            return (Chat) session.createSQLQuery("SELECT c.id, c.name FROM Chat as c JOIN Accounts_PrivateChat as ap ON c.id = ap.chat_id WHERE user_id = :userId AND friend_id = :friendId")
+                    .setParameter("userId", userId)
+                    .setParameter("friendId", friendId)
+                    .addEntity(Chat.class)
+                    .getSingleResult();
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getChat Error.", e);
+        }
     }
 
     @Override

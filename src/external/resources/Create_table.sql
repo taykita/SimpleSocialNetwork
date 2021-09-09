@@ -66,7 +66,7 @@ create table if not exists Accounts_PrivateChat (
 	CHAT_ID int4 not null,
 	USER_ID int4 not null,
 	FRIEND_ID int4 not null,
-	primary key (CHAT_ID, ACC_ID, FRIEND_ID),
+	primary key (CHAT_ID, USER_ID, FRIEND_ID),
 	constraint ACCOUNTS_PRIVATECHAT_CHAT_ID_CONST
         foreign key (CHAT_ID)
         references Chat,

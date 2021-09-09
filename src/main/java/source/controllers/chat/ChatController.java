@@ -89,18 +89,17 @@ public class ChatController {
     }
 
     @PostMapping("/private-chat")
-    @ResponseBody
     public String privateChat(@AuthenticationPrincipal User activeUser,
                             @RequestParam int friendId) throws AccStorageException {
         int userId = activeUser.getId();
         if (chatRepository.existPrivateChat(userId, friendId)) {
-            return "redirect:chat?id=";
+            Chat privateChat = chatRepository.getPrivateChat(userId, friendId);
+            return "redirect:chat?id=" + privateChat.getId();
         } else {
             String name = accountRepository.getAccount(userId).getName() + "-" + accountRepository.getAccount(friendId).getName();
-            chatRepository.addPrivateChat(userId, friendId, name);
+            Chat chat = chatRepository.addPrivateChat(userId, friendId, name);
+            return "redirect:chat?id=" + chat.getId();
         }
-
-
     }
 
 }
