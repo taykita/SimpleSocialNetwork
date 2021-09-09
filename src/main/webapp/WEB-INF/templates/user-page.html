@@ -47,6 +47,12 @@
                 <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Добавить в друзья</button>
             </form>
             ')"></h6>
+
+            <form action="/private-chat" method="post">
+                <input type ="text" name="id" th:value="${id}" hidden />
+                <button class="mt-3 mb-3 w-40 btn btn-lg btn-dark" type="submit">Чат</button>
+            </form>
+
             <h1>Посты</h1>
 
             <div id="post">

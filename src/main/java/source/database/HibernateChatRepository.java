@@ -181,4 +181,54 @@ public class HibernateChatRepository implements ChatRepository{
         }
     }
 
+    @Override
+    public Chat addPrivateChat(int userId, int friendId, String name) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                Chat chat = new Chat();
+                chat.setName(name);
+
+                int id = (Integer) session.save(chat);
+                session.createSQLQuery("INSERT INTO Accounts_PrivateChat (CHAT_ID, USER_ID, FRIEND_ID) VALUES (:chatId, :userId, :friendId);")
+                        .setParameter("chatId", id)
+                        .setParameter("userId", userId)
+                        .setParameter("friendId", friendId)
+                        .executeUpdate();
+
+                session.createSQLQuery("INSERT INTO Accounts_PrivateChat (CHAT_ID, USER_ID, FRIEND_ID) VALUES (:chatId, :userId, :friendId);")
+                        .setParameter("chatId", id)
+                        .setParameter("userId", friendId)
+                        .setParameter("friendId", userId)
+                        .executeUpdate();
+
+                transaction.commit();
+
+                return getChat(id);
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addPrivateChat Error.", e);
+        }
+    }
+
+    @Override
+    public Chat getPrivateChat(int userId, int friendId) throws AccStorageException {
+        return null;
+    }
+
+    @Override
+    public boolean existPrivateChat(int userId, int friendId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createSQLQuery("SELECT * FROM Accounts_PrivateChat WHERE USER_ID = :userId AND FRIEND_ID = :friendId")
+                    .setParameter("userId", userId)
+                    .setParameter("friendId", friendId)
+                    .uniqueResult() != null;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getChat Error.", e);
+        }
+    }
+
 }

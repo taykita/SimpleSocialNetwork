@@ -23,4 +23,10 @@ public interface ChatRepository {
     List<Chat> getChats(int userId) throws AccStorageException;
 
     List<String> getUsersEmail(int chatId) throws AccStorageException;
+
+    Chat addPrivateChat(int userId, int friendId, String name) throws AccStorageException;
+
+    Chat getPrivateChat(int userId, int friendId) throws AccStorageException;
+
+    boolean existPrivateChat(int userId, int friendId) throws AccStorageException;
 }
