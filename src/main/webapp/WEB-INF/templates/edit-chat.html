@@ -37,6 +37,12 @@
                     </form>
                 </div>
             </th:block>
+            <div class="col-md-6">
+                <form action="add-chat-user" method="get">
+                    <input type ="text" name="chatId" th:value="${chatId}" hidden />
+                    <button class="mt-3 mb-3 w-40 btn btn-lg btn-dark" type="submit">Добавить пользователя</button>
+                </form>
+            </div>
 
         </div>
     </div>

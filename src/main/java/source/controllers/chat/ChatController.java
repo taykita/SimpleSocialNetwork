@@ -113,7 +113,7 @@ public class ChatController {
     @GetMapping("/add-chat-user")
     public String addChatUserPage(@RequestParam int chatId,
                                   Model model) throws AccStorageException {
-        List<Account> otherUsers = chatRepository.getOtherUsersFromChat(chatId);
+        List<Account> otherUsers = accountRepository.getAllAccounts();
         updateModel(model, otherUsers, chatId);
         return "add-chat-user";
     }
