@@ -17,7 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 
 @Repository
-public class HibernateChatRepository implements ChatRepository{
+public class HibernateChatRepository implements ChatRepository {
 
     @Autowired
     public HibernateChatRepository(SessionFactory sessionFactory) {
@@ -27,15 +27,16 @@ public class HibernateChatRepository implements ChatRepository{
     private final SessionFactory sessionFactory;
 
     @Override
-    public Chat addChat(List<Integer> ids, String name) throws AccStorageException {
+    public Chat addChat(List<Integer> ids, String name, boolean isPrivate) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Chat chat = new Chat();
-                chat.setName(name);
-
-                int id = (Integer) session.save(chat);
-                for (int accId: ids) {
+                int id = (Integer) session.createSQLQuery("INSERT INTO Chat(NAME, IS_PRIVATE, OWNER_ID) VALUES(:name, :isPrivate, :ownerId) RETURNING ID")
+                        .setParameter("name", name)
+                        .setParameter("isPrivate", isPrivate)
+                        .setParameter("ownerId", ids.get(ids.size() - 1))
+                        .getSingleResult();
+                for (int accId : ids) {
                     session.createSQLQuery("INSERT INTO Accounts_chat (CHAT_ID, ACC_ID) VALUES (:chatId, :accId);")
                             .setParameter("chatId", id)
                             .setParameter("accId", accId)
@@ -71,7 +72,7 @@ public class HibernateChatRepository implements ChatRepository{
     }
 
     @Override
-    public void deleteChatUsers(int accId, int chatId) throws AccStorageException {
+    public void deleteChatUser(int accId, int chatId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
@@ -86,7 +87,27 @@ public class HibernateChatRepository implements ChatRepository{
                 throw e;
             }
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addChat Error.", e);
+            throw new AccStorageException("Hibernate deleteChatUser Error.", e);
+        }
+    }
+
+    @Override
+    public void addChatUser(int accId, int chatId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createSQLQuery("INSERT INTO Accounts_Chat(CHAT_ID, ACC_ID) VALUES(:chatId, :accId)")
+                        .setParameter("chatId", chatId)
+                        .setParameter("accId", accId)
+                        .executeUpdate();
+
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addChatUser Error.", e);
         }
     }
 
@@ -135,7 +156,7 @@ public class HibernateChatRepository implements ChatRepository{
 
     @Override
     public Message getMessage(int id) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
             return session.get(Message.class, id);
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getMessage Error");
@@ -144,7 +165,7 @@ public class HibernateChatRepository implements ChatRepository{
 
     @Override
     public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m LEFT OUTER JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id AND m.acc_id = ac.acc_id LEFT OUTER JOIN Accounts_PrivateChat as ap ON m.chat_id = ap.chat_id LEFT OUTER JOIN Accounts AS a ON m.acc_id = a.id " +
                     "WHERE (ac.chat_id = :chatId OR ap.chat_id = :chatId) AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
@@ -175,7 +196,7 @@ public class HibernateChatRepository implements ChatRepository{
 
     @Override
     public List<Chat> getChats(int userId) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             Iterator result = session.createSQLQuery("SELECT c.id, c.name FROM Accounts_Chat as ac JOIN Chat AS c ON ac.chat_id=c.id WHERE ac.ACC_id=:userId")
                     .setParameter("userId", userId)
@@ -199,7 +220,7 @@ public class HibernateChatRepository implements ChatRepository{
 
     @Override
     public List<String> getUsersEmail(int chatId) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()){
+        try (Session session = sessionFactory.openSession()) {
 
             Iterator result = session.createSQLQuery("SELECT a.email FROM Accounts as a LEFT OUTER JOIN Accounts_Chat as ac ON a.id = ac.acc_id LEFT OUTER JOIN Accounts_PrivateChat as ap ON a.id = ap.user_id WHERE ac.chat_id = :chatId OR ap.chat_id = :chatId")
                     .setParameter("chatId", chatId)
@@ -223,10 +244,12 @@ public class HibernateChatRepository implements ChatRepository{
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Chat chat = new Chat();
-                chat.setName(name);
+                int id = (Integer) session.createSQLQuery("INSERT INTO Chat(NAME, IS_PRIVATE, OWNER_ID) VALUES(:name, :isPrivate, :ownerId) RETURNING ID")
+                        .setParameter("name", name)
+                        .setParameter("isPrivate", true)
+                        .setParameter("ownerId", userId)
+                        .getSingleResult();
 
-                int id = (Integer) session.save(chat);
                 session.createSQLQuery("INSERT INTO Accounts_PrivateChat (CHAT_ID, USER_ID, FRIEND_ID) VALUES (:chatId, :userId, :friendId);")
                         .setParameter("chatId", id)
                         .setParameter("userId", userId)
@@ -281,6 +304,21 @@ public class HibernateChatRepository implements ChatRepository{
         try (Session session = sessionFactory.openSession()) {
 
             List<Account> users = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+                    .setParameter("chatId", chatId)
+                    .addEntity(Account.class)
+                    .getResultList();
+
+            return users;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
+        }
+    }
+
+    @Override
+    public List<Account> getOtherUsersFromChat(int chatId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+
+            List<Account> users = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id <> :chatId")
                     .setParameter("chatId", chatId)
                     .addEntity(Account.class)
                     .getResultList();

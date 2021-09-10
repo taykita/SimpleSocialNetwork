@@ -32,7 +32,12 @@ create table if not exists Post (
 create table if not exists Chat (
 	ID serial not null,
 	NAME varchar(50),
-	primary key (id)
+	IS_PRIVATE boolean,
+	OWNER_ID int4,
+	primary key (id),
+    constraint CHAT_OWNER_ID_CONST
+        foreign key (OWNER_ID)
+        references Accounts
 );
 
 create table if not exists Message (

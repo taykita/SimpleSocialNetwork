@@ -8,12 +8,14 @@ import source.exception.AccStorageException;
 import java.util.List;
 
 public interface ChatRepository {
-    Chat addChat(List<Integer> ids, String name) throws AccStorageException;
+    Chat addChat(List<Integer> ids, String name, boolean isPrivate) throws AccStorageException;
 
     void updateChat(Chat chat) throws AccStorageException;
 
-    void deleteChatUsers(int accId, int chatId) throws AccStorageException;
+    void deleteChatUser(int accId, int chatId) throws AccStorageException;
 
+    void addChatUser(int accId, int chatId) throws AccStorageException;
+    
     Chat getChat(int id) throws AccStorageException;
 
     boolean existChat(int id) throws AccStorageException;
@@ -36,5 +38,5 @@ public interface ChatRepository {
 
     List<Account> getUsersFromChat(int chatId) throws AccStorageException;
 
-
+    List<Account> getOtherUsersFromChat(int chatId) throws AccStorageException;
 }

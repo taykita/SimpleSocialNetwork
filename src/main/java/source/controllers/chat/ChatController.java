@@ -44,7 +44,7 @@ public class ChatController {
 
         List<Integer> ids = new ArrayList<>(Arrays.asList(accIds));
         ids.add(activeUser.getId());
-        chatRepository.addChat(ids, name);
+        chatRepository.addChat(ids, name, false);
 
         return "redirect:chat-list";
     }
@@ -110,6 +110,14 @@ public class ChatController {
         return "edit-chat";
     }
 
+    @GetMapping("/add-chat-user")
+    public String addChatUserPage(@RequestParam int chatId,
+                                  Model model) throws AccStorageException {
+        List<Account> otherUsers = chatRepository.getOtherUsersFromChat(chatId);
+        updateModel(model, otherUsers, chatId);
+        return "add-chat-user";
+    }
+
     private void updateModel(Model model, List<Account> allUsers, int chatId) {
         model.addAttribute("users", allUsers);
         model.addAttribute("active", SideMenuItems.NONE);
@@ -119,8 +127,14 @@ public class ChatController {
     @PostMapping("/delete-from-chat")
     public String deleteFromChat(@RequestParam int id,
                                  @RequestParam int chatId) throws AccStorageException {
-        chatRepository.deleteChatUsers(id, chatId);
+        chatRepository.deleteChatUser(id, chatId);
         return "redirect:chat?id=" + chatId;
     }
 
+    @PostMapping("/add-in-chat")
+    public String addInChat(@RequestParam int id,
+                                 @RequestParam int chatId) throws AccStorageException {
+        chatRepository.addChatUser(id, chatId);
+        return "redirect:chat?id=" + chatId;
+    }
 }
