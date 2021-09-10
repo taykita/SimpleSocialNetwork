@@ -90,7 +90,7 @@ public class ChatController {
 
     @PostMapping("/private-chat")
     public String privateChat(@AuthenticationPrincipal User activeUser,
-                            @RequestParam int friendId) throws AccStorageException {
+                              @RequestParam int friendId) throws AccStorageException {
         int userId = activeUser.getId();
         if (chatRepository.existPrivateChat(userId, friendId)) {
             Chat privateChat = chatRepository.getPrivateChat(userId, friendId);
@@ -100,6 +100,27 @@ public class ChatController {
             Chat chat = chatRepository.addPrivateChat(userId, friendId, name);
             return "redirect:chat?id=" + chat.getId();
         }
+    }
+
+    @GetMapping("/edit-chat")
+    public String editChatPage(@RequestParam int chatId,
+                               Model model) throws AccStorageException {
+        List<Account> allUsers = chatRepository.getUsersFromChat(chatId);
+        updateModel(model, allUsers, chatId);
+        return "edit-chat";
+    }
+
+    private void updateModel(Model model, List<Account> allUsers, int chatId) {
+        model.addAttribute("users", allUsers);
+        model.addAttribute("active", SideMenuItems.NONE);
+        model.addAttribute("chatId", chatId);
+    }
+
+    @PostMapping("/delete-from-chat")
+    public String deleteFromChat(@RequestParam int id,
+                                 @RequestParam int chatId) throws AccStorageException {
+        chatRepository.deleteChatUsers(id, chatId);
+        return "redirect:chat?id=" + chatId;
     }
 
 }

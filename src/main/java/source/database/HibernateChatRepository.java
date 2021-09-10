@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import source.controllers.entity.Account;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.exception.AccStorageException;
@@ -44,6 +45,42 @@ public class HibernateChatRepository implements ChatRepository{
                 transaction.commit();
 
                 return getChat(id);
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addChat Error.", e);
+        }
+    }
+
+    @Override
+    public void updateChat(Chat chat) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.update(chat);
+                transaction.commit();
+            } catch (HibernateException e) {
+                transaction.rollback();
+                throw e;
+            }
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate addChat Error.", e);
+        }
+    }
+
+    @Override
+    public void deleteChatUsers(int accId, int chatId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.beginTransaction();
+            try {
+                session.createSQLQuery("DELETE FROM Accounts_chat WHERE chat_id = :chatId AND acc_id = :accId")
+                        .setParameter("chatId", chatId)
+                        .setParameter("accId", accId)
+                        .executeUpdate();
+
+                transaction.commit();
             } catch (HibernateException e) {
                 transaction.rollback();
                 throw e;
@@ -109,8 +146,8 @@ public class HibernateChatRepository implements ChatRepository{
     public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()){
 
-            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id AND m.acc_id = ac.acc_id JOIN Accounts AS a ON m.acc_id = a.id " +
-                    "WHERE ac.chat_id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
+            Iterator result = session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m LEFT OUTER JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id AND m.acc_id = ac.acc_id LEFT OUTER JOIN Accounts_PrivateChat as ap ON m.chat_id = ap.chat_id LEFT OUTER JOIN Accounts AS a ON m.acc_id = a.id " +
+                    "WHERE (ac.chat_id = :chatId OR ap.chat_id = :chatId) AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
                     .setParameter("chatId", chatId)
                     .setParameter("firstMessageId", firstMessageId)
                     .setParameter("maxCount", maxCount)
@@ -236,6 +273,21 @@ public class HibernateChatRepository implements ChatRepository{
                     .uniqueResult() != null;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getChat Error.", e);
+        }
+    }
+
+    @Override
+    public List<Account> getUsersFromChat(int chatId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+
+            List<Account> users = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+                    .setParameter("chatId", chatId)
+                    .addEntity(Account.class)
+                    .getResultList();
+
+            return users;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate getPost Error.", e);
         }
     }
 
