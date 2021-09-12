@@ -36,23 +36,9 @@
                 </div>
             </th:block>
 
-            <h4>Создать чат</h4>
-            <form action="create-chat" method="post">
-                <th:block th:each="user : ${users}">
-                    <div class="row col-md-5 p-2">
-                        <input type="checkbox" th:attr='value=${user.id}' name="accIds" th:text="${user.name}">
-                    </div>
-                </th:block>
-                <div class="row col-md-5 p-2">
-                    <input type="text" class="form-control" name="name" id="name">
-                    <label for="name">Введите текст</label>
-                </div>
-                <div class="row">
-                    <div class="col-md-2 pt-3 pb-2">
-                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Создать чат</button>
-                    </div>
-                </div>
-            </form>
+            <div class="col-md-5">
+                <a class="w-30 btn btn-lg btn-secondary" href="create-chat" type="submit">Создать чат</a>
+            </div>
 
         </div>
     </div>

@@ -50,11 +50,14 @@ public class EditMainAcc {
             isEdit = true;
         }
         if (!currentAccount.getEmail().equals(newAccount.getEmail())) {
-            currentAccount.setEmail(newAccount.getEmail());
-            isEdit = true;
+            if (!accountRepository.existAccount(newAccount.getEmail())) {
+                currentAccount.setEmail(newAccount.getEmail());
+                isEdit = true;
+            }
         }
+        //TODO Как сделать проверку?
         if (!newAccount.getPass().equals("") &&
-                !currentAccount.getPass().equals(oldPass) &&
+                currentAccount.getPass().equals(passwordEncoder.encode(oldPass)) &&
                 newAccount.getPass().equals(chPass)) {
             currentAccount.setPass(passwordEncoder.encode(newAccount.getPass()));
             isEdit = true;

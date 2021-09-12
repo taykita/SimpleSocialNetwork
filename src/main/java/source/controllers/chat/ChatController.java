@@ -14,9 +14,9 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Chat;
 import source.controllers.entity.Message;
 import source.controllers.entity.User;
+import source.controllers.entity.html.SideMenuItems;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
-import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
 import java.util.ArrayList;
@@ -36,6 +36,15 @@ public class ChatController {
     private final ChatRepository chatRepository;
     private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
+
+    @GetMapping("/create-chat")
+    public String createChatPage(@AuthenticationPrincipal User activeUser,
+                                 Model model) throws AccStorageException {
+
+        List<Account> allFriends = accountRepository.getFriends(activeUser.getId());
+        model.addAttribute("users", allFriends);
+        return "create-chat";
+    }
 
     @PostMapping("/create-chat")
     public String createChat(@AuthenticationPrincipal User activeUser,
