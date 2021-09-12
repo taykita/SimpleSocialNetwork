@@ -32,7 +32,7 @@ create table if not exists Post (
 create table if not exists Chat (
 	ID serial not null,
 	NAME varchar(50),
-	IS_PRIVATE boolean,
+	TYPE int4,
 	OWNER_ID int4,
 	primary key (id),
     constraint CHAT_OWNER_ID_CONST
@@ -64,21 +64,5 @@ create table if not exists Accounts_Chat (
         references Chat,
     constraint ACCOUNTS_CHAT_ACC_ID_CONST
         foreign key (ACC_ID)
-        references Accounts
-);
-
-create table if not exists Accounts_PrivateChat (
-	CHAT_ID int4 not null,
-	USER_ID int4 not null,
-	FRIEND_ID int4 not null,
-	primary key (CHAT_ID, USER_ID, FRIEND_ID),
-	constraint ACCOUNTS_PRIVATECHAT_CHAT_ID_CONST
-        foreign key (CHAT_ID)
-        references Chat,
-    constraint ACCOUNTS_PRIVATECHAT_USER_ID_CONST
-        foreign key (USER_ID)
-        references Accounts,
-    constraint ACCOUNTS_PRIVATECHAT_FRIEND_ID_CONST
-        foreign key (FRIEND_ID)
         references Accounts
 );

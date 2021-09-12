@@ -63,12 +63,12 @@ public class ChatController {
     }
 
     private void updateModel(Account account, Model model, Chat chat) {
-
         model.addAttribute("name", chat.getName());
         model.addAttribute("userName", account.getName());
         model.addAttribute("userId", account.getId());
         model.addAttribute("chatId", chat.getId());
         model.addAttribute("active", SideMenuItems.NONE);
+        model.addAttribute("chatType", chat.getType());
     }
 
     @MessageMapping("/chat")
@@ -133,7 +133,7 @@ public class ChatController {
 
     @PostMapping("/add-in-chat")
     public String addInChat(@RequestParam int id,
-                                 @RequestParam int chatId) throws AccStorageException {
+                            @RequestParam int chatId) throws AccStorageException {
         chatRepository.addChatUser(id, chatId);
         return "redirect:chat?id=" + chatId;
     }
