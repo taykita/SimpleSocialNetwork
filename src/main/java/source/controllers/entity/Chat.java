@@ -3,7 +3,7 @@ package source.controllers.entity;
 public class Chat {
     private int id;
     private String name;
-    private int owner_id;
+    private int ownerId;
     private int type;
 
     public int getId() {
@@ -30,11 +30,11 @@ public class Chat {
         this.type = type;
     }
 
-    public int getOwner_id() {
-        return owner_id;
+    public int getOwnerId() {
+        return ownerId;
     }
 
-    public void setOwner_id(int owner_id) {
-        this.owner_id = owner_id;
+    public void setOwnerId(int ownerId) {
+        this.ownerId = ownerId;
     }
 }

@@ -12,19 +12,24 @@ import org.springframework.web.bind.annotation.RequestParam;
 import source.controllers.entity.Account;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
+import source.database.ChatRepository;
 import source.exception.AccStorageException;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Controller
 public class AuthorizationController {
     @Autowired
-    public AuthorizationController(AccountRepository accountRepository) {
+    public AuthorizationController(AccountRepository accountRepository, ChatRepository chatRepository) {
         this.accountRepository = accountRepository;
+        this.chatRepository = chatRepository;
     }
 
+    private final ChatRepository chatRepository;
     private final AccountRepository accountRepository;
-
 
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
@@ -43,7 +48,10 @@ public class AuthorizationController {
         if (accountRepository.existAccount(account.getEmail())) {
             return "redirect:" + "sign";
         } else {
-            accountRepository.addAccount(account);
+            account = accountRepository.addAccount(account);
+            List<Integer> ids = new ArrayList<>();
+            ids.add(account.getId());
+            chatRepository.addChat(ids, "Сохраненные сообщения", 3);
 
             return "redirect:" + "login";
         }

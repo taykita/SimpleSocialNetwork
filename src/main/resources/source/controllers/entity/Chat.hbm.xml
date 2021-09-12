@@ -5,6 +5,10 @@
         </id>
         <property name="name" type="string" column="NAME"/>
 
+        <property name="ownerId" type="int" column="OWNER_ID"/>
+
+        <property name="type" type="int" column="TYPE"/>
+
     </class>
 
     <class name="Message" table="Message">

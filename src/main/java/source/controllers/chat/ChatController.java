@@ -44,7 +44,7 @@ public class ChatController {
 
         List<Integer> ids = new ArrayList<>(Arrays.asList(accIds));
         ids.add(activeUser.getId());
-        chatRepository.addChat(ids, name, false);
+        chatRepository.addChat(ids, name, 1);
 
         return "redirect:chat-list";
     }
@@ -55,6 +55,12 @@ public class ChatController {
                            Model model) throws AccStorageException {
 
         Chat chat = chatRepository.getChat(id);
+
+        List<String> usersEmail = chatRepository.getUsersEmail(chat.getId());
+        if (!usersEmail.contains(activeUser.getUsername())) {
+            return "redirect:chat-list";
+        }
+
         Account account = accountRepository.getAccount(activeUser.getId());
 
         updateModel(account, model, chat);

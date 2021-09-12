@@ -35,12 +35,12 @@
                     <h6 th:text="${name}">...</h6>
                 </div>
 
-                <h6 th:utext="(${isPrivate} ? '' : '
+                <div class="col-md-6" th:utext="((${chatType} == 1) ? '
                 <form action=&quot;edit-chat&quot; method=&quot;get&quot;>
                     <input type =&quot;text&quot; name=&quot;chatId&quot; value=&quot;' + ${chatId} + '&quot; hidden />
                     <button class=&quot;mt-3 mb-3 w-40 btn btn-lg btn-dark&quot; type=&quot;submit&quot;>Редактировать</button>
                 </form>
-                ')"></h6>
+                ' : '' )"></div>
                 <div class="col-md-2 exitB">
                     <a class="w-30 btn btn-lg btn-secondary" href="exit" type="submit">Выход</a>
                 </div>
