@@ -257,10 +257,11 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public boolean existPrivateChat(int userId, int friendId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery("SELECT ac1.chat_id as chat1_id, ac2.chat_id as chat2_id FROM Accounts_Chat as ac1 INNER JOIN Accounts_Chat as ac2 ON ac1.chat_id = ac2.chat_id and ac2.acc_id != :userId WHERE ac1.acc_id = :userId AND ac2.acc_id = :friendId")
+            return !session.createSQLQuery("SELECT ac1.chat_id as chat1_id, ac2.chat_id as chat2_id FROM Accounts_Chat as ac1 INNER JOIN Accounts_Chat as ac2 ON ac1.chat_id = ac2.chat_id and ac2.acc_id != :userId WHERE ac1.acc_id = :userId AND ac2.acc_id = :friendId")
                     .setParameter("userId", userId)
                     .setParameter("friendId", friendId)
-                    .uniqueResult() != null;
+                    .getResultList()
+                    .isEmpty();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate existPrivateChat Error.", e);
         }

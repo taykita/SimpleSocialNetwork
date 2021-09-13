@@ -155,6 +155,11 @@ public class HibernateAccountRepository implements AccountRepository {
                         .setParameter("userId", friend.getId())
                         .executeUpdate();
 
+                session.createSQLQuery("DELETE FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                        .setParameter("accId", friend.getId())
+                        .setParameter("userId", user.getId())
+                        .executeUpdate();
+
                 transaction.commit();
             } catch (HibernateException e) {
                 transaction.rollback();
@@ -226,7 +231,9 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.delete(post);
+                session.createSQLQuery("DELETE FROM Post WHERE id = :id")
+                        .setParameter("id", post.getId())
+                        .executeUpdate();
 
                 transaction.commit();
             } catch (HibernateException e) {
@@ -234,7 +241,7 @@ public class HibernateAccountRepository implements AccountRepository {
                 throw e;
             }
         } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate addPost Error.", e);
+            throw new AccStorageException("Hibernate deletePost Error.", e);
         }
     }
 
