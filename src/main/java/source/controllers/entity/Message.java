@@ -2,13 +2,15 @@ package source.controllers.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.sql.Timestamp;
+
 public class Message {
     @JsonProperty("accId")
     private int accId;
     @JsonProperty("chatId")
     private int chatId;
     @JsonProperty("date")
-    private String date;
+    private Timestamp date;
     @JsonProperty("text")
     private String text;
     @JsonProperty("name")
@@ -50,10 +52,10 @@ public class Message {
     }
 
     public String getDate() {
-        return date;
+        return date.toString();
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 

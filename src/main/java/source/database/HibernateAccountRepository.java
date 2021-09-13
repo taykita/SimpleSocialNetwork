@@ -80,8 +80,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account getAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (Account) session.createQuery("from Account where email = :email")
+            return (Account) session.createSQLQuery("SELECT * FROM Accounts WHERE email = :email")
                     .setParameter("email", email)
+                    .addEntity(Account.class)
                     .getSingleResult();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate get Error.", e);
@@ -91,7 +92,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public boolean existAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("select email from Account where email = :email")
+            return session.createSQLQuery("SELECT email FROM Accounts WHERE email = :email")
                     .setParameter("email", email)
                     .uniqueResult() != null;
         } catch (HibernateException e) {
@@ -107,7 +108,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Account> getAllAccounts() throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Account>) session.createQuery("from Account").list();
+            return (List<Account>) session.createSQLQuery("SELECT * FROM Accounts")
+                    .addEntity(Account.class)
+                    .getResultList();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getAll Error.", e);
         }
@@ -268,8 +271,9 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createQuery("From Post where ACC_ID = :id ORDER BY id DESC")
+            return (List<Post>) session.createSQLQuery("SELECT * FROM Post WHERE ACC_ID = :id ORDER BY id DESC")
                     .setParameter("id", userId)
+                    .addEntity(Post.class)
                     .getResultList();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
@@ -279,10 +283,11 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createQuery("FROM Post WHERE ACC_ID = :acc_id AND ID < :firstPostId ORDER BY id DESC")
+            return (List<Post>) session.createSQLQuery("SELECT * FROM Post WHERE ACC_ID = :acc_id AND ID < :firstPostId ORDER BY id DESC")
                     .setParameter("acc_id", userId)
                     .setParameter("firstPostId", firstPostId)
                     .setMaxResults(maxCount)
+                    .addEntity(Post.class)
                     .getResultList();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
@@ -293,7 +298,7 @@ public class HibernateAccountRepository implements AccountRepository {
     public List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
-
+//TODO Надо подумать
             for (Account account : getFriends(user.getId())) {
                 ids.add(account.getId());
             }
@@ -312,8 +317,7 @@ public class HibernateAccountRepository implements AccountRepository {
                 Post post = new Post();
                 post.setId((Integer) row[0]);
                 post.setText((String) row[2]);
-                Timestamp timestamp = (Timestamp) row[3];
-                post.setDate(timestamp.toString());
+                post.setDate((Timestamp) row[3]);
                 post.setUserName((String) row[4]);
                 posts.add(post);
             }

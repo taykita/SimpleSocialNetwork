@@ -32,7 +32,7 @@
 
         <property name="text" type="string" column="TEXT"/>
 
-        <property name="date" type="string" column="DATE"/>
+        <property name="date" type="timestamp" column="DATE"/>
 
     </class>
 

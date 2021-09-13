@@ -19,7 +19,9 @@
 
         <property name="text" type="string" column="TEXT"/>
 
-        <property name="date" type="string" column="DATE"/>
+        <property name="name" type="string" column="USER_NAME"/>
+
+        <property name="date" type="timestamp" column="DATE"/>
 
     </class>
 

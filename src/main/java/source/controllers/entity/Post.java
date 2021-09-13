@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.sql.Timestamp;
 
 public class Post {
     public Post() {
@@ -19,7 +20,7 @@ public class Post {
     private String text;
 
     @JsonProperty("date")
-    private String date;
+    private Timestamp date;
 
     @JsonProperty("userName")
     private String userName;
@@ -52,10 +53,10 @@ public class Post {
     }
 
     public String getDate() {
-        return date;
+        return date.toString();
     }
 
-    public void setDate(String date) {
+    public void setDate(Timestamp date) {
         this.date = date;
     }
 
