@@ -14,24 +14,21 @@ import source.exception.AccStorageException;
 @Controller
 public class FriendController {
     @Autowired
-    public FriendController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public FriendController(FriendService friendService) {
+        this.friendService = friendService;
     }
 
-    private final AccountRepository accountRepository;
-
+    private final FriendService friendService;
 
     @PostMapping("/add-friend")
     public String addFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
-        Account user = accountRepository.getAccount(activeUser.getId());
-        accountRepository.addFriend(user, accountRepository.getAccount(id));
+        friendService.addFriend(id, activeUser);
         return "redirect:" + "user-page?id=" + id;
     }
 
     @GetMapping("/delete-friend")
     public String deleteFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
-        Account user = accountRepository.getAccount(activeUser.getId());
-        accountRepository.deleteFriend(user, accountRepository.getAccount(id));
+        friendService.deleteFriend(id, activeUser);
         return "redirect:" + "friend-list";
     }
 

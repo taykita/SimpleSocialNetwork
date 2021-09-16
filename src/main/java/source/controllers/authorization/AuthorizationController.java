@@ -23,13 +23,11 @@ import java.util.List;
 @Controller
 public class AuthorizationController {
     @Autowired
-    public AuthorizationController(AccountRepository accountRepository, ChatRepository chatRepository) {
-        this.accountRepository = accountRepository;
-        this.chatRepository = chatRepository;
+    public AuthorizationController(AuthorizationService authorizationService) {
+        this.authorizationService = authorizationService;
     }
 
-    private final ChatRepository chatRepository;
-    private final AccountRepository accountRepository;
+    private final AuthorizationService authorizationService;
 
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
@@ -45,14 +43,10 @@ public class AuthorizationController {
     }
 
     private String registration(Account account) throws AccStorageException {
-        if (accountRepository.existAccount(account.getEmail())) {
+        if (authorizationService.existAccount(account.getEmail())) {
             return "redirect:" + "sign";
         } else {
-            account = accountRepository.addAccount(account);
-            List<Integer> ids = new ArrayList<>();
-            ids.add(account.getId());
-            chatRepository.addChat(ids, "Сохраненные сообщения", 3);
-
+            authorizationService.addAccount(account);
             return "redirect:" + "login";
         }
     }

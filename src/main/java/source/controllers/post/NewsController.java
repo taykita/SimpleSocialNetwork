@@ -1,4 +1,4 @@
-package source.controllers;
+package source.controllers.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,11 +18,11 @@ import java.util.List;
 @Controller
 public class NewsController {
     @Autowired
-    public NewsController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public NewsController(PostService postService) {
+        this.postService = postService;
     }
 
-    private final AccountRepository accountRepository;
+    private final PostService postService;
 
 
     @GetMapping("/news")
@@ -37,8 +37,7 @@ public class NewsController {
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        int id = activeUser.getId();
-        return accountRepository.getFriendsPosts(accountRepository.getAccount(id), firstPostId, 10);
+        return postService.getPosts(activeUser, firstPostId);
     }
 
 }

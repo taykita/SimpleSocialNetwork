@@ -1,7 +1,6 @@
 package source.database;
 
 import source.controllers.entity.Account;
-import source.controllers.entity.Message;
 import source.controllers.entity.Post;
 import source.exception.AccStorageException;
 

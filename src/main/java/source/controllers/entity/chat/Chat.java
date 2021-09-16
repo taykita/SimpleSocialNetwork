@@ -1,4 +1,4 @@
-package source.controllers.entity;
+package source.controllers.entity.chat;
 
 public class Chat {
     private int id;

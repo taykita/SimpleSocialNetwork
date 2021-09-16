@@ -2,7 +2,6 @@ package source.controllers.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,49 +10,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
-import source.controllers.entity.Chat;
-import source.controllers.entity.Message;
+import source.controllers.entity.chat.Chat;
+import source.controllers.entity.chat.Message;
 import source.controllers.entity.User;
 import source.controllers.entity.html.SideMenuItems;
-import source.database.AccountRepository;
-import source.database.ChatRepository;
 import source.exception.AccStorageException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
 public class ChatController {
     @Autowired
-    public ChatController(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate,
-                          ChatRepository chatRepository) {
-        this.accountRepository = accountRepository;
-        this.messagingTemplate = messagingTemplate;
-        this.chatRepository = chatRepository;
+    public ChatController(ChatService chatService) {
+        this.chatService = chatService;
     }
 
-    private final ChatRepository chatRepository;
-    private final SimpMessagingTemplate messagingTemplate;
-    private final AccountRepository accountRepository;
+    public final int COUNT = 10;
+    private final ChatService chatService;
 
     @GetMapping("/create-chat")
     public String createChatPage(@AuthenticationPrincipal User activeUser,
                                  Model model) throws AccStorageException {
 
-        List<Account> allFriends = accountRepository.getFriends(activeUser.getId());
+        List<Account> allFriends = chatService.getFriends(activeUser);
         model.addAttribute("users", allFriends);
         return "create-chat";
     }
+
 
     @PostMapping("/create-chat")
     public String createChat(@AuthenticationPrincipal User activeUser,
                              @RequestParam Integer[] accIds,
                              @RequestParam(required = false, defaultValue = "default") String name) throws AccStorageException {
 
-        List<Integer> ids = new ArrayList<>(Arrays.asList(accIds));
-        ids.add(activeUser.getId());
-        chatRepository.addChat(ids, name, 1);
+        chatService.addChat(activeUser, accIds, name);
 
         return "redirect:chat-list";
     }
@@ -63,14 +53,15 @@ public class ChatController {
                            @RequestParam int id,
                            Model model) throws AccStorageException {
 
-        Chat chat = chatRepository.getChat(id);
+        Chat chat = chatService.getChat(id);
 
-        List<String> usersEmail = chatRepository.getUsersEmail(chat.getId());
-        if (!usersEmail.contains(activeUser.getUsername())) {
-            return "redirect:chat-list";
-        }
 
-        Account account = accountRepository.getAccount(activeUser.getId());
+//        List<String> usersEmail = chatRepository.getUsersEmail(chat.getId());
+//        if (!usersEmail.contains(activeUser.getUsername())) {
+//            return "redirect:chat-list";
+//        }
+
+        Account account = chatService.getAccount(activeUser);
 
         updateModel(account, model, chat);
 
@@ -88,39 +79,29 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
-        message = chatRepository.addMessage(message);
+        message = chatService.addMessage(message);
 
-        for (String user : chatRepository.getUsersEmail(message.getChatId())) {
-            messagingTemplate.convertAndSendToUser(user,
-                    "/queue/chat/" + message.getChatId(), message);
-        }
+        chatService.sendMessageToUsers(message);
     }
 
     @GetMapping("/chat/get-messages")
     @ResponseBody
     public List<Message> getMessages(@RequestParam(required = false, defaultValue = "1") int firstMessageId,
                                      @RequestParam int chatId) throws AccStorageException {
-        return chatRepository.getMessages(chatId, firstMessageId, 10);
+        return chatService.getMessages(chatId, firstMessageId, COUNT);
     }
 
     @PostMapping("/private-chat")
     public String privateChat(@AuthenticationPrincipal User activeUser,
                               @RequestParam int friendId) throws AccStorageException {
         int userId = activeUser.getId();
-        if (chatRepository.existPrivateChat(userId, friendId)) {
-            Chat privateChat = chatRepository.getPrivateChat(userId, friendId);
-            return "redirect:chat?id=" + privateChat.getId();
-        } else {
-            String name = accountRepository.getAccount(userId).getName() + "-" + accountRepository.getAccount(friendId).getName();
-            Chat chat = chatRepository.addPrivateChat(userId, friendId, name);
-            return "redirect:chat?id=" + chat.getId();
-        }
+        return chatService.redirectToChat(friendId, userId);
     }
 
     @GetMapping("/edit-chat")
     public String editChatPage(@RequestParam int chatId,
                                Model model) throws AccStorageException {
-        List<Account> allUsers = chatRepository.getUsersFromChat(chatId);
+        List<Account> allUsers = chatService.getAllUsersFromChat(chatId);
         updateModel(model, allUsers, chatId);
         return "edit-chat";
     }
@@ -128,8 +109,8 @@ public class ChatController {
     @GetMapping("/add-chat-user")
     public String addChatUserPage(@RequestParam int chatId,
                                   Model model) throws AccStorageException {
-        List<Account> otherUsers = accountRepository.getAllAccounts();
-        updateModel(model, otherUsers, chatId);
+        List<Account> otherFriends = chatService.getOtherFriends();
+        updateModel(model, otherFriends, chatId);
         return "add-chat-user";
     }
 
@@ -142,14 +123,15 @@ public class ChatController {
     @PostMapping("/delete-from-chat")
     public String deleteFromChat(@RequestParam int id,
                                  @RequestParam int chatId) throws AccStorageException {
-        chatRepository.deleteChatUser(id, chatId);
+        chatService.deleteChatUser(id, chatId);
         return "redirect:chat?id=" + chatId;
     }
 
     @PostMapping("/add-in-chat")
     public String addInChat(@RequestParam int id,
                             @RequestParam int chatId) throws AccStorageException {
-        chatRepository.addChatUser(id, chatId);
+        chatService.addChatUser(id, chatId);
         return "redirect:chat?id=" + chatId;
     }
+
 }

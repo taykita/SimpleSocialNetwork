@@ -1,8 +1,8 @@
 package source.database;
 
 import source.controllers.entity.Account;
-import source.controllers.entity.Chat;
-import source.controllers.entity.Message;
+import source.controllers.entity.chat.Chat;
+import source.controllers.entity.chat.Message;
 import source.exception.AccStorageException;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package source.controllers.entity;
+package source.controllers.entity.chat;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

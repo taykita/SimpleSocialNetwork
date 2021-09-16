@@ -7,13 +7,11 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Account;
-import source.controllers.entity.Chat;
-import source.controllers.entity.Message;
+import source.controllers.entity.chat.Chat;
+import source.controllers.entity.chat.Message;
 import source.exception.AccStorageException;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Repository

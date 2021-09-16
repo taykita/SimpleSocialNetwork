@@ -17,19 +17,17 @@ import source.exception.AccStorageException;
 @Controller
 public class EditMainAcc {
     @Autowired
-    public EditMainAcc(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
+    public EditMainAcc(MainService mainService) {
+        this.mainService = mainService;
     }
 
-    private final PasswordEncoder passwordEncoder;
-    private final AccountRepository accountRepository;
+    private final MainService mainService;
 
     @GetMapping("/edit-acc")
     public String editAccPage(@AuthenticationPrincipal User activeUser,
-                           Model model) throws AccStorageException {
+                              Model model) throws AccStorageException {
 
-        Account currentAccount = accountRepository.getAccount(activeUser.getId());
+        Account currentAccount = mainService.getAccount(activeUser);
         model.addAttribute("account", currentAccount);
         model.addAttribute("newAccount", new Account());
 
@@ -41,31 +39,10 @@ public class EditMainAcc {
                           @ModelAttribute("newAccount") Account newAccount,
                           @RequestParam(required = false) String chPass,
                           @RequestParam(required = false) String oldPass) throws AccStorageException {
-        Account currentAccount = accountRepository.getAccount(activeUser.getId());
 
-        boolean isEdit = false;
-
-        if (!currentAccount.getName().equals(newAccount.getName())) {
-            currentAccount.setName(newAccount.getName());
-            isEdit = true;
-        }
-        if (!currentAccount.getEmail().equals(newAccount.getEmail())) {
-            if (!accountRepository.existAccount(newAccount.getEmail())) {
-                currentAccount.setEmail(newAccount.getEmail());
-                isEdit = true;
-            }
-        }
-        //TODO Как сделать проверку?
-        if (!newAccount.getPass().equals("") &&
-                currentAccount.getPass().equals(passwordEncoder.encode(oldPass)) &&
-                newAccount.getPass().equals(chPass)) {
-            currentAccount.setPass(passwordEncoder.encode(newAccount.getPass()));
-            isEdit = true;
-        }
-        if (isEdit) {
-            accountRepository.updateAccount(currentAccount);
-        }
+        mainService.checkAndUpdate(activeUser, newAccount, chPass, oldPass);
 
         return "redirect:main";
     }
+
 }

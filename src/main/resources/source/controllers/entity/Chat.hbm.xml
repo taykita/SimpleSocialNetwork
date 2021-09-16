@@ -1,4 +1,4 @@
-<hibernate-mapping package="source.controllers.entity">
+<hibernate-mapping package="source.controllers.entity.chat">
     <class name="Chat" table="Chat">
         <id name="id" type="int" column="id">
             <generator class="identity"/>
