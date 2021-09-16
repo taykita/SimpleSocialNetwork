@@ -5,6 +5,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
 import source.controllers.entity.chat.Chat;
+import source.controllers.entity.chat.ChatType;
 import source.controllers.entity.chat.Message;
 import source.controllers.entity.User;
 import source.database.AccountRepository;
@@ -34,13 +35,20 @@ public class ChatService {
     }
 
     public void addChat(User activeUser, Integer[] accIds, String name) throws AccStorageException {
-        List<Integer> ids = new ArrayList<>(Arrays.asList(accIds));
+        List<Integer> ids;
+        if (accIds == null) {
+            ids = new ArrayList<>();
+        } else {
+            ids = new ArrayList<>(Arrays.asList(accIds));
+        }
         ids.add(activeUser.getId());
-        chatRepository.addChat(ids, name, 1);
+        chatRepository.addChat(ids, name, ChatType.PUBLIC);
     }
 
-    public Chat getChat(int id) throws AccStorageException {
-        return chatRepository.getChat(id);
+    public Chat getChat(int id, Account account) throws AccStorageException {
+        Chat chat = chatRepository.getChat(id);
+        fixPrivateChatName(account, chat);
+        return chat;
     }
 
     public Account getAccount(User activeUser) throws AccStorageException {
@@ -90,6 +98,26 @@ public class ChatService {
     }
 
     public List<Chat> getChats(User activeUser) throws AccStorageException {
-        return chatRepository.getChats(activeUser.getId());
+        Account userAccount = accountRepository.getAccount(activeUser.getId());
+        List<Chat> chats = chatRepository.getChats(activeUser.getId());
+        for (Chat chat : chats) {
+            fixPrivateChatName(userAccount, chat);
+        }
+        return chats;
     }
+
+    public boolean authUser(int chatId, int accId) throws AccStorageException {
+        return chatRepository.authChatUser(chatId, accId);
+    }
+
+    private void fixPrivateChatName(Account account, Chat chat) {
+        if (chat.getType() == ChatType.PRIVATE.ordinal() + 1) {
+            if (account.getId() == chat.getOwnerId()) {
+                chat.setName(chat.getName().substring(account.getName().length() + 1, chat.getName().length()));
+            } else {
+                chat.setName(chat.getName().substring(0, account.getName().length()));
+            }
+        }
+    }
+
 }

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Account;
+import source.controllers.entity.User;
 import source.controllers.entity.chat.Chat;
 import source.controllers.entity.chat.Message;
-import source.controllers.entity.User;
 import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
@@ -40,7 +40,7 @@ public class ChatController {
 
     @PostMapping("/create-chat")
     public String createChat(@AuthenticationPrincipal User activeUser,
-                             @RequestParam Integer[] accIds,
+                             @RequestParam(required = false) Integer[] accIds,
                              @RequestParam(required = false, defaultValue = "default") String name) throws AccStorageException {
 
         chatService.addChat(activeUser, accIds, name);
@@ -53,15 +53,13 @@ public class ChatController {
                            @RequestParam int id,
                            Model model) throws AccStorageException {
 
-        Chat chat = chatService.getChat(id);
-
-
-//        List<String> usersEmail = chatRepository.getUsersEmail(chat.getId());
-//        if (!usersEmail.contains(activeUser.getUsername())) {
-//            return "redirect:chat-list";
-//        }
 
         Account account = chatService.getAccount(activeUser);
+        Chat chat = chatService.getChat(id, account);
+
+        if (!chatService.authUser(chat.getId(), account.getId())) {
+            return "redirect:chat-list";
+        }
 
         updateModel(account, model, chat);
 

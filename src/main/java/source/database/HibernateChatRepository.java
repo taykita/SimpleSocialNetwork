@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import source.controllers.entity.Account;
 import source.controllers.entity.chat.Chat;
+import source.controllers.entity.chat.ChatType;
 import source.controllers.entity.chat.Message;
 import source.exception.AccStorageException;
 
@@ -25,13 +26,13 @@ public class HibernateChatRepository implements ChatRepository {
     private final SessionFactory sessionFactory;
 
     @Override
-    public Chat addChat(List<Integer> ids, String name, int type) throws AccStorageException {
+    public Chat addChat(List<Integer> ids, String name, ChatType type) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
                 int id = (Integer) session.createSQLQuery("INSERT INTO Chat(NAME, TYPE, OWNER_ID) VALUES(:name, :type, :ownerId) RETURNING ID")
                         .setParameter("name", name)
-                        .setParameter("type", type)
+                        .setParameter("type", type.ordinal() + 1)
                         .setParameter("ownerId", ids.get(ids.size() - 1))
                         .getSingleResult();
                 for (int accId : ids) {
@@ -292,6 +293,18 @@ public class HibernateChatRepository implements ChatRepository {
             return users;
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getOtherUsersFromChat Error.", e);
+        }
+    }
+
+    @Override
+    public boolean authChatUser(int chatId, int accId) throws AccStorageException {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createSQLQuery("SELECT a.id FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId AND a.id = :accId")
+                    .setParameter("chatId", chatId)
+                    .setParameter("accId", accId)
+                    .uniqueResult() != null;
+        } catch (HibernateException e) {
+            throw new AccStorageException("Hibernate authUser Error");
         }
     }
 

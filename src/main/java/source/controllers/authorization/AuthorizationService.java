@@ -3,6 +3,7 @@ package source.controllers.authorization;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
+import source.controllers.entity.chat.ChatType;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
 import source.exception.AccStorageException;
@@ -25,7 +26,7 @@ public class AuthorizationService {
         account = accountRepository.addAccount(account);
         List<Integer> ids = new ArrayList<>();
         ids.add(account.getId());
-        chatRepository.addChat(ids, "Сохраненные сообщения", 3);
+        chatRepository.addChat(ids, "Сохраненные сообщения", ChatType.SAVED);
     }
 
     public boolean existAccount(String email) throws AccStorageException {
