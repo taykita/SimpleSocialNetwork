@@ -1,0 +1,136 @@
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd" version="2.1">
+
+    <named-native-query name="Chat.addChat">
+        <query>
+            INSERT INTO
+                Chat
+                    (NAME, TYPE, OWNER_ID)
+            VALUES
+                (:name, :type, :ownerId)
+            RETURNING ID
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.addUserInChat">
+        <query>
+            INSERT INTO
+                Accounts_chat
+                    (CHAT_ID, ACC_ID)
+            VALUES
+                (:chatId, :accId)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.deleteChatUser">
+        <query>
+            DELETE FROM
+                Accounts_chat
+            WHERE
+                chat_id = :chatId
+            AND
+                acc_id = :accId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.addChatUser">
+        <query>
+            INSERT INTO
+                Accounts_Chat
+                    (CHAT_ID, ACC_ID)
+            VALUES
+                (:chatId, :accId)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getChat">
+        <query>
+            SELECT
+                c.id, c.name, c.type, c.owner_id
+            FROM
+                Chat as c
+            WHERE
+                ID = :chatId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.existChat">
+        <query>
+            SELECT
+                *
+            FROM
+                Accounts_Chat
+            WHERE
+                ACC_ID = :accId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.addMessage">
+        <query>
+            INSERT INTO
+                Message
+                    (TEXT, DATE, CHAT_ID, ACC_ID)
+            VALUES
+                (:text, now(), :chatId, :accId)
+            RETURNING DATE
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getMessages">
+        <query>
+            SELECT
+                m.text, m.date, a.user_name, m.id
+            FROM
+                Message AS m
+            JOIN
+                Accounts_Chat AS ac
+            ON
+                m.chat_id = ac.chat_id
+            AND
+                m.acc_id = ac.acc_id
+            JOIN
+                Accounts AS a
+            ON
+                m.acc_id = a.id
+            WHERE
+                ac.chat_id = :chatId
+            AND
+                m.id &lt; :firstMessageId
+            ORDER BY
+                m.id
+            DESC
+            LIMIT :maxCount
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getChats">
+        <query>
+            SELECT
+                c.id, c.name, c.owner_id, c.type
+            FROM
+                Accounts_Chat as ac
+            JOIN
+                Chat AS c
+            ON
+                ac.chat_id=c.id
+            WHERE
+                ac.ACC_id=:userId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getMessages">
+        <query>
+
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getMessages">
+        <query>
+
+        </query>
+    </named-native-query>
+
+
+</entity-mappings>

@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<entity-mappings xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm
+                                     http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd" version="2.1">
+
+    <named-native-query name="Account.getAccount">
+        <query>
+            SELECT
+                *
+            FROM
+                Accounts
+            WHERE
+                email = :email
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.existAccount">
+        <query>
+            SELECT
+                email
+            FROM
+                Accounts
+            WHERE
+                email = :email
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.getAllAccounts">
+        <query>
+            SELECT
+                *
+            FROM
+                Accounts
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.addFriend">
+        <query>
+            INSERT INTO
+                Accounts_Accounts
+                    (ACC_ID, USER_ID)
+            VALUES
+                (:accId, :userId)
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.deleteFriend">
+        <query>
+            DELETE FROM
+                Accounts_Accounts
+            WHERE
+                ACC_ID = :accId
+            AND
+                USER_ID = :userId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.isFriend">
+        <query>
+            SELECT
+                *
+            FROM
+                Accounts_Accounts
+            WHERE
+                ACC_ID = :accId
+            AND
+                USER_ID = :userId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.getFriends">
+        <query>
+            SELECT
+                a.id, a.email, a.pass, a.user_name
+            FROM
+                Accounts as a
+            JOIN
+                Accounts_Accounts as aa
+            ON
+                a.id = aa.user_id
+            WHERE
+                aa.acc_id = :userId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.addPost">
+        <query>
+            INSERT INTO
+                Post
+                    (ACC_ID, TEXT, DATE)
+            VALUES
+                (:id, :text, now())
+            RETURNING ID
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.deletePost">
+        <query>
+            DELETE FROM
+                Post
+            WHERE
+                id = :id
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.updatePost">
+        <query>
+            UPDATE
+                Post
+            SET
+                text=:text
+            WHERE
+                id=:id
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.getAllUsersPosts">
+        <query>
+            SELECT
+                *
+            FROM
+                Post
+            WHERE
+                ACC_ID = :id
+            ORDER BY
+                id
+            DESC
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.getPosts">
+        <query>
+            SELECT
+                *
+            FROM
+                Post
+            WHERE
+                ACC_ID = :acc_id
+            AND
+                ID &lt; :firstPostId
+            ORDER BY
+                id
+            DESC
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Account.getFriendsPosts">
+        <query>
+            SELECT
+                p.id, p.ACC_ID, p.TEXT, p.DATE, a.user_name
+            FROM
+                post as p
+            JOIN
+                accounts as a
+            ON
+                p.ACC_ID=a.id
+            WHERE
+                p.ACC_ID in (:ids)
+            AND
+                p.id &lt; :firstPostId
+            ORDER BY
+                p.id
+            DESC
+            LIMIT
+                :maxCount
+        </query>
+    </named-native-query>
+
+</entity-mappings>

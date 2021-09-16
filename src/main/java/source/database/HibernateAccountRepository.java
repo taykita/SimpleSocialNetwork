@@ -80,7 +80,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Account getAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (Account) session.createSQLQuery("SELECT * FROM Accounts WHERE email = :email")
+            return (Account) session.getNamedNativeQuery("Account.getAccount")
                     .setParameter("email", email)
                     .addEntity(Account.class)
                     .getSingleResult();
@@ -92,7 +92,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public boolean existAccount(String email) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery("SELECT email FROM Accounts WHERE email = :email")
+            return session.getNamedNativeQuery("Account.existAccount")
                     .setParameter("email", email)
                     .uniqueResult() != null;
         } catch (HibernateException e) {
@@ -108,7 +108,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Account> getAllAccounts() throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Account>) session.createSQLQuery("SELECT * FROM Accounts")
+            return (List<Account>) session.getNamedNativeQuery("Account.getAllAccounts")
                     .addEntity(Account.class)
                     .getResultList();
         } catch (HibernateException e) {
@@ -122,16 +122,15 @@ public class HibernateAccountRepository implements AccountRepository {
 
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("INSERT INTO Accounts_Accounts (ACC_ID, USER_ID) VALUES (:accId, :userId);")
+                session.getNamedNativeQuery("Account.addFriend")
                         .setParameter("accId", user.getId())
                         .setParameter("userId", friend.getId())
                         .executeUpdate();
 
-                session.createSQLQuery("INSERT INTO Accounts_Accounts (ACC_ID, USER_ID) VALUES (:accId, :userId);")
+                session.getNamedNativeQuery("Account.addFriend")
                         .setParameter("accId", friend.getId())
                         .setParameter("userId", user.getId())
                         .executeUpdate();
-
 
                 transaction.commit();
             } catch (HibernateException e) {
@@ -150,12 +149,12 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("DELETE FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                session.getNamedNativeQuery("Account.deleteFriend")
                         .setParameter("accId", user.getId())
                         .setParameter("userId", friend.getId())
                         .executeUpdate();
 
-                session.createSQLQuery("DELETE FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                session.getNamedNativeQuery("Account.deleteFriend")
                         .setParameter("accId", friend.getId())
                         .setParameter("userId", user.getId())
                         .executeUpdate();
@@ -175,7 +174,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                return session.createSQLQuery("SELECT * FROM Accounts_Accounts WHERE ACC_ID = :accId AND USER_ID = :userId")
+                return session.getNamedNativeQuery("Account.isFriend")
                         .setParameter("accId", user.getId())
                         .setParameter("userId", friend.getId())
                         .uniqueResult() != null;
@@ -193,7 +192,7 @@ public class HibernateAccountRepository implements AccountRepository {
     public List<Account> getFriends(int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            List<Account> friends = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Accounts as aa ON a.id = aa.user_id WHERE aa.acc_id = :userId")
+            List<Account> friends = session.getNamedNativeQuery("Account.getFriends")
                     .setParameter("userId", userId)
                     .addEntity(Account.class)
                     .getResultList();
@@ -209,7 +208,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                int id = (int) session.createSQLQuery("INSERT INTO Post (ACC_ID, TEXT, DATE) VALUES (:id, :text, now()) RETURNING ID;")
+                int id = (int) session.getNamedNativeQuery("Account.addPost")
                         .setParameter("id", user.getId())
                         .setParameter("text", post.getText())
                         .getSingleResult();
@@ -231,7 +230,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("DELETE FROM Post WHERE id = :id")
+                session.getNamedNativeQuery("Account.deletePost")
                         .setParameter("id", post.getId())
                         .executeUpdate();
 
@@ -251,7 +250,7 @@ public class HibernateAccountRepository implements AccountRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("UPDATE Post SET text=:text WHERE id=:id")
+                session.getNamedNativeQuery("Account.updatePost")
                         .setParameter("text", newPost.getText())
                         .setParameter("id", oldPost.getId())
                         .executeUpdate();
@@ -278,7 +277,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createSQLQuery("SELECT * FROM Post WHERE ACC_ID = :id ORDER BY id DESC")
+            return (List<Post>) session.getNamedNativeQuery("Account.getAllUsersPosts")
                     .setParameter("id", userId)
                     .addEntity(Post.class)
                     .getResultList();
@@ -290,7 +289,7 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public List<Post> getPosts(int userId, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (List<Post>) session.createSQLQuery("SELECT * FROM Post WHERE ACC_ID = :acc_id AND ID < :firstPostId ORDER BY id DESC")
+            return (List<Post>) session.getNamedNativeQuery("Account.getPosts")
                     .setParameter("acc_id", userId)
                     .setParameter("firstPostId", firstPostId)
                     .setMaxResults(maxCount)
@@ -310,7 +309,7 @@ public class HibernateAccountRepository implements AccountRepository {
                 ids.add(account.getId());
             }
 
-            Iterator results = session.createSQLQuery("SELECT p.id, p.ACC_ID, p.TEXT, p.DATE, a.user_name FROM post as p JOIN accounts as a ON p.ACC_ID=a.id WHERE p.ACC_ID in (:ids) AND p.id < :firstPostId ORDER BY p.id DESC LIMIT :maxCount")
+            Iterator results = session.getNamedNativeQuery("Account.getFriendsPosts")
                     .setParameterList("ids", ids)
                     .setParameter("firstPostId", firstPostId)
                     .setParameter("maxCount", maxCount)

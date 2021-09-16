@@ -26,6 +26,9 @@
 
         <mapping resource="source/controllers/entity/Account.hbm.xml"/>
         <mapping resource="source/controllers/entity/Chat.hbm.xml"/>
+
+        <mapping resource="AccountRepoQueries.hbm.xml"/>
+        <mapping resource="ChatRepoQueries.hbm.xml"/>
     </session-factory>
 
 </hibernate-configuration>

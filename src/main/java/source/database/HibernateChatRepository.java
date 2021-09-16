@@ -30,13 +30,13 @@ public class HibernateChatRepository implements ChatRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                int id = (Integer) session.createSQLQuery("INSERT INTO Chat(NAME, TYPE, OWNER_ID) VALUES(:name, :type, :ownerId) RETURNING ID")
+                int id = (Integer) session.getNamedNativeQuery("Chat.addChat")
                         .setParameter("name", name)
                         .setParameter("type", type.ordinal() + 1)
                         .setParameter("ownerId", ids.get(ids.size() - 1))
                         .getSingleResult();
                 for (int accId : ids) {
-                    session.createSQLQuery("INSERT INTO Accounts_chat (CHAT_ID, ACC_ID) VALUES (:chatId, :accId);")
+                    session.getNamedNativeQuery("Chat.addUserInChat")
                             .setParameter("chatId", id)
                             .setParameter("accId", accId)
                             .executeUpdate();
@@ -75,7 +75,7 @@ public class HibernateChatRepository implements ChatRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("DELETE FROM Accounts_chat WHERE chat_id = :chatId AND acc_id = :accId")
+                session.getNamedNativeQuery("Chat.deleteChatUser")
                         .setParameter("chatId", chatId)
                         .setParameter("accId", accId)
                         .executeUpdate();
@@ -95,7 +95,7 @@ public class HibernateChatRepository implements ChatRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                session.createSQLQuery("INSERT INTO Accounts_Chat(CHAT_ID, ACC_ID) VALUES(:chatId, :accId)")
+                session.getNamedNativeQuery("Chat.addChatUser")
                         .setParameter("chatId", chatId)
                         .setParameter("accId", accId)
                         .executeUpdate();
@@ -113,7 +113,7 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public Chat getChat(int id) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (Chat) session.createSQLQuery("SELECT c.id, c.name, c.type, c.owner_id FROM Chat as c WHERE ID = :chatId")
+            return (Chat) session.getNamedNativeQuery("Chat.getChat")
                     .setParameter("chatId", id)
                     .addEntity(Chat.class)
                     .getSingleResult();
@@ -125,7 +125,7 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public boolean existChat(int accId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery("SELECT * FROM Accounts_Chat WHERE ACC_ID = :accId")
+            return session.getNamedNativeQuery("Chat.existChat")
                     .setParameter("accId", accId)
                     .uniqueResult() != null;
         } catch (HibernateException e) {
@@ -138,7 +138,7 @@ public class HibernateChatRepository implements ChatRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                Timestamp date = (Timestamp) session.createSQLQuery("INSERT INTO Message (TEXT, DATE, CHAT_ID, ACC_ID) VALUES (:text, now(), :chatId, :accId) RETURNING DATE;")
+                Timestamp date = (Timestamp) session.getNamedNativeQuery("Chat.addMessage")
                         .setParameter("text", message.getText())
                         .setParameter("chatId", message.getChatId())
                         .setParameter("accId", message.getAccId())
@@ -169,8 +169,7 @@ public class HibernateChatRepository implements ChatRepository {
     public List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            return session.createSQLQuery("SELECT m.text, m.date, a.user_name, m.id FROM Message AS m JOIN Accounts_Chat AS ac ON m.chat_id = ac.chat_id AND m.acc_id = ac.acc_id JOIN Accounts AS a ON m.acc_id = a.id " +
-                    "WHERE ac.chat_id = :chatId AND m.id < :firstMessageId ORDER BY m.id DESC LIMIT :maxCount")
+            return session.getNamedNativeQuery("Chat.getMessages")
                     .setParameter("chatId", chatId)
                     .setParameter("firstMessageId", firstMessageId)
                     .setParameter("maxCount", maxCount)
@@ -185,7 +184,7 @@ public class HibernateChatRepository implements ChatRepository {
     public List<Chat> getChats(int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            return session.createSQLQuery("SELECT c.id, c.name, c.owner_id, c.type FROM Accounts_Chat as ac JOIN Chat AS c ON ac.chat_id=c.id WHERE ac.ACC_id=:userId")
+            return session.getNamedNativeQuery("Chat.getChats")
                     .setParameter("userId", userId)
                     .addEntity(Chat.class)
                     .getResultList();
