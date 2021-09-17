@@ -106,8 +106,9 @@ public class ChatController {
 
     @GetMapping("/add-chat-user")
     public String addChatUserPage(@RequestParam int chatId,
+                                  @AuthenticationPrincipal User activeUser,
                                   Model model) throws AccStorageException {
-        List<Account> otherFriends = chatService.getOtherFriends();
+        List<Account> otherFriends = chatService.getOtherFriends(chatId, activeUser.getId());
         updateModel(model, otherFriends, chatId);
         return "add-chat-user";
     }

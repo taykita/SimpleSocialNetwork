@@ -85,8 +85,8 @@ public class ChatService {
         return chatRepository.getUsersFromChat(chatId);
     }
 
-    public List<Account> getOtherFriends() throws AccStorageException {
-        return accountRepository.getAllAccounts();
+    public List<Account> getOtherFriends(int chatId, int userId) throws AccStorageException {
+        return chatRepository.getOtherUsersFromChat(chatId, userId);
     }
 
     public void deleteChatUser(int id, int chatId) throws AccStorageException {

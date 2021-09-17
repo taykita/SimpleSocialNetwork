@@ -116,21 +116,133 @@
             ON
                 ac.chat_id=c.id
             WHERE
-                ac.ACC_id=:userId
+                ac.acc_id=:userId
         </query>
     </named-native-query>
 
-    <named-native-query name="Chat.getMessages">
+    <named-native-query name="Chat.getUsersEmail">
         <query>
-
+            SELECT
+                a.email
+            FROM
+                Accounts as a
+            JOIN
+                Accounts_Chat as ac
+            ON
+                a.id = ac.acc_id
+            WHERE
+                ac.chat_id = :chatId
         </query>
     </named-native-query>
 
-    <named-native-query name="Chat.getMessages">
+    <named-native-query name="Chat.addPrivateChat">
         <query>
-
+            INSERT INTO
+                Chat
+                    (NAME, TYPE, OWNER_ID)
+            VALUES
+                (:name, :type, :ownerId)
+            RETURNING ID
         </query>
     </named-native-query>
 
+    <named-native-query name="Chat.getPrivateChat">
+        <query>
+            SELECT DISTINCT
+                c.id, c.name, c.type, c.owner_id
+            FROM
+                Accounts_Chat as ac1
+            INNER JOIN
+                Accounts_Chat as ac2
+            ON
+                ac1.chat_id = ac2.chat_id
+            AND
+                ac2.acc_id != :userId
+            INNER JOIN
+                Chat as c
+            ON
+                ac1.chat_id = c.id
+            WHERE
+                c.type = 2
+            AND
+                ac1.acc_id = :userId
+            AND
+                ac2.acc_id = :friendId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.existPrivateChat">
+        <query>
+            SELECT
+                ac1.chat_id as chat1_id, ac2.chat_id as chat2_id
+            FROM
+                Accounts_Chat as ac1
+            INNER JOIN
+                Accounts_Chat as ac2
+            ON
+                ac1.chat_id = ac2.chat_id
+            AND
+                ac2.acc_id != :userId
+            WHERE
+                ac1.acc_id = :userId
+            AND
+                ac2.acc_id = :friendId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.getUsersFromChat">
+        <query>
+            SELECT
+                a.id, a.email, a.pass, a.user_name
+            FROM
+                Accounts as a
+            JOIN
+                Accounts_Chat as ac
+            ON
+                a.id = ac.acc_id
+            WHERE
+                ac.chat_id = :chatId
+        </query>
+    </named-native-query>
+
+<!--    TODO Подумать над исправлением бага-->
+
+    <named-native-query name="Chat.getOtherUsersFromChat">
+        <query>
+            SELECT DISTINCT
+                a.id, a.email, a.pass, a.user_name
+            FROM
+                Accounts as a
+            JOIN
+                Accounts_Accounts as aa
+            ON
+                a.id = aa.user_id
+            JOIN
+                Accounts_Chat as ac
+            ON
+                a.id = ac.acc_id
+            WHERE
+                ac.chat_id != :chatId
+            AND
+                aa.acc_id = :userId
+        </query>
+    </named-native-query>
+
+    <named-native-query name="Chat.authChatUser">
+        <query>
+            SELECT
+                a.id
+            FROM
+                Accounts as a
+            JOIN
+                Accounts_Chat as ac
+            ON
+                a.id = ac.acc_id
+            WHERE
+                ac.chat_id = :chatId
+            AND
+                a.id = :accId
+        </query>
+    </named-native-query>
 
 </entity-mappings>

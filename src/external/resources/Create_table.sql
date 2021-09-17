@@ -6,6 +6,10 @@ create table if not exists Accounts (
 	primary key (id)
 );
 
+CREATE INDEX IF NOT EXISTS accounts_email_idx ON
+	Accounts
+		(email)
+
 create table if not exists Accounts_Accounts (
 	ACC_ID int4 not null,
 	USER_ID int4 not null,
@@ -28,6 +32,10 @@ create table if not exists Post (
         foreign key (ACC_ID)
         references Accounts
 );
+
+CREATE INDEX IF NOT EXISTS post_acc_id_idx ON
+	Post
+		(ACC_ID)
 
 create table if not exists Chat (
 	ID serial not null,

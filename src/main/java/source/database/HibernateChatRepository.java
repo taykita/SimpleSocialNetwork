@@ -197,7 +197,7 @@ public class HibernateChatRepository implements ChatRepository {
     public List<String> getUsersEmail(int chatId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            return session.createSQLQuery("SELECT a.email FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+            return session.getNamedNativeQuery("Chat.getUsersEmail")
                     .setParameter("chatId", chatId)
                     .getResultList();
         } catch (HibernateException e) {
@@ -210,18 +210,18 @@ public class HibernateChatRepository implements ChatRepository {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
-                int id = (Integer) session.createSQLQuery("INSERT INTO Chat(NAME, TYPE, OWNER_ID) VALUES(:name, :type, :ownerId) RETURNING ID")
+                int id = (Integer) session.getNamedNativeQuery("Chat.addPrivateChat")
                         .setParameter("name", name)
                         .setParameter("type", 2)
                         .setParameter("ownerId", userId)
                         .getSingleResult();
 
-                session.createSQLQuery("INSERT INTO Accounts_Chat (CHAT_ID, ACC_ID) VALUES (:chatId, :accId);")
+                session.getNamedNativeQuery("Chat.addUserInChat")
                         .setParameter("chatId", id)
                         .setParameter("accId", userId)
                         .executeUpdate();
 
-                session.createSQLQuery("INSERT INTO Accounts_Chat (CHAT_ID, ACC_ID) VALUES (:chatId, :accId);")
+                session.getNamedNativeQuery("Chat.addUserInChat")
                         .setParameter("chatId", id)
                         .setParameter("accId", friendId)
                         .executeUpdate();
@@ -241,8 +241,7 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public Chat getPrivateChat(int userId, int friendId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return (Chat) session.createSQLQuery("SELECT DISTINCT c.id, c.name, c.type, c.owner_id FROM Accounts_Chat as ac1 INNER JOIN Accounts_Chat as ac2 ON ac1.chat_id = ac2.chat_id and ac2.acc_id != :userId " +
-                    "INNER JOIN Chat as c ON ac1.chat_id = c.id WHERE c.type = 2 AND ac1.acc_id = :userId AND ac2.acc_id = :friendId")
+            return (Chat) session.getNamedNativeQuery("Chat.getPrivateChat")
                     .setParameter("userId", userId)
                     .setParameter("friendId", friendId)
                     .addEntity(Chat.class)
@@ -255,7 +254,7 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public boolean existPrivateChat(int userId, int friendId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return !session.createSQLQuery("SELECT ac1.chat_id as chat1_id, ac2.chat_id as chat2_id FROM Accounts_Chat as ac1 INNER JOIN Accounts_Chat as ac2 ON ac1.chat_id = ac2.chat_id and ac2.acc_id != :userId WHERE ac1.acc_id = :userId AND ac2.acc_id = :friendId")
+            return !session.getNamedNativeQuery("Chat.existPrivateChat")
                     .setParameter("userId", userId)
                     .setParameter("friendId", friendId)
                     .getResultList()
@@ -269,7 +268,7 @@ public class HibernateChatRepository implements ChatRepository {
     public List<Account> getUsersFromChat(int chatId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            List<Account> users = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId")
+            List<Account> users = session.getNamedNativeQuery("Chat.getUsersFromChat")
                     .setParameter("chatId", chatId)
                     .addEntity(Account.class)
                     .getResultList();
@@ -281,11 +280,12 @@ public class HibernateChatRepository implements ChatRepository {
     }
 
     @Override
-    public List<Account> getOtherUsersFromChat(int chatId) throws AccStorageException {
+    public List<Account> getOtherUsersFromChat(int chatId, int userId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
 
-            List<Account> users = session.createSQLQuery("SELECT a.id, a.email, a.pass, a.user_name FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id <> :chatId")
+            List<Account> users = session.getNamedNativeQuery("Chat.getOtherUsersFromChat")
                     .setParameter("chatId", chatId)
+                    .setParameter("userId", userId)
                     .addEntity(Account.class)
                     .getResultList();
 
@@ -298,7 +298,7 @@ public class HibernateChatRepository implements ChatRepository {
     @Override
     public boolean authChatUser(int chatId, int accId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.createSQLQuery("SELECT a.id FROM Accounts as a JOIN Accounts_Chat as ac ON a.id = ac.acc_id WHERE ac.chat_id = :chatId AND a.id = :accId")
+            return session.getNamedNativeQuery("Chat.authChatUser")
                     .setParameter("chatId", chatId)
                     .setParameter("accId", accId)
                     .uniqueResult() != null;

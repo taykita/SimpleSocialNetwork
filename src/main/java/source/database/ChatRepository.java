@@ -39,7 +39,7 @@ public interface ChatRepository {
 
     List<Account> getUsersFromChat(int chatId) throws AccStorageException;
 
-    List<Account> getOtherUsersFromChat(int chatId) throws AccStorageException;
+    List<Account> getOtherUsersFromChat(int chatId, int userId) throws AccStorageException;
 
     boolean authChatUser(int chatId, int accId) throws AccStorageException;
 }
