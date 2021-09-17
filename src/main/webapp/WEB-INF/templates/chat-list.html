@@ -28,7 +28,7 @@
             <th:block th:each="chat : ${chats}">
                 <div class="row col-md-5 p-2">
                     <form action="chat" method="get">
-                        <input type="text" name="id" th:value="${chat.id}" hidden>
+                        <input type="text" name="chatId" th:value="${chat.id}" hidden>
                         <a href="#" onclick="this.parentNode.submit()">
                             <h5 th:text="${chat.name}"></h5>
                         </a>

@@ -15,10 +15,9 @@ import source.exception.AccStorageException;
 import java.sql.Timestamp;
 import java.util.List;
 
-@Repository
+
 public class HibernateChatRepository implements ChatRepository {
 
-    @Autowired
     public HibernateChatRepository(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

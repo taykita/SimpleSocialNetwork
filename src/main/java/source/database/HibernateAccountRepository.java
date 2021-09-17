@@ -27,7 +27,6 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     private final PasswordEncoder passwordEncoder;
-
     private final SessionFactory sessionFactory;
 
     @Override
@@ -268,7 +267,10 @@ public class HibernateAccountRepository implements AccountRepository {
     @Override
     public Post getPost(int postId) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
-            return session.get(Post.class, postId);
+            return (Post) session.getNamedNativeQuery("Account.getPost")
+                    .setParameter("id", postId)
+                    .addEntity(Post.class)
+                    .getSingleResult();
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate getPost Error.", e);
         }
@@ -304,7 +306,7 @@ public class HibernateAccountRepository implements AccountRepository {
     public List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
-//TODO Надо подумать
+//TODO Как сделать nullable username
             for (Account account : getFriends(user.getId())) {
                 ids.add(account.getId());
             }

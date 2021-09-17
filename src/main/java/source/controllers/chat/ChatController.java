@@ -50,16 +50,12 @@ public class ChatController {
 
     @GetMapping("/chat")
     public String chatPage(@AuthenticationPrincipal User activeUser,
-                           @RequestParam int id,
+                           @RequestParam int chatId,
                            Model model) throws AccStorageException {
 
 
         Account account = chatService.getAccount(activeUser);
-        Chat chat = chatService.getChat(id, account);
-
-        if (!chatService.authUser(chat.getId(), account.getId())) {
-            return "redirect:chat-list";
-        }
+        Chat chat = chatService.getChat(chatId, account);
 
         updateModel(account, model, chat);
 

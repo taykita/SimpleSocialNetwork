@@ -6,14 +6,15 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.servlet.config.annotation.*;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
+import source.database.ChatRepository;
+import source.database.HibernateChatRepository;
 import source.database.hibernate.HibernateUtil;
+import source.interceptors.ChatCheckAuthInterceptor;
 
 import javax.servlet.ServletContext;
 
@@ -22,7 +23,8 @@ import javax.servlet.ServletContext;
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext, HibernateUtil hibernateUtil) {
+    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext,
+                        HibernateUtil hibernateUtil) {
         this.applicationContext = applicationContext;
         this.servletContext = servletContext;
         this.hibernateUtil = hibernateUtil;
@@ -72,5 +74,16 @@ public class SpringConfig implements WebMvcConfigurer {
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public ChatRepository chatRepository() {
+        return new HibernateChatRepository(sessionFactory());
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(new ChatCheckAuthInterceptor(chatRepository()))
+                .addPathPatterns("/chat", "/edit-chat", "/add-chat-user");
     }
 }

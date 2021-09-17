@@ -9,7 +9,6 @@ import java.util.*;
 public class Account {
     public Account() {
         setRoles(Collections.singletonList("ROLE_USER"));
-
     }
 
     @NotEmpty(message = "Почта не должна быть пустой")
