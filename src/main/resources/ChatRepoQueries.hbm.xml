@@ -233,11 +233,7 @@
             SELECT
                 a.id
             FROM
-                Accounts as a
-            JOIN
                 Accounts_Chat as ac
-            ON
-                a.id = ac.acc_id
             WHERE
                 ac.chat_id = :chatId
             AND

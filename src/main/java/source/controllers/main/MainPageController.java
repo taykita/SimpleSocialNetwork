@@ -19,18 +19,18 @@ import java.util.List;
 @Controller
 public class MainPageController {
     @Autowired
-    public MainPageController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public MainPageController(MainService mainService) {
+        this.mainService = mainService;
     }
 
-    private final AccountRepository accountRepository;
+    private final MainService mainService;
 
 
     @GetMapping("/main")
     public String mainPage(@AuthenticationPrincipal User activeUser,
                            Model model) throws AccStorageException {
 
-        Account user = accountRepository.getAccount(activeUser.getId());
+        Account user = mainService.getAccount(activeUser);
 
         updateModel(user, model);
 
@@ -49,7 +49,7 @@ public class MainPageController {
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        return accountRepository.getPosts(activeUser.getId(), firstPostId, 10);
+        return mainService.getPosts(activeUser.getId(), firstPostId);
     }
 
 }

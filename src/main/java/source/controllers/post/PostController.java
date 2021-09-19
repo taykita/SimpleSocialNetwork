@@ -1,6 +1,7 @@
 package source.controllers.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +20,12 @@ import java.util.List;
 @Controller
 public class PostController {
     @Autowired
-    public PostController(PostService postService) {
+    public PostController(PostService postService, SimpMessagingTemplate messagingTemplate) {
         this.postService = postService;
+        this.messagingTemplate = messagingTemplate;
     }
 
+    private final SimpMessagingTemplate messagingTemplate;
     private final PostService postService;
     
     //TODO Разобраться с отображением ошибки
@@ -32,7 +35,16 @@ public class PostController {
         if (bindingResult.hasErrors())
             return "redirect:main";
 
-        postService.createPostAndSendToUsers(post, activeUser);
+        Account account = postService.getAccount(activeUser.getId());
+
+        post = postService.addPost(post, account);
+
+        List<Account> friends = postService.getFriends(account.getId());
+
+        for (Account friend: friends) {
+            messagingTemplate.convertAndSendToUser(friend.getEmail(), "/queue/feed", post);
+        }
+        messagingTemplate.convertAndSend("/queue/user-page/" + activeUser.getId(), post);
 
         return "redirect:main";
     }

@@ -2,6 +2,7 @@ package source.controllers.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,12 +22,14 @@ import java.util.List;
 @Controller
 public class ChatController {
     @Autowired
-    public ChatController(ChatService chatService) {
+    public ChatController(ChatService chatService,
+                          SimpMessagingTemplate messagingTemplate) {
         this.chatService = chatService;
+        this.messagingTemplate = messagingTemplate;
     }
 
-    public final int COUNT = 10;
     private final ChatService chatService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @GetMapping("/create-chat")
     public String createChatPage(@AuthenticationPrincipal User activeUser,
@@ -75,21 +78,24 @@ public class ChatController {
     public void chatHandler(Message message) throws Exception {
         message = chatService.addMessage(message);
 
-        chatService.sendMessageToUsers(message);
+        for (String user : chatService.getUsersEmail(message.getChatId())) {
+            messagingTemplate.convertAndSendToUser(user,
+                    "/queue/chat/" + message.getChatId(), message);
+        }
     }
 
     @GetMapping("/chat/get-messages")
     @ResponseBody
     public List<Message> getMessages(@RequestParam(required = false, defaultValue = "1") int firstMessageId,
                                      @RequestParam int chatId) throws AccStorageException {
-        return chatService.getMessages(chatId, firstMessageId, COUNT);
+        return chatService.getMessages(chatId, firstMessageId);
     }
 
     @PostMapping("/private-chat")
     public String privateChat(@AuthenticationPrincipal User activeUser,
                               @RequestParam int friendId) throws AccStorageException {
         int userId = activeUser.getId();
-        return chatService.redirectToChat(friendId, userId);
+        return "redirect:chat?chatId=" + chatService.redirectToChat(friendId, userId);
     }
 
     @GetMapping("/edit-chat")

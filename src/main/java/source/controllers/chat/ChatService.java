@@ -1,13 +1,13 @@
 package source.controllers.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
+import source.controllers.entity.User;
 import source.controllers.entity.chat.Chat;
 import source.controllers.entity.chat.ChatType;
 import source.controllers.entity.chat.Message;
-import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
 import source.exception.AccStorageException;
@@ -19,16 +19,17 @@ import java.util.List;
 @Service
 public class ChatService {
     @Autowired
-    public ChatService(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate,
+    public ChatService(AccountRepository accountRepository,
                        ChatRepository chatRepository) {
         this.accountRepository = accountRepository;
-        this.messagingTemplate = messagingTemplate;
         this.chatRepository = chatRepository;
     }
 
     private final ChatRepository chatRepository;
-    private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
+
+    @Value("${message.pagination.count}")
+    private int messageCount;
 
     public List<Account> getFriends(User activeUser) throws AccStorageException {
         return accountRepository.getFriends(activeUser.getId());
@@ -59,25 +60,22 @@ public class ChatService {
         return chatRepository.addMessage(message);
     }
 
-    public void sendMessageToUsers(Message message) throws AccStorageException {
-        for (String user : chatRepository.getUsersEmail(message.getChatId())) {
-            messagingTemplate.convertAndSendToUser(user,
-                    "/queue/chat/" + message.getChatId(), message);
-        }
+    public List<String> getUsersEmail(int chatId) throws AccStorageException {
+        return chatRepository.getUsersEmail(chatId);
     }
 
-    public List<Message> getMessages(int chatId, int firstMessageId, int count) throws AccStorageException {
-        return chatRepository.getMessages(chatId, firstMessageId, 10);
+    public List<Message> getMessages(int chatId, int firstMessageId) throws AccStorageException {
+        return chatRepository.getMessages(chatId, firstMessageId, messageCount);
     }
 
-    public String redirectToChat(int friendId, int userId) throws AccStorageException {
+    public int redirectToChat(int friendId, int userId) throws AccStorageException {
         if (chatRepository.existPrivateChat(userId, friendId)) {
             Chat privateChat = chatRepository.getPrivateChat(userId, friendId);
-            return "redirect:chat?id=" + privateChat.getId();
+            return privateChat.getId();
         } else {
             String name = accountRepository.getAccount(userId).getName() + "-" + accountRepository.getAccount(friendId).getName();
             Chat chat = chatRepository.addPrivateChat(userId, friendId, name);
-            return "redirect:chat?id=" + chat.getId();
+            return chat.getId();
         }
     }
 
@@ -113,7 +111,7 @@ public class ChatService {
     private void fixPrivateChatName(Account account, Chat chat) {
         if (chat.getType() == ChatType.PRIVATE.ordinal() + 1) {
             if (account.getId() == chat.getOwnerId()) {
-                chat.setName(chat.getName().substring(account.getName().length() + 1, chat.getName().length()));
+                chat.setName(chat.getName().substring(account.getName().length() + 1));
             } else {
                 chat.setName(chat.getName().substring(0, account.getName().length()));
             }

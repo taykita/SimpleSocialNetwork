@@ -24,33 +24,21 @@ public class AuthorizationService {
     private final ChatRepository chatRepository;
     private final AccountRepository accountRepository;
 
-    public String registration(Account account, BindingResult bindingResult, String chPass) throws AccStorageException {
-        if (bindingResult.hasErrors())
-            return "sign-in";
+    public boolean registration(Account account, BindingResult bindingResult, String chPass) throws AccStorageException {
 
         if (account.getPass().equals(chPass)) {
             return checkExistAndCreateAcc(account);
         } else {
-            return "redirect:" + "sign";
+            return false;
         }
     }
 
-    public void checkErrorAndLogout(Model model, String error, String logout) {
-        if (error != null) {
-            model.addAttribute("error", "Неправильное имя пользователя или пароль!");
-        }
-
-        if (logout != null) {
-            model.addAttribute("logout", "Вы вышли!");
-        }
-    }
-
-    private String checkExistAndCreateAcc(Account account) throws AccStorageException {
+    private boolean checkExistAndCreateAcc(Account account) throws AccStorageException {
         if (existAccount(account.getEmail())) {
-            return "redirect:" + "sign";
+            return false;
         } else {
             addAccount(account);
-            return "redirect:" + "login";
+            return true;
         }
     }
 

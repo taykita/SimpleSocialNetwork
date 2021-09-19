@@ -1,12 +1,17 @@
 package source.controllers.main;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
+import source.controllers.entity.Post;
 import source.controllers.entity.User;
+import source.controllers.post.PostService;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
+
+import java.util.List;
 
 @Service
 public class MainService {
@@ -18,6 +23,9 @@ public class MainService {
 
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
+
+    @Value("${post.pagination.count}")
+    private int postCount;
 
     public Account getAccount(User activeUser) throws AccStorageException {
         return accountRepository.getAccount(activeUser.getId());
@@ -49,5 +57,9 @@ public class MainService {
         if (isEdit) {
             accountRepository.updateAccount(currentAccount);
         }
+    }
+
+    public List<Post> getPosts(int userId, int firstPostId) throws AccStorageException {
+        return accountRepository.getPosts(userId, firstPostId, postCount);
     }
 }

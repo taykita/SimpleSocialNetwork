@@ -27,8 +27,13 @@ public class AuthorizationController {
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
                                BindingResult bindingResult, @RequestParam String chPass, Model model) throws AccStorageException {
+        if (bindingResult.hasErrors())
+            return "sign-in";
 
-        return authorizationService.registration(account, bindingResult, chPass);
+        if (authorizationService.registration(account, bindingResult, chPass)) {
+            return "redirect:login";
+        }
+        return "redirect:sign";
     }
 
     @GetMapping("/sign")
@@ -43,10 +48,16 @@ public class AuthorizationController {
                                 @RequestParam(value = "logout", required = false) String logout) {
 
         if (checkAuth()) {
-            return "redirect:" + "main";
+            return "redirect:main";
         }
 
-        authorizationService.checkErrorAndLogout(model, error, logout);
+        if (error != null) {
+            model.addAttribute("error", "Неправильное имя пользователя или пароль!");
+        }
+
+        if (logout != null) {
+            model.addAttribute("logout", "Вы вышли!");
+        }
 
         model.addAttribute("account", new Account());
         return "log-in";

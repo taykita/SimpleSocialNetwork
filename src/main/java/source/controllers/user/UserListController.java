@@ -16,15 +16,15 @@ import java.util.List;
 @Controller
 public class UserListController {
     @Autowired
-    public UserListController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public UserListController(UserService userService) {
+        this.userService = userService;
     }
 
-    private final AccountRepository accountRepository;
+    private final UserService userService;
 
     @GetMapping("/user-list")
     public String userListPage(@AuthenticationPrincipal User activeUser, Model model) throws AccStorageException {
-        List<Account> allUsers = accountRepository.getAllAccounts();
+        List<Account> allUsers = userService.getAllAccounts();
         updateModel(activeUser, model, allUsers);
         return "all-users";
     }

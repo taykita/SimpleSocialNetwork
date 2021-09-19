@@ -19,11 +19,11 @@ import java.util.List;
 @Controller
 public class UserPageController {
     @Autowired
-    public UserPageController(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public UserPageController(UserService userService) {
+        this.userService = userService;
     }
 
-    private final AccountRepository accountRepository;
+    private final UserService userService;
 
     @GetMapping("/user-page")
     public String userPage(@AuthenticationPrincipal User activeUser,
@@ -34,7 +34,7 @@ public class UserPageController {
             return "redirect:/main";
         }
 
-        Account user = accountRepository.getAccount(activeUser.getId());
+        Account user = userService.getAccount(activeUser.getId());
 
 
         updateModel(user, model, id, activeUser.getId());
@@ -47,17 +47,17 @@ public class UserPageController {
     }
 
     private void updateModel(Account activeUser, Model model, int id, int activeUserId) throws AccStorageException {
-        Account userAccount = accountRepository.getAccount(id);
+        Account friend = userService.getAccount(id);
 
-        model.addAttribute("name", userAccount.getName());
-        model.addAttribute("isFriend", isFriend(activeUser, userAccount));
+        model.addAttribute("name", friend.getName());
+        model.addAttribute("isFriend", isFriend(activeUser, friend));
         model.addAttribute("id", id);
         model.addAttribute("activeUserId", activeUserId);
         model.addAttribute("active", SideMenuItems.NONE);
     }
 
     private boolean isFriend(Account user, Account friend) throws AccStorageException {
-        return accountRepository.isFriend(user, friend);
+        return userService.isFriend(user, friend);
     }
 
     @GetMapping("/user-page/get-posts")
@@ -65,7 +65,8 @@ public class UserPageController {
     public List<Post> getPosts(@RequestParam int id,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        return accountRepository.getPosts(id, firstPostId, 10);
+        return userService.getPosts(id, firstPostId);
     }
+
 
 }

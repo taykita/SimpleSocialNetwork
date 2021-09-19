@@ -24,7 +24,11 @@ public class ChatCheckAuthInterceptor extends HandlerInterceptorAdapter {
         int chatId = Integer.parseInt(request.getParameter("chatId"));
         UsernamePasswordAuthenticationToken authenticationToken = (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
         User activeUser = (User) authenticationToken.getPrincipal();
-        return authUser(chatId, activeUser.getId());
+        if (authUser(chatId, activeUser.getId())) {
+            return true;
+        }
+        response.sendRedirect("chat-list");
+        return false;
     }
 
     public boolean authUser(int chatId, int accId) throws AccStorageException {

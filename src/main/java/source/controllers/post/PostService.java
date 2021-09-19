@@ -1,6 +1,7 @@
 package source.controllers.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
@@ -14,24 +15,28 @@ import java.util.List;
 @Service
 public class PostService {
     @Autowired
-    public PostService(AccountRepository accountRepository, SimpMessagingTemplate messagingTemplate) {
+    public PostService(AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
-        this.messagingTemplate = messagingTemplate;
     }
 
-    private final SimpMessagingTemplate messagingTemplate;
     private final AccountRepository accountRepository;
 
-    public void createPostAndSendToUsers(Post post, User activeUser) throws AccStorageException {
-        Account account = accountRepository.getAccount(activeUser.getId());
+    @Value("${post.pagination.count}")
+    private int postCount;
+
+    public Account getAccount(int id) throws AccStorageException {
+        return accountRepository.getAccount(id);
+    }
+
+    public Post addPost(Post post, Account account) throws AccStorageException {
         post = accountRepository.addPost(post, account);
 
         post.setUserName(account.getName());
-        List<Account> friends = accountRepository.getFriends(account.getId());
-        for (Account friend: friends) {
-            messagingTemplate.convertAndSendToUser(friend.getEmail(), "/queue/feed", post);
-        }
-        messagingTemplate.convertAndSend("/queue/user-page/" + activeUser.getId(), post);
+        return post;
+    }
+
+    public List<Account> getFriends(int userId) throws AccStorageException {
+        return accountRepository.getFriends(userId);
     }
 
     public void deletePost(int id) throws AccStorageException {
@@ -46,8 +51,7 @@ public class PostService {
         return accountRepository.getPost(id);
     }
 
-    public List<Post> getPosts(User activeUser, int firstPostId) throws AccStorageException {
-        int id = activeUser.getId();
-        return accountRepository.getFriendsPosts(accountRepository.getAccount(id), firstPostId, 10);
+    public List<Post> getPosts(int id, int firstPostId) throws AccStorageException {
+        return accountRepository.getFriendsPosts(accountRepository.getAccount(id), firstPostId, postCount);
     }
 }

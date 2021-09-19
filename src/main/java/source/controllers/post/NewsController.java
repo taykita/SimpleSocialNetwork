@@ -37,7 +37,7 @@ public class NewsController {
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
-        return postService.getPosts(activeUser, firstPostId);
+        return postService.getPosts(activeUser.getId(), firstPostId);
     }
 
 }
