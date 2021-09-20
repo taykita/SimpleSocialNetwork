@@ -31,51 +31,6 @@ $(function () {
 
     connect();
 
-    $('.upload_files').on( 'click', function( event ){
-
-    	event.stopPropagation();
-    	event.preventDefault();
-
-    	if( typeof files == 'undefined' ) return;
-
-    	var data = new FormData();
-
-    	$.each( files, function( key, value ){
-    		data.append( key, value );
-    	});
-
-    	data.append( 'my_file_upload', 1 );
-
-    	$.ajax({
-    		url         : 'upload',
-    		type        : 'POST',
-    		data        : data,
-    		cache       : false,
-    		dataType    : 'json',
-    		processData : false,
-    		contentType : false,
-    		success     : function( respond, status, jqXHR ){
-
-    			if( typeof respond.error === 'undefined' ){
-    				var files_path = respond.files;
-    				var html = '';
-    				$.each( files_path, function( key, val ){
-    					 html += val +'<br>';
-    				} )
-
-    				$('.ajax-reply').html( html );
-    			}
-    			else {
-    				console.log('ОШИБКА: ' + respond.data );
-    			}
-    		},
-    		error: function( jqXHR, status, errorThrown ){
-    			console.log( 'ОШИБКА AJAX запроса: ' + status, jqXHR );
-    		}
-
-    	});
-
-    });
 
     function get() {
         let data = {firstPostId: currentFirstPostId};

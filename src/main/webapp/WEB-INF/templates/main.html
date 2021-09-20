@@ -36,9 +36,11 @@
                 <div class="col-md-3">
                     <img src="resources/images/avatars/1.png" width="200" height="200"
                          alt="Не удалось загрузить картинку">
-                    <input type="file" multiple="multiple" accept=".image/*">
-                    <a href="#" class="upload_files button">Загрузить файлы</a>
-                    <div class="ajax-reply"></div>
+                    <form th:action="@{main/load}" enctype="multipart/form-data">
+                        <input type="file" name="image" accept="image/png, image/jpeg" />
+                        <button class="w-30 btn btn-lg btn-secondary" type="submit">Загрузить фото</button>
+                    </form>
+
                 </div>
                 <div class="col-md-9">
                     <p>Информация</p>
