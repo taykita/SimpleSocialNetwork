@@ -1,5 +1,6 @@
 package source.controllers.main;
 
+import com.amazonaws.services.s3.AmazonS3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,16 +12,20 @@ import source.controllers.post.PostService;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
+import java.io.File;
 import java.util.List;
 
 @Service
 public class MainService {
     @Autowired
-    public MainService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
+    public MainService(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
+                       AmazonS3 amazonS3) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
+        this.amazonS3 = amazonS3;
     }
 
+    private final AmazonS3 amazonS3;
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
 
@@ -61,5 +66,13 @@ public class MainService {
 
     public List<Post> getPosts(int userId, int firstPostId) throws AccStorageException {
         return accountRepository.getPosts(userId, firstPostId, postCount);
+    }
+
+    public void saveImage(String fullName, File image) {
+        amazonS3.putObject(
+                "booknetwork",
+                fullName,
+                image
+        );
     }
 }

@@ -1,5 +1,11 @@
 package source.configuration;
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -79,6 +85,20 @@ public class SpringConfig implements WebMvcConfigurer {
     @Bean
     public ChatRepository chatRepository() {
         return new HibernateChatRepository(sessionFactory());
+    }
+
+    @Bean
+    public AmazonS3 amazonS3() {
+        AmazonS3 amazonS3 = AmazonS3ClientBuilder
+                .standard()
+                .withCredentials(new AWSStaticCredentialsProvider(
+                        new BasicAWSCredentials(
+                                "XERXALIJGGXADWXT5GT4",
+                                "49LJyMHC1sXRvjBSqS6QH4RjG2pR4BL1FSEEjxUb"
+                        )))
+                .withRegion(Regions.EU_CENTRAL_1)
+                .build();
+        return amazonS3;
     }
 
     @Override

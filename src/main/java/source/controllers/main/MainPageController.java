@@ -1,5 +1,6 @@
 package source.controllers.main;
 
+import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -66,23 +67,17 @@ public class MainPageController {
     public String saveUser(@AuthenticationPrincipal User activeUser,
                            @RequestParam("image") MultipartFile multipartFile) throws IOException {
 
-        String fileName = StringUtils.cleanPath(multipartFile.getOriginalFilename());
-
-        String uploadDir = "user-photos/" + activeUser.getId();
-
-        Path uploadPath = Paths.get(uploadDir);
-
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
+        String fullName = "user-photos/" + activeUser.getId() + "/avatar.jpg";
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            Path filePath = uploadPath.resolve(fileName);
-            Files.copy(inputStream, filePath, StandardCopyOption.REPLACE_EXISTING);
-        } catch (IOException ioe) {
-            throw new IOException("Could not save image file: " + fileName, ioe);
-        }
+            File file = new File(fullName);
 
+            FileUtils.copyInputStreamToFile(inputStream, file);
+
+            mainService.saveImage(fullName, file);
+        } catch (IOException e) {
+            throw new IOException("Не могу сохранить файл: " + fullName, e);
+        }
 
         return "redirect:/main";
     }
