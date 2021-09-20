@@ -8,7 +8,7 @@ create table if not exists Accounts (
 
 CREATE INDEX IF NOT EXISTS accounts_email_idx ON
 	Accounts
-		(email)
+		(email);
 
 create table if not exists Accounts_Accounts (
 	ACC_ID int4 not null,
@@ -35,7 +35,7 @@ create table if not exists Post (
 
 CREATE INDEX IF NOT EXISTS post_acc_id_idx ON
 	Post
-		(ACC_ID)
+		(ACC_ID);
 
 create table if not exists Chat (
 	ID serial not null,
