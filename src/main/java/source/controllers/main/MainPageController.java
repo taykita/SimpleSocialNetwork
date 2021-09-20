@@ -84,9 +84,8 @@ public class MainPageController {
         }
 
 
-        return "redirect:main";
+        return "redirect:/main";
     }
-
 
 
 }

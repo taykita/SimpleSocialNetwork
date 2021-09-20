@@ -86,4 +86,6 @@ public class SpringConfig implements WebMvcConfigurer {
         registry.addInterceptor(new ChatCheckAuthInterceptor(chatRepository()))
                 .addPathPatterns("/chat", "/edit-chat", "/add-chat-user");
     }
+
+
 }
