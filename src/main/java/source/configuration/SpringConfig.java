@@ -91,12 +91,12 @@ public class SpringConfig implements WebMvcConfigurer {
     public AmazonS3 amazonS3() {
         AmazonS3 amazonS3 = AmazonS3ClientBuilder
                 .standard()
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("obs.ru-moscow-1.hc.sbercloud.ru", "ru-moscow"))
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(
                                 "XERXALIJGGXADWXT5GT4",
                                 "49LJyMHC1sXRvjBSqS6QH4RjG2pR4BL1FSEEjxUb"
                         )))
-                .withRegion(Regions.EU_CENTRAL_1)
                 .build();
         return amazonS3;
     }
