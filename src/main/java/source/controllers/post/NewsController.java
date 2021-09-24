@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
-import source.database.AccountRepository;
 import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 

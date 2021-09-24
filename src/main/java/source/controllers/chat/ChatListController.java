@@ -5,8 +5,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import source.controllers.entity.chat.Chat;
 import source.controllers.entity.User;
+import source.controllers.entity.chat.Chat;
 import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 

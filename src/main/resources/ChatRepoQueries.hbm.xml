@@ -231,13 +231,13 @@
     <named-native-query name="Chat.authChatUser">
         <query>
             SELECT
-                a.id
+                ac.acc_id
             FROM
                 Accounts_Chat as ac
             WHERE
                 ac.chat_id = :chatId
             AND
-                a.id = :accId
+                ac.acc_id = :accId
         </query>
     </named-native-query>
 

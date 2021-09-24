@@ -2,11 +2,9 @@ package source.controllers.post;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
-import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 

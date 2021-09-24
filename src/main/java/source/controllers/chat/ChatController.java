@@ -2,7 +2,6 @@ package source.controllers.chat;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -16,6 +15,7 @@ import source.controllers.entity.chat.Chat;
 import source.controllers.entity.chat.Message;
 import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
+import source.service.MessagingClient;
 
 import java.util.List;
 
@@ -23,13 +23,13 @@ import java.util.List;
 public class ChatController {
     @Autowired
     public ChatController(ChatService chatService,
-                          SimpMessagingTemplate messagingTemplate) {
+                          MessagingClient messagingClient) {
         this.chatService = chatService;
-        this.messagingTemplate = messagingTemplate;
+        this.messagingClient = messagingClient;
     }
 
     private final ChatService chatService;
-    private final SimpMessagingTemplate messagingTemplate;
+    private final MessagingClient messagingClient;
 
     @GetMapping("/create-chat")
     public String createChatPage(@AuthenticationPrincipal User activeUser,
@@ -76,12 +76,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
-        message = chatService.addMessage(message);
-
-        for (String user : chatService.getUsersEmail(message.getChatId())) {
-            messagingTemplate.convertAndSendToUser(user,
-                    "/queue/chat/" + message.getChatId(), message);
-        }
+            messagingClient.sendMessageToChat("/queue/chat/", message);
     }
 
     @GetMapping("/chat/get-messages")

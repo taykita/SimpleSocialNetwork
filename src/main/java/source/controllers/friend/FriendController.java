@@ -6,9 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import source.controllers.entity.Account;
 import source.controllers.entity.User;
-import source.database.AccountRepository;
 import source.exception.AccStorageException;
 
 @Controller
