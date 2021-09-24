@@ -7,18 +7,23 @@ import source.controllers.entity.Post;
 import source.controllers.main.MainService;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
+import source.file.store.FileStoreClient;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
 public class UserService {
     @Autowired
-    public UserService(AccountRepository accountRepository,
-                       MainService mainService) {
+    public UserService(AccountRepository accountRepository, MainService mainService,
+                       FileStoreClient fileStoreClient) {
         this.accountRepository = accountRepository;
         this.mainService = mainService;
+        this.fileStoreClient = fileStoreClient;
     }
 
+    private final FileStoreClient fileStoreClient;
     private final AccountRepository accountRepository;
     private final MainService mainService;
 
@@ -36,5 +41,9 @@ public class UserService {
 
     public List<Post> getPosts(int id, int firstPostId) throws AccStorageException {
         return mainService.getPosts(id, firstPostId);
+    }
+
+    public byte[] loadImage(String fullName) throws IOException {
+        return fileStoreClient.loadImage(fullName);
     }
 }

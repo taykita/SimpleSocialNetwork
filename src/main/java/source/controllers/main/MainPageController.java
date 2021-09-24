@@ -1,6 +1,7 @@
 package source.controllers.main;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -63,18 +64,14 @@ public class MainPageController {
         return mainService.getPosts(activeUser.getId(), firstPostId);
     }
 
-    @PostMapping("main/load")
-    public String saveUser(@AuthenticationPrincipal User activeUser,
+        @PostMapping("main/upload")
+    public String uploadAvatar(@AuthenticationPrincipal User activeUser,
                            @RequestParam("image") MultipartFile multipartFile) throws IOException {
 
         String fullName = "user-photos/" + activeUser.getId() + "/avatar.jpg";
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
-            File file = new File(fullName);
-
-            FileUtils.copyInputStreamToFile(inputStream, file);
-
-            mainService.saveImage(fullName, file);
+            mainService.saveImage(fullName, inputStream);
         } catch (IOException e) {
             throw new IOException("Не могу сохранить файл: " + fullName, e);
         }
@@ -82,5 +79,12 @@ public class MainPageController {
         return "redirect:/main";
     }
 
+    @GetMapping("main/load/avatar")
+    @ResponseBody
+    public byte[] loadAvatar(@AuthenticationPrincipal User activeUser) throws AccStorageException, IOException {
 
+        String fullName = "user-photos/" + activeUser.getId() + "/avatar.jpg";
+
+        return mainService.loadImage(fullName);
+    }
 }

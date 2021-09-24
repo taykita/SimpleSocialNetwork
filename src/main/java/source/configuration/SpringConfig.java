@@ -25,7 +25,7 @@ import source.interceptors.ChatCheckAuthInterceptor;
 import javax.servlet.ServletContext;
 
 @Configuration
-@ComponentScan("source.controllers, source.database")
+@ComponentScan("source.controllers, source.database, source.file")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     @Autowired

@@ -14,6 +14,7 @@ import source.database.AccountRepository;
 import source.controllers.entity.html.SideMenuItems;
 import source.exception.AccStorageException;
 
+import java.io.IOException;
 import java.util.List;
 
 @Controller
@@ -68,5 +69,13 @@ public class UserPageController {
         return userService.getPosts(id, firstPostId);
     }
 
+    @GetMapping("/user-page/load/avatar")
+    @ResponseBody
+    public byte[] loadAvatar(@RequestParam int id) throws AccStorageException, IOException {
+
+        String fullName = "user-photos/" + id + "/avatar.jpg";
+
+        return userService.loadImage(fullName);
+    }
 
 }

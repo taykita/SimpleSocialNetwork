@@ -1,6 +1,5 @@
 package source.controllers.main;
 
-import com.amazonaws.services.s3.AmazonS3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -8,24 +7,25 @@ import org.springframework.stereotype.Service;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.controllers.entity.User;
-import source.controllers.post.PostService;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
+import source.file.store.FileStoreClient;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @Service
 public class MainService {
     @Autowired
     public MainService(AccountRepository accountRepository, PasswordEncoder passwordEncoder,
-                       AmazonS3 amazonS3) {
+                       FileStoreClient fileStoreClient) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
-        this.amazonS3 = amazonS3;
+        this.fileStoreClient = fileStoreClient;
     }
 
-    private final AmazonS3 amazonS3;
+    private final FileStoreClient fileStoreClient;
     private final PasswordEncoder passwordEncoder;
     private final AccountRepository accountRepository;
 
@@ -68,11 +68,11 @@ public class MainService {
         return accountRepository.getPosts(userId, firstPostId, postCount);
     }
 
-    public void saveImage(String fullName, File image) {
-        amazonS3.putObject(
-                "booknetwork",
-                fullName,
-                image
-        );
+    public void saveImage(String fullName, InputStream image) {
+        fileStoreClient.saveImage(fullName, image);
+    }
+
+    public byte[] loadImage(String fullName) throws IOException {
+        return fileStoreClient.loadImage(fullName);
     }
 }

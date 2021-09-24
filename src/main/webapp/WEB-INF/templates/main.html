@@ -34,9 +34,9 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <img src="resources/images/avatars/1.png" width="200" height="200"
+                    <img src="main/load/avatar" width="200" height="200"
                          alt="Не удалось загрузить картинку">
-                    <form method="post" th:action="@{main/load}" enctype="multipart/form-data">
+                    <form method="post" th:action="@{main/upload}" enctype="multipart/form-data">
                         <input type="file" name="image" />
                         <button class="w-30 btn btn-lg btn-secondary" value="Upload" type="submit">Загрузить фото</button>
                     </form>
