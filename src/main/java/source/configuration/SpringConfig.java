@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,36 +41,41 @@ public class SpringConfig implements WebMvcConfigurer {
     private final ServletContext servletContext;
     private final HibernateUtil hibernateUtil;
 
+    @Value("${s3.accessKey}")
+    private String accessKey;
+    @Value("${s3.secretKey}")
+    private String secretKey;
+
     @Bean
     public SessionFactory sessionFactory() {
         return hibernateUtil.getSessionFactory();
     }
 
-//    @Bean
-//    public SpringResourceTemplateResolver templateResolver() {
-//        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-//        templateResolver.setApplicationContext(applicationContext);
-//        templateResolver.setPrefix("/templates/");
-//        templateResolver.setSuffix(".html");
-//        templateResolver.setCharacterEncoding("UTF-8");
-//        return templateResolver;
-//    }
-//
-//    @Bean
-//    public SpringTemplateEngine templateEngine() {
-//        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-//        templateEngine.setTemplateResolver(templateResolver());
-//        templateEngine.setEnableSpringELCompiler(true);
-//        return templateEngine;
-//    }
-//
-//    @Override
-//    public void configureViewResolvers(ViewResolverRegistry registry) {
-//        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
-//        resolver.setCharacterEncoding("UTF-8");
-//        resolver.setTemplateEngine(templateEngine());
-//        registry.viewResolver(resolver);
-//    }
+    @Bean
+    public SpringResourceTemplateResolver templateResolver() {
+        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
+        templateResolver.setApplicationContext(applicationContext);
+        templateResolver.setPrefix("/templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setCharacterEncoding("UTF-8");
+        return templateResolver;
+    }
+
+    @Bean
+    public SpringTemplateEngine templateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(templateResolver());
+        templateEngine.setEnableSpringELCompiler(true);
+        return templateEngine;
+    }
+
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        ThymeleafViewResolver resolver = new ThymeleafViewResolver();
+        resolver.setCharacterEncoding("UTF-8");
+        resolver.setTemplateEngine(templateEngine());
+        registry.viewResolver(resolver);
+    }
 
     @Bean
     public ResourceHandlerRegistry resourceHandlerRegistry() {
@@ -94,8 +100,8 @@ public class SpringConfig implements WebMvcConfigurer {
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("obs.ru-moscow-1.hc.sbercloud.ru", "ru-moscow"))
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(
-                                "XERXALIJGGXADWXT5GT4",
-                                "49LJyMHC1sXRvjBSqS6QH4RjG2pR4BL1FSEEjxUb"
+                                accessKey,
+                                secretKey
                         )))
                 .build();
         return amazonS3;

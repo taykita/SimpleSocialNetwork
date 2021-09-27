@@ -17,6 +17,10 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <spring.version>5.2.15.RELEASE</spring.version>
+        <s3.accessKey>XERXALIJGGXADWXT5GT4</s3.accessKey>
+        <s3.secretKey>49LJyMHC1sXRvjBSqS6QH4RjG2pR4BL1FSEEjxUb</s3.secretKey>
+        <psql.username>admin</psql.username>
+        <psql.password>admin</psql.password>
     </properties>
 
     <dependencyManagement>
