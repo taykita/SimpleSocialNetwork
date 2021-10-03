@@ -42,6 +42,8 @@ public class SimpMessagingClient implements MessagingClient {
 
         post = accountRepository.addPost(post, account);
 
+        post.setUserName(account.getName());
+
         List<Account> friends = accountRepository.getFriends(account.getId());
 
         for (Account friend: friends) {
