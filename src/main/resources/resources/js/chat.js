@@ -46,15 +46,7 @@ function send() {
 $(function () {
     $(document).ready(get);
     chatId = $("#chatId").val();
-//    $('#chat-list').scroll(function () {
-//        console.log($('#chat-list').height() + $('#chat-list').scrollTop());
-//        if($('#chat-list').height() + $('#chat-list').scrollTop() + 40 >= $('#chat-list').height() && !block) {
-//            block = true;
-//            get();
-//        }
-//    });
     connect();
-    // $('#chat-list').scrollTop($('#chat-list').prop("scrollHeight"));
     $(document).keypress(function (e) {
         if (e.keyCode === 13)
             send();

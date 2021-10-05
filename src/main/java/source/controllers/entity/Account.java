@@ -4,7 +4,10 @@ import source.controllers.authorization.validation.ValidEmail;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Account {
     public Account() {
@@ -26,7 +29,6 @@ public class Account {
 
     private int id;
     private Set<Account> accountSet = new HashSet<>(0);
-    private List<Post> posts = new ArrayList<>(0);
 
     private List<String> roles;
 
@@ -85,14 +87,6 @@ public class Account {
 
     public void setRoles(List<String> roles) {
         this.roles = roles;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
     }
 
     @Override

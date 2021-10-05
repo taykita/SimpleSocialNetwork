@@ -9,8 +9,4 @@ public class SSNException extends Exception {
         super(msg);
     }
 
-    public SSNException(Exception e) {
-        super(e);
-    }
-
 }

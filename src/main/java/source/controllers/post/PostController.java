@@ -25,7 +25,7 @@ public class PostController {
 
     private final MessagingClient messagingClient;
     private final PostService postService;
-    
+
     //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")
     public String createPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
@@ -37,7 +37,6 @@ public class PostController {
 
         return "redirect:main";
     }
-
 
 
     @PostMapping("/delete-post")

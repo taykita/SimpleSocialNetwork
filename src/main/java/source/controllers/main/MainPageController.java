@@ -55,9 +55,9 @@ public class MainPageController {
         return mainService.getPosts(activeUser.getId(), firstPostId);
     }
 
-        @PostMapping("main/upload")
+    @PostMapping("main/upload")
     public String uploadAvatar(@AuthenticationPrincipal User activeUser,
-                           @RequestParam("image") MultipartFile multipartFile) throws IOException {
+                               @RequestParam("image") MultipartFile multipartFile) throws IOException {
 
         String fullName = "user-photos/" + activeUser.getId() + "/avatar.jpg";
 

@@ -76,7 +76,7 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
-            messagingClient.sendMessageToChat("/queue/chat/", message);
+        messagingClient.sendMessageToChat("/queue/chat/", message);
     }
 
     @GetMapping("/chat/get-messages")

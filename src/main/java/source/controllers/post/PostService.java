@@ -41,7 +41,7 @@ public class PostService {
         accountRepository.deletePost(accountRepository.getPost(id));
     }
 
-    public void updatePost(Post post, int id) throws AccStorageException{
+    public void updatePost(Post post, int id) throws AccStorageException {
         accountRepository.updatePost(accountRepository.getPost(id), post);
     }
 
