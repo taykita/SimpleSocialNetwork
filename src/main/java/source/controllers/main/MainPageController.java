@@ -30,23 +30,30 @@ public class MainPageController {
 
 
     @GetMapping("/main")
-    public String mainPage(@AuthenticationPrincipal User activeUser,
-                           Model model) throws AccStorageException {
+    public String mainPage(Model model) {
 
-        Account user = mainService.getAccount(activeUser);
-
-        updateModel(user, model);
+        updateModel(model);
 
         return "main";
     }
 
-    private void updateModel(Account activeUser, Model model) {
+    private void updateModel(Model model) {
         model.addAttribute("post", new Post());
-        model.addAttribute("name", activeUser.getName());
-        model.addAttribute("id", activeUser.getId());
-        model.addAttribute("active", SideMenuItems.MAIN);
     }
 
+    @GetMapping("/main/get-active-menu-button")
+    @ResponseBody
+    public SideMenuItems getActiveMenuB() {
+        return SideMenuItems.MAIN;
+    }
+
+    @GetMapping("main/get-user-name")
+    @ResponseBody
+    public String getUserName(@AuthenticationPrincipal User activeUser) throws AccStorageException {
+        Account user = mainService.getAccount(activeUser);
+        return user.getName();
+    }
+    
     @GetMapping("/main/get-posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
