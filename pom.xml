@@ -134,6 +134,7 @@
                 <directory>src/main/resources</directory>
                 <excludes>
                     <exclude>hibernate.cfg.xml</exclude>
+                    <exclude>application.properties</exclude>
                 </excludes>
             </resource>
 
