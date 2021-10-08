@@ -5,7 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,16 +31,10 @@ public class MainPageController {
 
 
     @GetMapping("/main")
-    public String mainPage(Model model) {
-
-        updateModel(model);
-
+    public String mainPage() {
         return "main";
     }
 
-    private void updateModel(Model model) {
-        model.addAttribute("post", new Post());
-    }
 
     @GetMapping("/main/get-active-menu-button")
     @ResponseBody
@@ -51,9 +44,7 @@ public class MainPageController {
 
     @GetMapping("main/get-user-name")
     @ResponseBody
-    public String getUserName() throws AccStorageException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User activeUser = (User) authentication.getPrincipal();
+    public String getUserName(@AuthenticationPrincipal User activeUser) throws AccStorageException {
         Account user = mainService.getAccount(activeUser);
         return user.getName();
     }
