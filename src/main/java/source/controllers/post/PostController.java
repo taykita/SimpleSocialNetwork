@@ -26,12 +26,13 @@ public class PostController {
     private final MessagingClient messagingClient;
     private final PostService postService;
 
-    //TODO Разобраться с отображением ошибки
     @PostMapping("/create-post")
-    public String createPost(@ModelAttribute("post") @Valid Post post, BindingResult bindingResult,
+    public String createPost(@RequestParam String postText,
                              @AuthenticationPrincipal User activeUser) throws AccStorageException {
-        if (bindingResult.hasErrors())
-            return "redirect:main";
+
+        Post post = new Post();
+
+        post.setText(postText);
 
         messagingClient.sendPostToUsers(post, activeUser.getId());
 
