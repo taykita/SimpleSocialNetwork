@@ -14,28 +14,31 @@ let currentFirstPostId = 2147483647;
 
 function Root() {
     return (
-        <div class="col-md-9">
+        <div class="row">
             <SideMenu active={getActiveMenuB()}/>
-            <div class="row">
-                <Name name={getUserName}/>
-                <ExitB/>
-            </div>
-            <div className="row">
-                <Avatar/>
-                <Info/>
-            </div>
-            <h1>Посты</h1>
-            <div id="post">
+            <div class="col-md-9">
+                <div class="row">
+                    <Name name={getUserName()}/>
+                    <ExitB/>
+                </div>
+                <div className="row">
+                    <Avatar/>
+                    <Info/>
+                </div>
+                <h1>Посты</h1>
+                <div id="post">
 
+                </div>
+                <LoadMoreB/>
             </div>
-            <LoadMoreB/>
         </div>
+
     );
 }
 
 function getActiveMenuB() {
     let active;
-    $.get("main/get-active-menu-button", setActive, "json");
+    $.ajax({url:"main/get-active-menu-button", async:false, success:setActive, dataType:"json"});
 
     function setActive(data) {
         active = data;
@@ -46,11 +49,14 @@ function getActiveMenuB() {
 
 function getUserName() {
     let userName;
-    $.get("main/get-user-name", setUserName, "json");
+    $.ajax({url:"main/get-user-name", async:false, success:setUserName, dataType:"text"});
 
     function setUserName(data) {
+        console.log(data);
         userName = data;
     }
+
+    console.log(userName);
 
     return userName;
 }
