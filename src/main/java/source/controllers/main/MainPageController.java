@@ -1,5 +1,6 @@
 package source.controllers.main;
 
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import source.exception.AccStorageException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Controller
 public class MainPageController {
@@ -36,25 +38,27 @@ public class MainPageController {
     }
 
 
-    @GetMapping("/main/get-active-menu-button")
+    @GetMapping("/main/menu/bottoms/active")
     @ResponseBody
     public SideMenuItems getActiveMenuB() {
         return SideMenuItems.MAIN;
     }
-
-    @GetMapping("main/get-user-name")
-    @ResponseBody
-    public String getUserName(@AuthenticationPrincipal User activeUser) throws AccStorageException {
-        Account user = mainService.getAccount(activeUser);
-        return user.getName();
-    }
     
-    @GetMapping("/main/get-posts")
+    @GetMapping("/main/posts")
     @ResponseBody
     public List<Post> getPosts(@AuthenticationPrincipal User activeUser,
                                @RequestParam(required = false, defaultValue = "1") int firstPostId) throws AccStorageException {
 
         return mainService.getPosts(activeUser.getId(), firstPostId);
+    }
+
+    //Можно ли вот так?
+    @GetMapping("main/user")
+    @ResponseBody
+    public Account getMainUser(@AuthenticationPrincipal User activeUser) throws AccStorageException {
+        Account account = mainService.getAccount(activeUser);
+        account.setAccountSet(null);
+        return account;
     }
 
     @PostMapping("main/upload")

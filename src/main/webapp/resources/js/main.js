@@ -43,12 +43,12 @@ class SideMenu extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            items: []
+            active: []
         };
     }
 
     componentDidMount() {
-        fetch("main/get-active-menu-button")
+        fetch("/main/menu/bottoms/active")
             .then(res => res.json())
             .then(
                 (result) => {
@@ -67,7 +67,7 @@ class SideMenu extends React.Component {
     }
 
     render() {
-        const { error, isLoaded, active } = this.state;
+        const {error, isLoaded, active} = this.state;
         if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else if (!isLoaded) {
@@ -108,18 +108,18 @@ class Name extends React.Component {
         this.state = {
             error: null,
             isLoaded: false,
-            items: []
+            user: []
         };
     }
 
     componentDidMount() {
-        fetch("main/get-user-name")
-            .then(res => res.text())
+        fetch("main/user")
+            .then(res => res.json())
             .then(
                 (result) => {
                     this.setState({
                         isLoaded: true,
-                        name: result
+                        user: result
                     });
                 },
                 (error) => {
@@ -132,7 +132,8 @@ class Name extends React.Component {
     }
 
     render() {
-        const { error, isLoaded, name } = this.state;
+        const {error, isLoaded, user} = this.state;
+        console.log(user);
         if (error) {
             return <div>Ошибка: {error.message}</div>;
         } else if (!isLoaded) {
@@ -140,7 +141,7 @@ class Name extends React.Component {
         } else {
             return (
                 <div className="col-md-10">
-                    <h1>{name}</h1>
+                    <h1>{user.name}</h1>
                 </div>
             );
         }
@@ -176,11 +177,11 @@ function Avatar() {
         <div className="col-md-3">
             <img src="main/load/avatar" width="200" height="200"
                  alt="Не удалось загрузить картинку"/>
-                <form method="post" action="main/upload" encType="multipart/form-data">
-                    <input type="file" name="image"/>
-                    <button className="w-30 btn btn-lg btn-secondary" value="Upload" type="submit">Загрузить фото
-                    </button>
-                </form>
+            <form method="post" action="main/upload" encType="multipart/form-data">
+                <input type="file" name="image"/>
+                <button className="w-30 btn btn-lg btn-secondary" value="Upload" type="submit">Загрузить фото
+                </button>
+            </form>
         </div>
     );
 }
@@ -199,10 +200,10 @@ function Info() {
 function CreatePost() {
     return (
         <div className="row col-md-7">
-            <form action="create-post" method="POST">
+            <form action="posts" method="POST">
                 <div className="form-floating">
-                    <input type="text" className="form-control" name="postText" id="postText" />
-                        <label htmlFor="postText">Введите текст</label>
+                    <input type="text" className="form-control" name="postText" id="postText"/>
+                    <label htmlFor="postText">Введите текст</label>
                 </div>
 
                 <button className="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
@@ -229,7 +230,7 @@ function LoadMoreB() {
 $(document).off('.data-api')
 $(function () {
     ReactDOM.render(
-        <Root />,
+        <Root/>,
         document.getElementById('root')
     );
 
@@ -238,12 +239,12 @@ $(function () {
 
     let files;
 
-    $('input[type=file]').on('change', function(){
+    $('input[type=file]').on('change', function () {
         files = this.files;
     });
 
     $(window).scroll(function () {
-        if($(window).height() + $(window).scrollTop() + 40 >= $(document).height() && !block) {
+        if ($(window).height() + $(window).scrollTop() + 40 >= $(document).height() && !block) {
             block = true;
             get();
         }
@@ -253,7 +254,7 @@ $(function () {
 
     function get() {
         let data = {firstPostId: currentFirstPostId};
-        $.get("main/get-posts", data, showPostList, "json");
+        $.get("main/posts", data, showPostList, "json");
     }
 
     function showPostList(posts) {
@@ -274,15 +275,14 @@ $(function () {
                 '       <div class="pt-2 pb-1">\n' +
                 '            <div class="pt-1 pb-1">\n' +
                 '                <div class="delete-post">\n' +
-                '                    <form action="delete-post" method="post">\n' +
-                '                        <input type="text" name="id" value="' + posts[i].id + '" hidden/>\n' +
+                '                    <form action="posts/' + posts[i].id +'" method="delete">\n' +
                 '                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Удалить</button>\n' +
                 '                    </form>\n' +
                 '                </div>\n' +
                 '           </div>\n' +
                 '           <div class="pt-1 pb-1">\n' +
                 '                <div class="edit-post">\n' +
-                '                    <form action="edit-post-page" method="post">\n' +
+                '                    <form action="edit-post-page" method="get">\n' +
                 '                       <input type="text" name="id" value="' + posts[i].id + '" hidden/>\n' +
                 '                       <button class="w-100 btn btn-lg btn-secondary" type="submit">Редактировать</button>\n' +
                 '                    </form>\n' +
@@ -295,7 +295,7 @@ $(function () {
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
-        currentFirstPostId = posts[posts.length-1].id;
+        currentFirstPostId = posts[posts.length - 1].id;
         block = false;
     }
 
