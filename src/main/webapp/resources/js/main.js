@@ -77,7 +77,7 @@ class SideMenu extends React.Component {
                 <div className="col-md-3">
                     <div className="position-sticky">
                         <div className="p-2 mb-3">
-                            <div className="btn-group-vertical btn-group-toggle" data-toggle="buttons">
+                            <div className="w-100 btn-group-vertical btn-group-toggle" data-toggle="buttons">
                                 <a className={checkActive(active, "MAIN")} href="main">
                                     Моя страница
                                 </a>
@@ -175,11 +175,11 @@ function ExitB() {
 function Avatar() {
     return (
         <div className="col-md-3">
-            <img src="main/load/avatar" width="200" height="200"
+            <img className="img" src="main/load/avatar" width="200" height="200"
                  alt="Не удалось загрузить картинку"/>
             <form method="post" action="main/upload" encType="multipart/form-data">
-                <input type="file" name="image"/>
-                <button className="w-30 btn btn-lg btn-secondary" value="Upload" type="submit">Загрузить фото
+                <input className="w-75 form-control img-load" type="file" name="image"/>
+                <button className="w-75 btn btn-lg btn-secondary img-load-btn" value="Upload" type="submit">Загрузить фото
                 </button>
             </form>
         </div>
@@ -200,16 +200,36 @@ function Info() {
 function CreatePost() {
     return (
         <div className="row col-md-7">
-            <form action="posts" method="POST">
-                <div className="form-floating">
-                    <input type="text" className="form-control" name="postText" id="postText"/>
-                    <label htmlFor="postText">Введите текст</label>
-                </div>
-
-                <button className="w-100 btn btn-lg btn-dark" type="submit" id="send">Опубликовать</button>
-            </form>
+            <div className="post-text form-floating">
+                <input type="text" className="form-control" name="postText" id="postText"/>
+                <label htmlFor="postText">Введите текст</label>
+            </div>
+            <div className="post-btn row col-md-12 pb-2">
+                <button onClick={createPost} className="w-100 btn btn-lg btn-dark" id="send">Опубликовать</button>
+            </div>
         </div>
     );
+}
+
+function createPost() {
+    const data = {
+        text: $("#postText").val(),
+        id: 0
+    };
+
+    $.ajax({
+        url:"posts",
+        type:"POST",
+        data: JSON.stringify(data),
+        contentType:"application/json",
+        dataType:"json",
+        success: function (data) {
+            window.location.href = "main";
+        },
+        error: function() {
+            window.location.href = "main";
+        }
+    })
 }
 
 function LoadMoreB() {
@@ -264,7 +284,7 @@ $(function () {
             innerHTML +=
                 '<div class="row">\n' +
                 '   <div class="col-md-7">\n' +
-                '       <div class="p-2">\n' +
+                '       <div >\n' +
                 '           <div class="post">\n' +
                 '               <p class="list">' + posts[i].date + '</p>\n' +
                 '               <p class="list">' + posts[i].text + '</p>\n' +
@@ -273,11 +293,9 @@ $(function () {
                 '   </div>\n' +
                 '   <div class="col-md-2">\n' +
                 '       <div class="pt-2 pb-1">\n' +
-                '            <div class="pt-1 pb-1">\n' +
+                '           <div class="pt-1 pb-1">\n' +
                 '                <div class="delete-post">\n' +
-                '                    <form action="posts/' + posts[i].id +'" method="delete">\n' +
-                '                        <button class="w-100 btn btn-lg btn-secondary" type="submit">Удалить</button>\n' +
-                '                    </form>\n' +
+                '                    <button onclick="deletePost(' + posts[i].id + ')" class="w-100 btn btn-lg btn-secondary">Удалить</button>\n' +
                 '                </div>\n' +
                 '           </div>\n' +
                 '           <div class="pt-1 pb-1">\n' +
@@ -292,6 +310,7 @@ $(function () {
                 '   </div>\n' +
                 '</div>\n';
         }
+
         let innerDiv = document.createElement('div');
         innerDiv.innerHTML = innerHTML;
         div.insertAdjacentElement("beforeend", innerDiv);
@@ -299,4 +318,20 @@ $(function () {
         block = false;
     }
 
+
+
 });
+
+function deletePost(id) {
+    $.ajax({
+        url:"posts/" + id,
+        type:"DELETE",
+        success: function (data) {
+            window.location.href = "main";
+        },
+        error: function() {
+            window.location.href = "main";
+        }
+
+    })
+}

@@ -5,7 +5,7 @@ let postId = searchParams.get("id");
 
 function Root() {
     return (
-        <div className="row col-md-12">
+        <div id="post" className="row col-md-12">
             <PostText/>
             <Submit/>
         </div>
@@ -52,7 +52,7 @@ class PostText extends React.Component {
             return (
                 <div className="form-floating">
                     <div className="input-group post-window">
-                        <textarea className="form-control" name="text" value={post.text}/>
+                        <textarea id="text" className="form-control" name="text" value={post.text}/>
                     </div>
                 </div>
             );
@@ -62,7 +62,7 @@ class PostText extends React.Component {
 
 function Submit() {
     return (
-        <form action="main">
+        <form>
             <button onClick={putPost} className="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
         </form>
     )
@@ -77,7 +77,19 @@ function putPost() {
     $.ajax({
         url:"posts",
         type:"PUT",
-        data: data
+        data: JSON.stringify(data),
+        contentType:"application/json",
+        dataType:"json",
+        success: function (data) {
+            window.location.href = "main";
+        },
+        error: function() {
+            ReactDOM.render(
+                <h1>Ошибка обновления поста</h1>,
+                document.getElementById('post')
+            );
+        }
+
     })
 }
 
