@@ -1,4 +1,3 @@
-
 let url = new URL(window.location.href);
 let searchParams = new URLSearchParams(url.search.substring(1));
 let postId = searchParams.get("id");
@@ -52,7 +51,7 @@ class PostText extends React.Component {
             return (
                 <div className="form-floating">
                     <div className="input-group post-window">
-                        <textarea id="text" className="form-control" name="text" value={post.text}/>
+                        <textarea id="text" className="form-control" name="text">{post.text}</textarea>
                     </div>
                 </div>
             );
@@ -84,13 +83,11 @@ function putPost() {
             window.location.href = "main";
         },
         error: function() {
-            ReactDOM.render(
-                <h1>Ошибка обновления поста</h1>,
-                document.getElementById('post')
-            );
+            window.location.href = "main";
         }
 
     })
+
 }
 
 ReactDOM.render(

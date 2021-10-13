@@ -220,6 +220,7 @@ function createPost() {
     $.ajax({
         url:"posts",
         type:"POST",
+        async: false,
         data: JSON.stringify(data),
         contentType:"application/json",
         dataType:"json",
