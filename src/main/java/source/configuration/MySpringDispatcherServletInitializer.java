@@ -1,6 +1,8 @@
 package source.configuration;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
+import source.configuration.kafka.KafkaProducerConfig;
+import source.configuration.kafka.KafkaTopicConfig;
 
 import javax.servlet.Filter;
 
@@ -13,7 +15,8 @@ public class MySpringDispatcherServletInitializer
 
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{SpringConfig.class, WebSecurityConfig.class, WebSocketConfig.class};
+        return new Class[]{SpringConfig.class, WebSecurityConfig.class, WebSocketConfig.class,
+                KafkaProducerConfig.class, KafkaTopicConfig.class};
     }
 
     @Override
