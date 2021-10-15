@@ -74,3 +74,11 @@ create table if not exists Accounts_Chat (
         foreign key (ACC_ID)
         references Accounts
 );
+
+create table if not exists Data (
+	ID serial not null,
+	DATA_NAME varchar(50),
+	ACTION varchar(50),
+	DATA varchar(100),
+	primary key (id)
+);
