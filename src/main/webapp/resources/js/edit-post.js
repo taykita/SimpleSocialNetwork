@@ -61,9 +61,7 @@ class PostText extends React.Component {
 
 function Submit() {
     return (
-        <form>
-            <button onClick={putPost} className="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
-        </form>
+        <button onClick={putPost} className="w-100 btn btn-lg btn-dark" type="submit">Опубликовать</button>
     )
 }
 
@@ -78,6 +76,7 @@ function putPost() {
         type:"PUT",
         data: JSON.stringify(data),
         contentType:"application/json",
+        async: false,
         dataType:"json",
         success: function (data) {
             window.location.href = "main";

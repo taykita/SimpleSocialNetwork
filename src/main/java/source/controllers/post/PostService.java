@@ -1,5 +1,7 @@
 package source.controllers.post;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -34,28 +36,32 @@ public class PostService {
     private void sendMessage(String message) {
 
         ListenableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send("booknetwork-topic", message);
+                kafkaTemplate.send("booknetwork-events", message);
 
         future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+            private Logger logger = LoggerFactory.getLogger("KAFKA");
 
             @Override
             public void onSuccess(SendResult<String, String> result) {
-                System.out.println("Sent message=[" + message +
+                logger.debug("Sent message=[" + message +
                         "] with offset=[" + result.getRecordMetadata().offset() + "]");
             }
             @Override
             public void onFailure(Throwable ex) {
-                System.out.println("Unable to send message=["
+                logger.debug("Unable to send message=["
                         + message + "] due to : " + ex.getMessage());
             }
         });
     }
 
-    public Post addPost(Post post, Account account) throws AccStorageException {
-        sendMessage("Post-Created-accID=" + account.getId() + "-postID=" + post.getId());
-        post = accountRepository.addPost(post, account);
+    public Post addPost(Post post, int userId) throws AccStorageException {
+        Account account = accountRepository.getAccount(userId);
 
+        post = accountRepository.addPost(post, account);
         post.setUserName(account.getName());
+
+        sendMessage("Post-Created-accID=" + account.getId() + "-postID=" + post.getId());
+
         return post;
     }
 

@@ -56,6 +56,7 @@ public class PostController {
 
         Post post = new Post();
         post.setText(postDTO.getText());
+        post = postService.addPost(post, activeUser.getId());
         messagingClient.sendPostToUsers(post, activeUser.getId());
 
         return "redirect:main";

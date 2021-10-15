@@ -38,13 +38,7 @@ public class SimpMessagingClient implements MessagingClient {
     }
 
     public void sendPostToUsers(Post post, int activeUserId) throws AccStorageException {
-        Account account = accountRepository.getAccount(activeUserId);
-
-        post = accountRepository.addPost(post, account);
-
-        post.setUserName(account.getName());
-
-        List<Account> friends = accountRepository.getFriends(account.getId());
+        List<Account> friends = accountRepository.getFriends(activeUserId);
 
         for (Account friend: friends) {
             messagingTemplate.convertAndSendToUser(friend.getEmail(), "/queue/feed", post);
