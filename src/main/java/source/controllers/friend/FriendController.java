@@ -1,5 +1,6 @@
 package source.controllers.friend;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -19,7 +20,8 @@ public class FriendController {
     private final FriendService friendService;
 
     @PostMapping("/add-friend")
-    public String addFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser) throws AccStorageException {
+    public String addFriend(@RequestParam int id, @AuthenticationPrincipal User activeUser)
+            throws AccStorageException, JsonProcessingException {
         friendService.addFriend(id, activeUser);
         return "redirect:" + "user-page?id=" + id;
     }

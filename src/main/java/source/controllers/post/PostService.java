@@ -1,29 +1,29 @@
 package source.controllers.post;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
-import org.springframework.util.concurrent.ListenableFutureCallback;
 import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
+import source.service.query.KafkaClient;
+import source.service.query.entity.AnalysisDTO;
 
 import java.util.List;
 
 @Service
 public class PostService {
     @Autowired
-    public PostService(AccountRepository accountRepository, KafkaTemplate<String, String> kafkaTemplate) {
-        this.kafkaTemplate = kafkaTemplate;
+    public PostService(AccountRepository accountRepository, KafkaClient kafkaClient, ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+        this.kafkaClient = kafkaClient;
         this.accountRepository = accountRepository;
     }
-    private final KafkaTemplate<String, String> kafkaTemplate;
+    private final ObjectMapper objectMapper;
+    private final KafkaClient kafkaClient;
     private final AccountRepository accountRepository;
 
     @Value("${post.pagination.count}")
@@ -33,34 +33,15 @@ public class PostService {
         return accountRepository.getAccount(id);
     }
 
-    private void sendMessage(String message) {
-
-        ListenableFuture<SendResult<String, String>> future =
-                kafkaTemplate.send("booknetwork-events", message);
-
-        future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
-            private Logger logger = LoggerFactory.getLogger("KAFKA");
-
-            @Override
-            public void onSuccess(SendResult<String, String> result) {
-                logger.debug("Sent message=[" + message +
-                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
-            }
-            @Override
-            public void onFailure(Throwable ex) {
-                logger.debug("Unable to send message=["
-                        + message + "] due to : " + ex.getMessage());
-            }
-        });
-    }
-
-    public Post addPost(Post post, int userId) throws AccStorageException {
+    public Post addPost(Post post, int userId) throws AccStorageException, JsonProcessingException {
         Account account = accountRepository.getAccount(userId);
 
         post = accountRepository.addPost(post, account);
         post.setUserName(account.getName());
 
-        sendMessage("Post-Created-accID=" + account.getId() + "-postID=" + post.getId());
+        AnalysisDTO analysisDTO = new AnalysisDTO("Post", "Created", post);
+
+        kafkaClient.sendMessage(objectMapper.writeValueAsString(post));
 
         return post;
     }

@@ -1,5 +1,6 @@
 package source.controllers.post;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -52,7 +53,7 @@ public class PostController {
 
     @PostMapping("/posts")
     public String createPost(@RequestBody PostDTO postDTO,
-                             @AuthenticationPrincipal User activeUser) throws AccStorageException {
+                             @AuthenticationPrincipal User activeUser) throws AccStorageException, JsonProcessingException {
 
         Post post = new Post();
         post.setText(postDTO.getText());

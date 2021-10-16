@@ -1,5 +1,6 @@
 package source.controllers.authorization;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -26,7 +27,8 @@ public class AuthorizationController {
 
     @PostMapping("/sign")
     public String registerUser(@ModelAttribute("account") @Valid Account account,
-                               BindingResult bindingResult, @RequestParam String chPass, Model model) throws AccStorageException {
+                               BindingResult bindingResult, @RequestParam String chPass, Model model)
+            throws AccStorageException, JsonProcessingException {
         if (bindingResult.hasErrors())
             return "sign-in";
 
