@@ -56,7 +56,7 @@ public class AuthorizationService {
         ids.add(account.getId());
         chatRepository.addChat(ids, "Сохраненные сообщения", ChatType.SAVED);
 
-        AnalysisDTO analysisDTO = new AnalysisDTO("Account", "Created", account);
+        AnalysisDTO analysisDTO = new AnalysisDTO("Account", "Created", account.getId() + "=" + account.getName());
         kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
     }
 

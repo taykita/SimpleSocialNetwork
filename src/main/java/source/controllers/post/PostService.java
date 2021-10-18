@@ -38,10 +38,10 @@ public class PostService {
 
         post = accountRepository.addPost(post, account);
         post.setUserName(account.getName());
-
+//TODO Попробовать json
         AnalysisDTO analysisDTO = new AnalysisDTO("Post", "Created", post);
 
-        kafkaClient.sendMessage(objectMapper.writeValueAsString(post));
+        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
 
         return post;
     }
