@@ -7,6 +7,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.SessionFactory;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -19,41 +23,58 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import source.database.ChatRepository;
 import source.database.HibernateChatRepository;
-import source.database.hibernate.HibernateUtil;
 import source.interceptors.ChatCheckAuthInterceptor;
 
 import javax.servlet.ServletContext;
+import java.util.Arrays;
 
 @Configuration
 @ComponentScan("source.controllers, source.database, source.file, source.service")
 @EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
     @Autowired
-    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext,
-                        HibernateUtil hibernateUtil) {
+    public SpringConfig(ApplicationContext applicationContext, ServletContext servletContext) {
         this.applicationContext = applicationContext;
         this.servletContext = servletContext;
-        this.hibernateUtil = hibernateUtil;
     }
 
     private final ApplicationContext applicationContext;
     private final ServletContext servletContext;
-    private final HibernateUtil hibernateUtil;
 
     @Value("${s3.accessKey}")
     private String accessKey;
     @Value("${s3.secretKey}")
     private String secretKey;
-
-    @Bean
-    public SessionFactory sessionFactory() {
-        return hibernateUtil.getSessionFactory();
-    }
+    @Value("${s3.serviceEndpoint}")
+    private String serviceEndpoint;
+    @Value("${s3.signingRegion}")
+    private String signingRegion;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
                 .addResourceLocations("/resources/");
+    }
+
+    @Bean
+    public SessionFactory sessionFactory() {
+        return getSessionFactory();
+    }
+
+    private SessionFactory getSessionFactory() {
+        final StandardServiceRegistry registry = buildRegistry();
+        try {
+            return new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        } catch (Exception e) {
+            StandardServiceRegistryBuilder.destroy(registry);
+            throw new RuntimeException(e);
+        }
+    }
+
+    private StandardServiceRegistry buildRegistry() {
+        return new StandardServiceRegistryBuilder()
+                .configure()
+                .build();
     }
 
     @Bean
@@ -65,7 +86,7 @@ public class SpringConfig implements WebMvcConfigurer {
     public AmazonS3 amazonS3() {
         AmazonS3 amazonS3 = AmazonS3ClientBuilder
                 .standard()
-                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration("obs.ru-moscow-1.hc.sbercloud.ru", "ru-moscow"))
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(serviceEndpoint, signingRegion))
                 .withCredentials(new AWSStaticCredentialsProvider(
                         new BasicAWSCredentials(
                                 accessKey,
@@ -85,6 +106,5 @@ public class SpringConfig implements WebMvcConfigurer {
     public ObjectMapper objectMapper() {
         return new ObjectMapper();
     }
-
 
 }
