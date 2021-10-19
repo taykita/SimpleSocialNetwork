@@ -36,7 +36,6 @@ public class UserPageController {
 
         Account user = userService.getAccount(activeUser.getId());
 
-
         updateModel(user, model, id, activeUser.getId());
 
         return "user-page";

@@ -19,7 +19,6 @@ public class S3Client implements FileStoreClient {
 
     private final AmazonS3 amazonS3;
 
-    //TODO Решить проблему с рефлексией
     @Value("${s3Client.bucket.name}")
     private String bucket;
 

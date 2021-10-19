@@ -39,7 +39,7 @@ public class UserService {
         return accountRepository.getAccount(id);
     }
 
-    public boolean isFriend(Account user, Account friend) throws AccStorageException{
+    public boolean isFriend(Account user, Account friend) throws AccStorageException {
         return accountRepository.isFriend(user, friend);
     }
 

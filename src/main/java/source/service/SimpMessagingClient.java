@@ -29,7 +29,7 @@ public class SimpMessagingClient implements MessagingClient {
 
     @Override
     public void sendMessageToChat(String destination, Message message) throws AccStorageException {
-        message = chatRepository.addMessage(message);
+
 
         for (String user : chatRepository.getUsersEmail(message.getChatId())) {
             messagingTemplate.convertAndSendToUser(user,

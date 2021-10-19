@@ -4,7 +4,6 @@ public class Chat {
     private int id;
     private String name;
     private int ownerId;
-    //TODO Подумать как замапить на enum
     private int type;
 
     public int getId() {

@@ -32,7 +32,7 @@ public class AuthorizationController {
         if (bindingResult.hasErrors())
             return "sign-in";
 
-        if (authorizationService.registration(account, bindingResult, chPass)) {
+        if (authorizationService.registration(account, chPass)) {
             return "redirect:login";
         }
         return "redirect:sign";
@@ -61,7 +61,6 @@ public class AuthorizationController {
             model.addAttribute("logout", "Вы вышли!");
         }
 
-        model.addAttribute("account", new Account());
         return "log-in";
     }
 

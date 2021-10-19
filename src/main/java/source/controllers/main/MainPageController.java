@@ -52,7 +52,6 @@ public class MainPageController {
         return mainService.getPosts(activeUser.getId(), firstPostId);
     }
 
-    //Можно ли вот так?
     @GetMapping("main/user")
     @ResponseBody
     public Account getMainUser(@AuthenticationPrincipal User activeUser) throws AccStorageException {

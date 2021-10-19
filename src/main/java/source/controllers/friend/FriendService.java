@@ -9,27 +9,32 @@ import source.controllers.entity.User;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
 import source.service.query.KafkaClient;
+import source.service.query.QueryClient;
 import source.service.query.entity.AnalysisDTO;
 
 @Service
 public class FriendService {
     @Autowired
     public FriendService(AccountRepository accountRepository,
-                         KafkaClient kafkaClient, ObjectMapper objectMapper) {
+                         QueryClient queryClient, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.kafkaClient = kafkaClient;
+        this.queryClient = queryClient;
         this.accountRepository = accountRepository;
     }
     private final ObjectMapper objectMapper;
-    private final KafkaClient kafkaClient;
+    private final QueryClient queryClient;
     private final AccountRepository accountRepository;
 
     public void addFriend(int id, User activeUser) throws AccStorageException, JsonProcessingException {
         Account user = accountRepository.getAccount(activeUser.getId());
         accountRepository.addFriend(user, accountRepository.getAccount(id));
 
+        sendMessageToQuery(id, activeUser);
+    }
+
+    private void sendMessageToQuery(int id, User activeUser) throws JsonProcessingException {
         AnalysisDTO analysisDTO = new AnalysisDTO("Account", "FriendAdded", activeUser.getId() + "-" + id);
-        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
+        queryClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
     }
 
     public void deleteFriend(int id, User activeUser) throws AccStorageException {

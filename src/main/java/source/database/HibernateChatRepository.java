@@ -4,8 +4,6 @@ import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 import source.controllers.entity.Account;
 import source.controllers.entity.chat.Chat;
 import source.controllers.entity.chat.ChatType;
@@ -152,15 +150,6 @@ public class HibernateChatRepository implements ChatRepository {
 
         } catch (HibernateException e) {
             throw new AccStorageException("Hibernate addMessage Error.", e);
-        }
-    }
-
-    @Override
-    public Message getMessage(int id) throws AccStorageException {
-        try (Session session = sessionFactory.openSession()) {
-            return session.get(Message.class, id);
-        } catch (HibernateException e) {
-            throw new AccStorageException("Hibernate getMessage Error");
         }
     }
 

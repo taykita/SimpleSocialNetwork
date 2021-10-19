@@ -19,18 +19,18 @@
 </head>
 <body class="text-center">
 <main class="form-signin">
-    <form th:action="@{login}" th:method="POST" th:object="${account}">
+    <form action="login" method="POST" >
         <div th:text="${error}">...</div>
         <div th:text="${logout}">...</div>
         <h1 class="h3 mb-3 fw-normal">Вход</h1>
 
         <div class="form-floating">
             <input type="email" class="form-control" name="username" id="username">
-            <label for="username" th:field="*{email}">Адрес почты</label>
+            <label for="username">Адрес почты</label>
         </div>
         <div class="form-floating">
             <input type="password" class="form-control" name="password" id="password">
-            <label for="password" th:field="*{pass}">Пароль</label>
+            <label for="password">Пароль</label>
         </div>
 
         <button class="w-100 btn btn-lg btn-dark" type="submit">Войти</button>

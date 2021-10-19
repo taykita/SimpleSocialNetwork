@@ -23,8 +23,6 @@ public interface ChatRepository {
 
     Message addMessage(Message message) throws AccStorageException;
 
-    Message getMessage(int id) throws AccStorageException;
-
     List<Message> getMessages(int chatId, int firstMessageId, int maxCount) throws AccStorageException;
 
     List<Chat> getChats(int userId) throws AccStorageException;

@@ -4,13 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.BindingResult;
 import source.controllers.entity.Account;
 import source.controllers.entity.chat.ChatType;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
 import source.exception.AccStorageException;
 import source.service.query.KafkaClient;
+import source.service.query.QueryClient;
 import source.service.query.entity.AnalysisDTO;
 
 import java.util.ArrayList;
@@ -20,18 +20,19 @@ import java.util.List;
 public class AuthorizationService {
     @Autowired
     public AuthorizationService(AccountRepository accountRepository, ChatRepository chatRepository,
-                                KafkaClient kafkaClient, ObjectMapper objectMapper) {
+                                QueryClient queryClient, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.kafkaClient = kafkaClient;
+        this.queryClient = queryClient;
         this.accountRepository = accountRepository;
         this.chatRepository = chatRepository;
     }
+
     private final ObjectMapper objectMapper;
-    private final KafkaClient kafkaClient;
+    private final QueryClient queryClient;
     private final ChatRepository chatRepository;
     private final AccountRepository accountRepository;
 
-    public boolean registration(Account account, BindingResult bindingResult, String chPass)
+    public boolean registration(Account account, String chPass)
             throws AccStorageException, JsonProcessingException {
 
         if (account.getPass().equals(chPass)) {
@@ -52,12 +53,20 @@ public class AuthorizationService {
 
     private void addAccount(Account account) throws AccStorageException, JsonProcessingException {
         account = accountRepository.addAccount(account);
+        createSaveMessagesChat(account);
+
+        sendMessageToQuery(account);
+    }
+
+    private void createSaveMessagesChat(Account account) throws AccStorageException {
         List<Integer> ids = new ArrayList<>();
         ids.add(account.getId());
         chatRepository.addChat(ids, "Сохраненные сообщения", ChatType.SAVED);
+    }
 
+    private void sendMessageToQuery(Account account) throws JsonProcessingException {
         AnalysisDTO analysisDTO = new AnalysisDTO("Account", "Created", account.getId() + "=" + account.getName());
-        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
+        queryClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
     }
 
     private boolean existAccount(String email) throws AccStorageException {

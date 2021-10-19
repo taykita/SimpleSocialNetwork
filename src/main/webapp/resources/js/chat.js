@@ -60,7 +60,7 @@ $(function () {
 
     function get() {
         let data = {firstMessageId: currentFirstMessageId, chatId: chatId};
-        $.get("chat/get-messages", data, showMessageList, "json");
+        $.get("chat/messages", data, showMessageList, "json");
     }
 
     function showMessageList(messageText) {

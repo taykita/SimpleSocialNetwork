@@ -22,6 +22,7 @@ public class PostService {
         this.kafkaClient = kafkaClient;
         this.accountRepository = accountRepository;
     }
+
     private final ObjectMapper objectMapper;
     private final KafkaClient kafkaClient;
     private final AccountRepository accountRepository;
@@ -38,12 +39,15 @@ public class PostService {
 
         post = accountRepository.addPost(post, account);
         post.setUserName(account.getName());
-//TODO Попробовать json
-        AnalysisDTO analysisDTO = new AnalysisDTO("Post", "Created", post);
 
-        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
+        sendMessageToQuery(post);
 
         return post;
+    }
+
+    private void sendMessageToQuery(Post post) throws JsonProcessingException {
+        AnalysisDTO analysisDTO = new AnalysisDTO("Post", "Created", post);
+        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
     }
 
     public List<Account> getFriends(int userId) throws AccStorageException {

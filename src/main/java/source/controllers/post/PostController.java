@@ -11,35 +11,6 @@ import source.controllers.entity.User;
 import source.exception.AccStorageException;
 import source.service.MessagingClient;
 
-class PostDTO {
-    private String text;
-    private Integer id;
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "PostDTO{" +
-                "text='" + text + '\'' +
-                ", id=" + id +
-                '}';
-    }
-}
-
 @Controller
 public class PostController {
     @Autowired

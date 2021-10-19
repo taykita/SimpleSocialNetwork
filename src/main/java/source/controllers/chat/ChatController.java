@@ -76,10 +76,11 @@ public class ChatController {
 
     @MessageMapping("/chat")
     public void chatHandler(Message message) throws Exception {
+        message = chatService.addMessage(message);
         messagingClient.sendMessageToChat("/queue/chat/", message);
     }
 
-    @GetMapping("/chat/get-messages")
+    @GetMapping("/chat/messages")
     @ResponseBody
     public List<Message> getMessages(@RequestParam(required = false, defaultValue = "1") int firstMessageId,
                                      @RequestParam int chatId) throws AccStorageException {

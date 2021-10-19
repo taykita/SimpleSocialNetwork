@@ -26,7 +26,6 @@ public class Message {
         this.text = text;
     }
 
-
     public String getName() {
         return name;
     }
