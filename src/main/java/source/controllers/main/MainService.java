@@ -52,13 +52,7 @@ public class MainService {
                 isEdit = true;
             }
         }
-        //TODO Изменить кодировку
-        if (!newAccount.getPass().equals("") &&
-                currentAccount.getPass().equals(passwordEncoder.encode(oldPass)) &&
-                newAccount.getPass().equals(chPass)) {
-            currentAccount.setPass(passwordEncoder.encode(newAccount.getPass()));
-            isEdit = true;
-        }
+
         if (isEdit) {
             accountRepository.updateAccount(currentAccount);
         }

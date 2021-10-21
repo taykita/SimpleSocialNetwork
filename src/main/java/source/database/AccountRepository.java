@@ -33,7 +33,7 @@ public interface AccountRepository {
 
     void deletePost(Post post) throws AccStorageException;
 
-    void updatePost(Post oldPost, Post newPost) throws AccStorageException;
+    void updatePost(int oldPostId, String newPostText) throws AccStorageException;
 
     Post getPost(int postId) throws AccStorageException;
 

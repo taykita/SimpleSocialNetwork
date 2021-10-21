@@ -18,9 +18,9 @@
 <body class="text-center">
 <main class="form-signin">
     <form th:action="@{sign}" th:method="POST" th:object="${account}">
-        <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>
-        <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}">...</div>
-        <div th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>
+        <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">...</div>
+        <div class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">...</div>
+        <div class="text-danger" th:if="${#fields.hasErrors('pass')}" th:errors="*{pass}">...</div>
         <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
         <div class="form-floating">

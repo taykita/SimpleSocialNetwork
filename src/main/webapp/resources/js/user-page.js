@@ -20,12 +20,16 @@ function connect() {
     });
 }
 
+function defaultImg() {
+    document.getElementById('avatar').src = 'resources/images/avatars/1.png';
+}
+
 function showPost(post) {
     let div = document.getElementById('post');
     let innerHTML = '';
     innerHTML +=
-        '<div class="row">\n' +
-        '   <div class="col-md-7">\n' +
+        '<div class="row p-2">\n' +
+        '   <div class="col-md-7 shadow">\n' +
         '       <div class="p-2">\n' +
         '           <div class="post">\n' +
         '               <p class="list">' + post.date + '</p>\n' +
@@ -62,8 +66,8 @@ $(function () {
         let innerHTML = '';
         for (let i = 0; i < posts.length; i++) {
             innerHTML +=
-                '<div class="row">\n' +
-                '   <div class="col-md-7">\n' +
+                '<div class="row p-2">\n' +
+                '   <div class="col-md-7 shadow">\n' +
                 '       <div class="p-2">\n' +
                 '           <div class="post">\n' +
                 '               <p class="list">' + posts[i].date + '</p>\n' +

@@ -175,14 +175,24 @@ function ExitB() {
 function Avatar() {
     return (
         <div className="col-md-3">
-            <img className="img" src="main/load/avatar" width="200" height="200"
-                 alt="Не удалось загрузить картинку"/>
+            <div id="avatar">
+                <img className="img" src="main/load/avatar" width="200" height="200"
+                     alt="Загрузка..." onError={defaultImg} />
+            </div>
             <form method="post" action="main/upload" encType="multipart/form-data">
                 <input className="w-75 form-control img-load" type="file" name="image"/>
                 <button className="w-75 btn btn-lg btn-secondary img-load-btn" value="Upload" type="submit">Загрузить фото
                 </button>
             </form>
         </div>
+    );
+}
+
+function defaultImg() {
+    ReactDOM.render(
+        <img id="avatar" className="img" src="resources/images/avatars/1.png" width="200" height="200"
+                         alt="Загрузка..." />,
+        document.getElementById('avatar')
     );
 }
 
@@ -283,10 +293,10 @@ $(function () {
         let innerHTML = '';
         for (let i = 0; i < posts.length; i++) {
             innerHTML +=
-                '<div class="row">\n' +
-                '   <div class="col-md-7">\n' +
-                '       <div >\n' +
-                '           <div class="post">\n' +
+                '<div class="row p-2">\n' +
+                '   <div class="col-md-7 shadow">\n' +
+                '       <div>\n' +
+                '           <div class="test">\n' +
                 '               <p class="list">' + posts[i].date + '</p>\n' +
                 '               <p class="list">' + posts[i].text + '</p>\n' +
                 '           </div>\n' +

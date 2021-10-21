@@ -50,9 +50,7 @@ public class PostController {
     @PutMapping(value = "/posts", consumes = "application/json", produces = "application/json")
     @ResponseBody
     public PostDTO editPost(@RequestBody PostDTO postDTO) throws AccStorageException {
-        Post post = new Post();
-        post.setText(postDTO.getText());
-        postService.updatePost(post, postDTO.getId());
+        postService.updatePost(postDTO.getText(), postDTO.getId());
         return postDTO;
     }
 

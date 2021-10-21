@@ -15,12 +15,11 @@
 
     <!-- Custom styles for this template -->
     <link href="resources/css/logIn.css" rel="stylesheet">
-<!--    TODO Сделать текст ошибок красным-->
 </head>
 <body class="text-center">
 <main class="form-signin">
     <form action="login" method="POST" >
-        <div th:text="${error}">...</div>
+        <div class="text-danger" th:text="${error}">...</div>
         <div th:text="${logout}">...</div>
         <h1 class="h3 mb-3 fw-normal">Вход</h1>
 

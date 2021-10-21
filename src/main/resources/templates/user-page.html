@@ -34,8 +34,8 @@
             </div>
             <div class="row">
                 <div class="col-md-3">
-                    <img th:src="'/user-page/load/avatar?id=' + ${id}" width="200" height="200"
-                         alt="Не удалось загрузить картинку">
+                    <img th:src="'/user-page/load/avatar?id=' + ${id}" width="200" height="200" onerror="defaultImg()"
+                         alt="Загрузка...">
                 </div>
                 <div class="col-md-9">
                     <p>Информация</p>
@@ -58,14 +58,12 @@
             <div id="post">
 
             </div>
-            <!--                TODO Разобрать странности с div здесь-->
             <div class="row">
                 <div class="col-md-2">
-                    <div class="pt-2 pb-1">
-                        <div class="pt-1 pb-1">
-                            <button class="w-100 btn btn-lg btn-secondary" type="submit" id="load-post">Загрузить ещё
-                            </button>
-                        </div>
+                    <div class="pt-2 pb-2">
+                        <button class="w-100 btn btn-lg btn-secondary" type="submit" id="load-post">
+                            Загрузить ещё
+                        </button>
                     </div>
                 </div>
             </div>

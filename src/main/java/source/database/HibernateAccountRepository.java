@@ -242,15 +242,14 @@ public class HibernateAccountRepository implements AccountRepository {
         }
     }
 
-    //TODO заменить параметры
     @Override
-    public void updatePost(Post oldPost, Post newPost) throws AccStorageException {
+    public void updatePost(int oldPostId, String newPostText) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             try {
                 session.getNamedNativeQuery("Account.updatePost")
-                        .setParameter("text", newPost.getText())
-                        .setParameter("id", oldPost.getId())
+                        .setParameter("text", newPostText)
+                        .setParameter("id", oldPostId)
                         .executeUpdate();
 
                 transaction.commit();
@@ -305,7 +304,7 @@ public class HibernateAccountRepository implements AccountRepository {
     public List<Post> getFriendsPosts(Account user, int firstPostId, int maxCount) throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             List<Integer> ids = new ArrayList<>();
-//TODO Как сделать nullable username
+
             for (Account account : getFriends(user.getId())) {
                 ids.add(account.getId());
             }
