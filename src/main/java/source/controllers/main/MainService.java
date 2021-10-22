@@ -53,6 +53,13 @@ public class MainService {
             }
         }
 
+        if (!newAccount.getPass().equals("") &&
+                passwordEncoder.matches(oldPass, activeUser.getPassword()) &&
+                newAccount.getPass().equals(chPass)) {
+            currentAccount.setPass(passwordEncoder.encode(newAccount.getPass()));
+            isEdit = true;
+        }
+
         if (isEdit) {
             accountRepository.updateAccount(currentAccount);
         }

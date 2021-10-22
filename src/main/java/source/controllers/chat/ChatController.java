@@ -128,7 +128,7 @@ public class ChatController {
     public String addInChat(@RequestParam int id,
                             @RequestParam int chatId) throws AccStorageException {
         chatService.addChatUser(id, chatId);
-        return "redirect:chat?id=" + chatId;
+        return "redirect:chat?chatId=" + chatId;
     }
 
 }

@@ -209,7 +209,7 @@
 
     <named-native-query name="Chat.getOtherUsersFromChat">
         <query>
-            SELECT DISTINCT
+            SELECT
                 a.id, a.email, a.pass, a.user_name
             FROM
                 Accounts as a
@@ -217,14 +217,18 @@
                 Accounts_Accounts as aa
             ON
                 a.id = aa.user_id
-            JOIN
-                Accounts_Chat as ac
-            ON
-                a.id = ac.acc_id
             WHERE
-                ac.chat_id != :chatId
-            AND
                 aa.acc_id = :userId
+            AND
+                a.id NOT IN
+                (
+                SELECT
+                    ac.acc_id
+                FROM
+                    Accounts_Chat as ac
+                WHERE
+                    ac.chat_id = :chatId
+                )
         </query>
     </named-native-query>
 
