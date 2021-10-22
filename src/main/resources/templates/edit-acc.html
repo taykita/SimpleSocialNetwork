@@ -22,6 +22,18 @@
                 <label for="name" th:field="*{name}">Имя пользователя</label>
             </div>
             <button class="w-100 btn btn-lg btn-dark" type="submit">Изменить</button>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="oldPass" id="oldPass">
+                <label for="oldPass">Пароль</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="pass" id="pass">
+                <label for="pass" th:field="*{pass}">Новый пароль</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control" name="chPass" id="chPass">
+                <label for="chPass">Подтвердите пароль</label>
+            </div>
         </form>
     </div>
 </main>

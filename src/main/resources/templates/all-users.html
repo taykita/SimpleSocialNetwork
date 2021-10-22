@@ -29,7 +29,7 @@
 
             <th:block th:each="user : ${users}">
                 <div class="row col-md-5 p-2 user">
-                    <a th:href="@{'user-page?id=' + ${user.id}}">
+                    <a class="shadow" th:href="@{'user-page?id=' + ${user.id}}">
                         <h5 th:text="${user.name}">..</h5>
                     </a>
                 </div>

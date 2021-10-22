@@ -60,10 +60,6 @@ public class ChatService {
         return chatRepository.addMessage(message);
     }
 
-    public List<String> getUsersEmail(int chatId) throws AccStorageException {
-        return chatRepository.getUsersEmail(chatId);
-    }
-
     public List<Message> getMessages(int chatId, int firstMessageId) throws AccStorageException {
         return chatRepository.getMessages(chatId, firstMessageId, messageCount);
     }
@@ -104,9 +100,6 @@ public class ChatService {
         return chats;
     }
 
-    public boolean authUser(int chatId, int accId) throws AccStorageException {
-        return chatRepository.authChatUser(chatId, accId);
-    }
 
     private void fixPrivateChatName(Account account, Chat chat) {
         if (chat.getType() == ChatType.PRIVATE.ordinal() + 1) {
