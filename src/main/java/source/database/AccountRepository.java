@@ -17,8 +17,6 @@ public interface AccountRepository {
 
     boolean existAccount(String email) throws AccStorageException;
 
-    boolean confirmPass(String email, String pass) throws AccStorageException;
-
     List<Account> getAllAccounts() throws AccStorageException;
 
     void addFriend(Account user, Account friend) throws AccStorageException;

@@ -99,11 +99,6 @@ public class HibernateAccountRepository implements AccountRepository {
     }
 
     @Override
-    public boolean confirmPass(String email, String pass) throws AccStorageException {
-        return getAccount(email).getPass().equals(pass);
-    }
-
-    @Override
     public List<Account> getAllAccounts() throws AccStorageException {
         try (Session session = sessionFactory.openSession()) {
             return (List<Account>) session.getNamedNativeQuery("Account.getAllAccounts")
