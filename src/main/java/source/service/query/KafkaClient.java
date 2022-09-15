@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
-@Service
-public class KafkaClient implements QueryClient {
+//@Service
+public class KafkaClient {
     public KafkaClient (@Value("${kafka.enable}") boolean kafkaEnable) {
         this.kafkaEnable = kafkaEnable;
     }
@@ -42,7 +42,7 @@ public class KafkaClient implements QueryClient {
         }
     }
 
-    @Autowired(required = false)
+//    @Autowired(required = false)
     public void setKafkaTemplate(KafkaTemplate<String, String> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }

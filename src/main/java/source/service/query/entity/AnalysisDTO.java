@@ -7,16 +7,20 @@ public class AnalysisDTO {
 
     }
 
-    public AnalysisDTO(String name, String action, Object data) {
+    public AnalysisDTO(String name, Action action, Object data) {
         this.name = name;
         this.action = action;
         this.data = data;
     }
 
+    public enum Action {
+        CREATED
+    }
+
     @JsonProperty("name")
     private String name;
     @JsonProperty("action")
-    private String action;
+    private Action action;
     @JsonProperty("data")
     private Object data;
 
@@ -28,11 +32,11 @@ public class AnalysisDTO {
         this.name = name;
     }
 
-    public String getAction() {
+    public Action getAction() {
         return action;
     }
 
-    public void setAction(String action) {
+    public void setAction(Action action) {
         this.action = action;
     }
 
