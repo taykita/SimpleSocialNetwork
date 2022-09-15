@@ -50,7 +50,7 @@ public class SpringConfig implements WebMvcConfigurer {
     @Value("${s3.signingRegion}")
     private String signingRegion;
 
-    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+    private final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             "classpath:/META-INF/resources/", "classpath:/resources/",
             "classpath:/static/", "classpath:/public/"
     };

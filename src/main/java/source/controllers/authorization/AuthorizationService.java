@@ -9,12 +9,13 @@ import source.controllers.entity.chat.ChatType;
 import source.database.AccountRepository;
 import source.database.ChatRepository;
 import source.exception.AccStorageException;
-import source.service.query.KafkaClient;
 import source.service.query.QueryClient;
 import source.service.query.entity.AnalysisDTO;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static source.configuration.Constants.MONITORING_QUEUE;
 
 @Service
 public class AuthorizationService {
@@ -65,8 +66,9 @@ public class AuthorizationService {
     }
 
     private void sendMessageToQuery(Account account) throws JsonProcessingException {
-        AnalysisDTO analysisDTO = new AnalysisDTO("Account", "Created", account.getId() + "=" + account.getName());
-        queryClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
+        AnalysisDTO analysisDTO = new AnalysisDTO("Account", AnalysisDTO.Action.CREATED,
+                account.getId() + "=" + account.getName());
+        queryClient.sendMessage(objectMapper.writeValueAsString(analysisDTO), MONITORING_QUEUE);
     }
 
     private boolean existAccount(String email) throws AccStorageException {

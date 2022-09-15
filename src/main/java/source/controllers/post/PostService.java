@@ -9,22 +9,24 @@ import source.controllers.entity.Account;
 import source.controllers.entity.Post;
 import source.database.AccountRepository;
 import source.exception.AccStorageException;
-import source.service.query.KafkaClient;
+import source.service.query.QueryClient;
 import source.service.query.entity.AnalysisDTO;
 
 import java.util.List;
 
+import static source.configuration.Constants.MONITORING_QUEUE;
+
 @Service
 public class PostService {
     @Autowired
-    public PostService(AccountRepository accountRepository, KafkaClient kafkaClient, ObjectMapper objectMapper) {
+    public PostService(AccountRepository accountRepository, QueryClient queryClient, ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
-        this.kafkaClient = kafkaClient;
+        this.queryClient = queryClient;
         this.accountRepository = accountRepository;
     }
 
     private final ObjectMapper objectMapper;
-    private final KafkaClient kafkaClient;
+    private final QueryClient queryClient;
     private final AccountRepository accountRepository;
 
     @Value("${post.pagination.count}")
@@ -46,8 +48,8 @@ public class PostService {
     }
 
     private void sendMessageToQuery(Post post) throws JsonProcessingException {
-        AnalysisDTO analysisDTO = new AnalysisDTO("Post", "Created", post);
-        kafkaClient.sendMessage(objectMapper.writeValueAsString(analysisDTO));
+        AnalysisDTO analysisDTO = new AnalysisDTO("Post", AnalysisDTO.Action.CREATED, post);
+        queryClient.sendMessage(objectMapper.writeValueAsString(analysisDTO), MONITORING_QUEUE);
     }
 
     public List<Account> getFriends(int userId) throws AccStorageException {
