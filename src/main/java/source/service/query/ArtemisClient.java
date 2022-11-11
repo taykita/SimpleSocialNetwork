@@ -1,6 +1,6 @@
 package source.service.query;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +33,6 @@ public class ArtemisClient implements QueryClient {
         } else {
             return activeMQConnectionFactory;
         }
-
     }
 
     private final ConnectionFactory connectionFactory;
